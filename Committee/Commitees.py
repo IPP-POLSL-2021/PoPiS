@@ -28,6 +28,40 @@ def CommiteeFutureSetting(term, code):
 
         print(setting['date'])
         date = datetime.strptime(setting['date'], '%Y-%m-%d')
-        today = datetime.today()
-        if date > today:
+        today = datetime.today('%Y-%m-%d')
+        if date >= today:
             return date
+
+
+def ComitteStats(term, code=None):
+    if code == None:
+        API = f'https://api.sejm.gov.pl/sejm/term{term}/committees'
+    else:
+        API = f'https://api.sejm.gov.pl/sejm/term{term}/committees/{code}'
+    response = requests.get(API)
+    API_data = response.json()
+    clubs = {}
+    peoples = {}
+    if code is None:
+        for obj in API_data:
+            for member in obj['members']:
+                if member['lastFirstName'] in peoples:
+                    peoples[member['lastFirstName']] += 1
+                else:
+                    peoples[member['lastFirstName']] = 1
+                    if member['club'] in clubs:
+                        clubs[member['club']].append(member['lastFirstName'])
+                    else:
+                        clubs[member['club']] = member['lastFirstName']
+    else:
+        for member in API_data['members']:
+            for member in obj['members']:
+                if member['lastFirstName'] in peoples:
+                    peoples[member['lastFirstName']] += 1
+                else:
+                    peoples[member['lastFirstName']] = 1
+                    if member['club'] in clubs:
+                        clubs[member['club']].append(member['lastFirstName'])
+                    else:
+                        clubs[member['club']] = member['lastFirstName']
+    return clubs, peoples
