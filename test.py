@@ -29,7 +29,7 @@ interpelation = get_interpelation(term_number,str(interpelation_number))
 # To na później
 # relative_date = date.today() - interpelation.receipt_date
 # Adresatów może być wiele ofc todo
-st.markdown(f"{interpelation.title} wysłana przez {interpelation.from_} skierowana do {interpelation.to[0]}")
+#st.markdown(f"{interpelation.title} wysłana przez {interpelation.from_} skierowana do {interpelation.to[0]}")
 #st.markdown("%i wysłana przez %i skierowana do %i" % ("interpelation.title", "interpelation.from_","interpelation.to"))
             
 #st.json
