@@ -27,8 +27,8 @@ def CommiteeFutureSetting(term, code):
         print(setting)
 
         print(setting['date'])
-        date = datetime.strptime(setting['date'], '%Y-%m-%d')
-        today = datetime.today('%Y-%m-%d')
+        date = datetime.strptime(setting['date'], '%Y-%m-%d').date()
+        today = datetime.today().date()
         if date >= today:
             return date
 
