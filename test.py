@@ -18,6 +18,8 @@ st.markdown(
     f"nasępne posiedzenie wybranej komisiji,{CommiteeFutureSetting(term_number,committeeCode)}")
 correlationValue = st.number_input(
     label="Podaj jak bardzo wartości mają być skorelowane [-1;1]", min_value=-1.0, max_value=1.0)
+type = st.selectbox("Wybierz rodzaj analizowanych wyników",
+                    ("procętowe", "ilościowe"))
 electionSelections = st.selectbox("wybierz poziom admistracyjny do analzy ", (
     "województwa", "okręgi", "powiaty", "gminy", "obwody"))
-st.dataframe(getResults(correlationValue, electionSelections))
+st.dataframe(getResults(correlationValue, electionSelections, type))
