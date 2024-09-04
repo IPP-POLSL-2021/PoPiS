@@ -18,7 +18,7 @@ def getResults(Correlation, electionSelections, type):
         case"okręgi":
 
             Results = pd.read_csv(
-                f"./Data/wyniki_gl_na_listy_po_okregach{str}_sejm_utf8.csv", sep=";")
+                f"./Data/wyniki_gl_na_listy_po_okregach{str}_sejm_utf8.csv", sep=";",  decimal=",")
             # print("Columns in the DataFrame:")
             # print(Results.columns)
             # print(Results.head())
@@ -26,7 +26,7 @@ def getResults(Correlation, electionSelections, type):
             # print(Results)
         case "powiaty":
             Results = pd.read_csv(
-                f"./Data/wyniki_gl_na_listy_po_powiatach{str}_sejm_utf8.csv", sep=";")
+                f"./Data/wyniki_gl_na_listy_po_powiatach{str}_sejm_utf8.csv", sep=";",  decimal=",")
             # print("Columns in the DataFrame:")
             # print(Results.columns)
             # print(Results.head())
@@ -36,7 +36,7 @@ def getResults(Correlation, electionSelections, type):
                                            "Nr okręgu"], axis=1)
         case "gminy":
             Results = pd.read_csv(
-                f"./Data/wyniki_gl_na_listy_po_gminach{str}_sejm_utf8.csv", sep=";")
+                f"./Data/wyniki_gl_na_listy_po_gminach{str}_sejm_utf8.csv", sep=";",  decimal=",")
             # print("Columns in the DataFrame:")
             # print(Results.columns)
             # print(Results.head())
@@ -49,7 +49,7 @@ def getResults(Correlation, electionSelections, type):
         # Results.describe()
         case "obwody":
             Results = pd.read_csv(
-                f"./Data/wyniki_gl_na_listy_po_obwodach{str}_sejm_utf8.csv", sep=";")
+                f"./Data/wyniki_gl_na_listy_po_obwodach{str}_sejm_utf8.csv", sep=";",  decimal=",")
             Results = Results.drop(labels=["Nr komisji",
                                            "Siedziba",
                                            "TERYT Gminy",
