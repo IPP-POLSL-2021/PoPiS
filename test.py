@@ -1,7 +1,8 @@
 import streamlit as st
 from streamlit_push_notifications import send_push
-from Votes.current_number import get_term_number, get_sitting_number, get_voting_number
-from Interpelations.get_answer import get_interpelation
+from current_number import get_term_number, get_sitting_number, get_voting_number
+from interpelation import get_interpelation
+from MP import get_name
 #from datetime import date
 # date.today()
 #from dotenv import load_dotenv
