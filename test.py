@@ -1,47 +1,130 @@
 import streamlit as st
 from streamlit_push_notifications import send_push
 from current_number import get_term_number, get_sitting_number, get_voting_number
-from interpelation import get_interpelation
-from MP import get_name
-#from datetime import date
-# date.today()
-#from dotenv import load_dotenv
-import os
-st.title("Popis")
+from interpelation import get_interpelation, get_title, get_replies
+import time
 
-@st.cache_data
+st.title("System Powiadomień Sejmowych")
+#@st.cache_data
 def load_numbers():
-    #load_dotenv()
     term_number = get_term_number()
     sitting_number = get_sitting_number(term_number)
     voting_number = get_voting_number(term_number, sitting_number)
     return term_number,sitting_number,voting_number
+    
+# Funkcja do sprawdzania nowych głosowań
+def check_new_voting():
+    term_number, sitting_number, voting_number = load_numbers()
+    last_voting = st.session_state.get('last_voting', (0, 0, 0))
+    
+    if (term_number, sitting_number, voting_number) != last_voting:
+        send_push(
+            title="Nowe głosowanie!",
+            body=f"Głosowanie nr {voting_number} na {sitting_number} posiedzeniu {term_number} kadencji Sejmu"
+        )
+        st.session_state.last_voting = (term_number, sitting_number, voting_number)
+        return True
+    return False
 
-st.header("Interpelacje")
-term_number = st.number_input(
-    "Numer Kadencji", value=10, placeholder="Wpisz numer"
-)
-#interpelation_number = st.number_input(
-#    "Numer Interpelacji", value=None, placeholder="Wpisz numer"
-#)
-interpelation_number = 3999
-interpelation = get_interpelation(term_number,str(interpelation_number))
-# Posłów zwraca jako numer a nie imię i nazwisko (literalnie rok 1914)
-# To na później
-# relative_date = date.today() - interpelation.receipt_date
-# Adresatów może być wiele ofc todo
-#st.markdown(f"{interpelation.title} wysłana przez {interpelation.from_} skierowana do {interpelation.to[0]}")
-#st.markdown("%i wysłana przez %i skierowana do %i" % ("interpelation.title", "interpelation.from_","interpelation.to"))
+# Funkcja do sprawdzania odpowiedzi na interpelacje
+def check_interpellation_replies(term, num):
+    current_replies = get_replies(term, num)[0]
+    last_replies = st.session_state.get(f'last_replies_{term}_{num}', [])
+    
+    if current_replies != last_replies:
+        new_replies = [reply for reply in current_replies if reply not in last_replies]
+        if new_replies:
+            title = get_title(term, num)
+            send_push(
+                title="Nowa odpowiedź na interpelację!",
+                body=f"Otrzymano nową odpowiedź na interpelację: {title}"
+            )
+            st.session_state[f'last_replies_{term}_{num}'] = current_replies
+            return True
+    return False
+
+# Inicjalizacja stanu sesji dla obserwowanych interpelacji
+if 'watched_interpellations' not in st.session_state:
+    st.session_state.watched_interpellations = []
+
+# Interface użytkownika
+st.header("Obserwowane Interpelacje")
+term = st.number_input("Numer Kadencji", value=10, min_value=1)
+interpellation_num = st.number_input("Numer Interpelacji", value=1, min_value=1)
+
+if st.button("Dodaj do obserwowanych"):
+    new_interpellation = (term, interpellation_num)
+    if new_interpellation not in st.session_state.watched_interpellations:
+        st.session_state.watched_interpellations.append(new_interpellation)
+        st.success(f"Dodano interpelację {interpellation_num} z kadencji {term} do obserwowanych.")
+    else:
+        st.warning("Ta interpelacja jest już obserwowana.")
+
+st.subheader("Lista obserwowanych interpelacji:")
+for t, num in st.session_state.watched_interpellations:
+    st.write(f"Kadencja {t}, Interpelacja {num}")
+    if st.button(f"Usuń {t}-{num}"):
+        st.session_state.watched_interpellations.remove((t, num))
+        st.rerun()
+
+# Przycisk do manualnego sprawdzenia aktualizacji
+if st.button("Sprawdź aktualizacje interpelacji"):
+    with st.spinner("Sprawdzanie nowych głosowań i odpowiedzi na interpelacje..."):
+        new_replies = any(check_interpellation_replies(t, num) for t, num in st.session_state.watched_interpellations)
+        
+        if new_replies:
+            st.success("Znaleziono nowe aktualizacje! Sprawdź powiadomienia.")
+        else:
+            st.info("Brak nowych aktualizacji.")
+
+# Przycisk do manualnego sprawdzenia aktualizacji
+if st.button("Sprawdź aktualizacje głosowań"):
+    with st.spinner("Sprawdzanie nowych głosowań i odpowiedzi na interpelacje..."):
+        new_voting = check_new_voting()
+        if new_voting:
+            st.success("Znaleziono nowe aktualizacje! Sprawdź powiadomienia.")
+        else:
+            st.info("Brak nowych aktualizacji.")
+
+# Automatyczne sprawdzanie co jakiś czas (np. co 5 minut)
+if st.checkbox("Włącz automatyczne sprawdzanie interpelacji"):
+    update_interval = st.slider("Częstotliwość sprawdzania (w minutach)", 1, 60, 5)
+    st.write(f"Automatyczne sprawdzanie co {update_interval} minut.")
+    
+    placeholder = st.empty()
+    while True:
+        with placeholder.container():
+            new_replies = any(check_interpellation_replies(t, num) for t, num in st.session_state.watched_interpellations)
             
-#st.json
-# st.html
-#send_push(title=interpelation.title, body=f"Wysłana przez {interpelation.from_} {date.today() - interpelation.sent_date} dni temu")
-st.header("Głosowania")
-if st.button("Pokaż najnowsze dane"):
-    term_number,sitting_number,voting_number=load_numbers()
-    send_push(title="Najnowsze głosowanie to",
-              body=f"Głosowanie nr {voting_number} na {sitting_number} posiedzeniu {term_number} kadencji Sejmu")
-             
-st.title("Jak się kliknie raz o powiadomienie to drugi raz już nie wyjdzie póki się nie wyśle innego powiadomienia")              
-if st.button("Reset"):
-    send_push(title="Test", body=f"Body")
+            if new_replies:
+                st.success("Znaleziono nowe aktualizacje! Sprawdź powiadomienia.")
+            else:
+                st.info("Brak nowych aktualizacji.")
+            
+            latest_check = time.strftime("%Y-%m-%d %H:%M:%S")
+            st.write(f"Ostatnie sprawdzenie: {latest_check}")
+        
+        time.sleep(update_interval * 60)
+
+# Automatyczne sprawdzanie co jakiś czas (np. co 5 minut)
+if st.checkbox("Włącz automatyczne sprawdzanie głosowań"):
+    update_interval = st.slider("Częstotliwość sprawdzania (w minutach)", 1, 60, 5)
+    st.write(f"Automatyczne sprawdzanie co {update_interval} minut.")
+    
+    placeholder = st.empty()
+    while True:
+        with placeholder.container():
+            new_voting = check_new_voting()
+            if new_voting:
+                st.success("Znaleziono nowe aktualizacje! Sprawdź powiadomienia.")
+            else:
+                st.info("Brak nowych aktualizacji.")
+            
+            latest_check = time.strftime("%Y-%m-%d %H:%M:%S")
+            st.write(f"Ostatnie sprawdzenie: {latest_check}")
+        
+        time.sleep(update_interval * 60)
+
+
+#st.sidebar.title("Informacje")
+#st.sidebar.info("Ta aplikacja pozwala śledzić nowe głosowania w Sejmie oraz odpowiedzi na wybrane interpelacje.")
