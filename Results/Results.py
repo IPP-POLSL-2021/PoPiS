@@ -103,4 +103,5 @@ def getResults(Correlation, electionSelections, type):
     Corr_Matrix_Larger_Than = Corr_Matrix > Correlation
     Corr_Matrix = Corr_Matrix[Corr_Matrix_Larger_Than]
     print(Corr_Matrix)
-    return Corr_Matrix
+
+    return Corr_Matrix, Results

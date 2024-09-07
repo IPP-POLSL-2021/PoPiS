@@ -1,5 +1,7 @@
 from streamlit_push_notifications import send_push
 import streamlit as st
+import matplotlib.pyplot as plt
+
 from Committee.Commitees import CommiteesList, CommiteeFutureSetting
 import json
 from Results.Results import getResults
@@ -22,4 +24,24 @@ type = st.selectbox("Wybierz rodzaj analizowanych wyników",
                     ("procętowe", "ilościowe"))
 electionSelections = st.selectbox("wybierz poziom admistracyjny do analzy ", (
     "województwa", "okręgi", "powiaty", "gminy", "obwody"))
-st.dataframe(getResults(correlationValue, electionSelections, type))
+matrix, Results = getResults(correlationValue, electionSelections, type)
+st.dataframe(matrix)
+
+axisX = st.selectbox("wybierz pierwszy elemnt korelacji",
+                     Results.columns)
+axisY = st.selectbox("wybierz drugi elemnt korelacji",
+                     Results.columns)
+
+
+fig, ax = plt.subplots()
+st.write(f"korelacja między {axisX, axisY}")
+ax.scatter(Results[axisX], Results[axisY],
+           color='blue', marker='o')
+# Oznaczenie osi i tytuł wykresu
+ax.set_xlabel(axisX)
+ax.set_ylabel(axisY)
+
+ax.legend()
+
+# Wyświetlenie wykresu w aplikacji
+st.pyplot(fig)
