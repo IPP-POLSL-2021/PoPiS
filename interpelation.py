@@ -1,3 +1,5 @@
+# Maybe some more showing in if name == main or professional pytest testing
+# Or type hints for functions, or comments directly next to function name so vscode nicely displays
 import requests
 import datetime
 from MP import get_name

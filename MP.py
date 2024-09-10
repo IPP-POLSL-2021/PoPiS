@@ -1,3 +1,7 @@
+# DONE
+# Maybe some more showing in if name == main or professional pytest testing
+# Or type hints for functions, or comments directly next to function name so vscode nicely displays
+# Or work on displaying photos of MP
 import requests
 import datetime
 
@@ -10,7 +14,7 @@ def get_name(term, id, response=False):
         response = get_MP(term,id)
     return response.json()['firstLastName']
 
-# Active - Bool
+# Returns a boolean value
 def get_status(term, id, response=False):
     if not response:
         response = get_MP(term,id)
@@ -22,6 +26,11 @@ def get_reason(term, id, response=False):
     if response.json()['active']:
         return "None - MP is currently active"
     return response.json()['inactiveCause'] + " z powodu " + response.json()['waiverDesc']
+
+def get_club(term, id, response=False):
+    if not response:
+        response = get_MP(term,id)
+    return response.json()['club']
 
 #district_num :  A district id where MP was elected Example: 29.
 #district_name : A district name where MP was elected Example: Katowice.
@@ -39,10 +48,6 @@ def get_district(term, id, mode, response=False):
         case _:
             return response.json()['districtNum'] + " - " + response.json()['districtName'] + " - " + response.json()['voivodeship']
 
-def get_club(term, id, response=False):
-    if not response:
-        response = get_MP(term,id)
-    return response.json()['club']
 #birth_date (str --> datetime.date): a date of birth Example: 1985-04-14.
 #birth_location (str): a place of birth Example: Gliwice.
 #profession (str): a profession Example: przedsiębiorca prywatny.
