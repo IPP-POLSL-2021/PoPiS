@@ -1,35 +1,34 @@
-from streamlit_push_notifications import send_push
 import streamlit as st
 import matplotlib.pyplot as plt
 
 from Committee.Commitees import CommiteesList, CommiteeFutureSetting
 import json
 from Results.Results import getResults
-st.header("komisije")
+st.header("komisje")
 term_number = st.number_input(
     "Numer Kadencji", value=10, placeholder="Wpisz numer"
 )
 commitees = CommiteesList(term_number)
-for commite in commitees:
+for commitee in commitees:
     st.markdown(
-        f"{commite['name']} o kodzie: {commite['code']}")
+        f"{commitee['name']} o kodzie: {commitee['code']}")
 committeeCode = st.text_input(
     "Kod komisij", value="ASW", placeholder="Podaj kod komisji")
 
 st.markdown(
-    f"nasępne posiedzenie wybranej komisiji,{CommiteeFutureSetting(term_number,committeeCode)}")
+    f"następne posiedzenie wybranej komisji,{CommiteeFutureSetting(term_number,committeeCode)}")
 correlationValue = st.number_input(
     label="Podaj jak bardzo wartości mają być skorelowane [-1;1]", min_value=-1.0, max_value=1.0)
 type = st.selectbox("Wybierz rodzaj analizowanych wyników",
-                    ("procętowe", "ilościowe"))
-electionSelections = st.selectbox("wybierz poziom admistracyjny do analzy ", (
+                    ("procentowe", "ilościowe"))
+electionSelections = st.selectbox("wybierz poziom administracyjny do analizy ", (
     "województwa", "okręgi", "powiaty", "gminy", "obwody"))
 matrix, Results = getResults(correlationValue, electionSelections, type)
 st.dataframe(matrix)
 
-axisX = st.selectbox("wybierz pierwszy elemnt korelacji",
+axisX = st.selectbox("wybierz pierwszy element korelacji",
                      Results.columns)
-axisY = st.selectbox("wybierz drugi elemnt korelacji",
+axisY = st.selectbox("wybierz drugi element korelacji",
                      Results.columns)
 
 
