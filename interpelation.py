@@ -25,7 +25,7 @@ def get_date(term, num, mode, response=False):
         case 'sent_date' | 1 | 'data_wysłania':
             return datetime.datetime.strptime(response.json()['sentDate'], '%Y-%m-%d').date()
         case 'last_modified' | 2 | 'czas_ostatniej_modyfikacji':
-            return datetime.datetime.strptime(response.json()['lastModified'], '%Y-%m-%d %H:%M:%S').date()
+            return datetime.datetime.strptime(response.json()['lastModified'], '%Y-%m-%d %H:%M:%S')
 
 def get_authors(term, num, response=False):
     if not response:
