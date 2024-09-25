@@ -1,2 +1,5 @@
 
 *.pyc
+Controller/.env
+*.pyc
+*.pyc
