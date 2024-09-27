@@ -1,9 +1,12 @@
-from Commitees import CommiteesList, CommiteeFutureSetting
-import requests
 from sqlalchemy import create_engine
+import requests
+from Commitees import CommiteesList, CommiteeFutureSetting
 from sqlalchemy.orm import sessionmaker
-from Model import DatabaseContext
-from Model import RemindersModel
+from Model.DatabaseContext import DatabaseContext
+from Model.RemindersModel import Reminders
+import sys
+
+#####
 
 
 def get_respone(User_Input):
@@ -25,7 +28,7 @@ def get_respone(User_Input):
 
 def create_event(id, text):
     print(id)
-    db_context = DatabaseContext.DatabaseContext()
+    db_context = DatabaseContext()
     session = db_context.get_session()
     commitees = CommiteesList(10)
     commiteesList = ""
@@ -34,7 +37,7 @@ def create_event(id, text):
         commiteesList += f":{commitee['code']} "
     if text in commiteesList:
         date = CommiteeFutureSetting(10, text)
-        new_reminder = RemindersModel.Reminders(
+        new_reminder = Reminders(
             chanelId=id, committeeSitting=date, platform="discord")
         session.add(new_reminder)
         session.commit()

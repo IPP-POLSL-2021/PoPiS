@@ -48,8 +48,8 @@ async def on_message(message):
     id = message.channel.id
     channel = client.get_channel(id)
     print(message.content[0])
-    # if message.content[0] == '!':
-    #     create_event(id, user_message[1:])
+    if message.content[0] == '!':
+        create_event(id, user_message[1:])
     # await channel.send('hello')
 
     await send_message(message, user_message)
