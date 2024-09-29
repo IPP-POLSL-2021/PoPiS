@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 import requests
-from Commitees import CommiteesList, CommiteeFutureSetting
+from Controller.Commitees import CommiteesList, CommiteeFutureSetting
 from sqlalchemy.orm import sessionmaker
 from Model.DatabaseContext import DatabaseContext
 from Model.RemindersModel import Reminders
@@ -20,14 +20,14 @@ def get_respone(User_Input):
 
             commiteesList += f"{commitee['name']} o kodzie: {commitee['code']}\n"
 
-        print(commiteesList)
+        # print(commiteesList)
         return f"oto lista komisji\n{commiteesList}"
     else:
         return ""
 
 
 def create_event(id, text):
-    print(id)
+    # print(id)
     db_context = DatabaseContext()
     session = db_context.get_session()
     commitees = CommiteesList(10)

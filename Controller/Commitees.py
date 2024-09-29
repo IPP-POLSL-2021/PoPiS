@@ -17,16 +17,16 @@ def CommiteeFutureSetting(term, code):
 
     response_API = requests.get(
         f'https://api.sejm.gov.pl/sejm/term{term}/committees/{code}/sittings')
-    print(f'https://api.sejm.gov.pl/sejm/term{term}/committees/{code}')
+    # print(f'https://api.sejm.gov.pl/sejm/term{term}/committees/{code}')
     if response_API.status_code != 200:
         date = " wystąpił bład"
         return date
     committee = response_API.json()
     for setting in committee:
         # print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-        print(setting)
+        # print(setting)
 
-        print(setting['date'])
+        # print(setting['date'])
         date = datetime.strptime(setting['date'], '%Y-%m-%d').date()
         today = datetime.today().date()
         if date >= today:

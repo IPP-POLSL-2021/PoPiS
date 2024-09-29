@@ -1,9 +1,10 @@
 
+import asyncio
 import os
 from dotenv import load_dotenv
 from discord import Intents, Client, Message
 
-from discordBotResponses import get_respone, create_event
+from Controller.discordBotResponses import get_respone, create_event
 load_dotenv()
 # aby wysłąć przypomnienie w  gdzieś musiałbym przetrzymywać cały obiekt message albo przynajmniej podobiekt author
 TOKEN = os.getenv('TOKEN')
@@ -24,7 +25,7 @@ async def send_message(message, user_message):
         response = get_respone(user_message)
         responseArray = response.split('\n')
         for responsee in responseArray:
-            print(responsee)
+            # print(responsee)
             await message.author.send(responsee) if is_private else await message.channel.send(responsee)
     except Exception as e:
         print(e)
@@ -42,12 +43,12 @@ async def on_message(message):
     username = str(message.author)
     user_message = message.content
 
-    print(user_message)
+    # print(user_message)
     channel = str(message.channel)
-    print(f'[{channel}] {username} "{user_message}"')
+    # print(f'[{channel}] {username} "{user_message}"')
     id = message.channel.id
     channel = client.get_channel(id)
-    print(message.content[0])
+    # print(message.content[0])
     if message.content[0] == '!':
         create_event(id, user_message[1:])
     # await channel.send('hello')
@@ -55,8 +56,5 @@ async def on_message(message):
     await send_message(message, user_message)
 
 
-def main():
+def run():
     client.run(token=TOKEN)
-
-
-main()

@@ -8,7 +8,7 @@ st.title("System Powiadomień Sejmowych")
 # @st.cache_data
 
 
-async def load_numbers():
+def load_numbers():
     term_number = get_term_number()
     sitting_number = get_sitting_number(term_number)
     voting_number = get_voting_number(term_number, sitting_number)
@@ -52,61 +52,37 @@ def check_interpellation_replies(term, num):
     return False
 
 
-# Inicjalizacja stanu sesji dla obserwowanych interpelacji
-if 'watched_interpellations' not in st.session_state:
-    st.session_state.watched_interpellations = []
+def loadView():
+    # Inicjalizacja stanu sesji dla obserwowanych interpelacji
+    if 'watched_interpellations' not in st.session_state:
+        st.session_state.watched_interpellations = []
 
-# Interface użytkownika
-st.header("Obserwowane Interpelacje")
-term = st.number_input("Numer Kadencji", value=10, min_value=1)
-interpellation_num = st.number_input(
-    "Numer Interpelacji", value=1, min_value=1)
+    # Interface użytkownika
+    st.header("Obserwowane Interpelacje")
+    term = st.number_input("Numer Kadencji", value=10,
+                           min_value=1, key='input_1')
+    interpellation_num = st.number_input(
+        "Numer Interpelacji", value=1, min_value=1)
 
-if st.button("Dodaj do obserwowanych"):
-    new_interpellation = (term, interpellation_num)
-    if new_interpellation not in st.session_state.watched_interpellations:
-        st.session_state.watched_interpellations.append(new_interpellation)
-        st.success(
-            f"Dodano interpelację {interpellation_num} z kadencji {term} do obserwowanych.")
-    else:
-        st.warning("Ta interpelacja jest już obserwowana.")
-
-st.subheader("Lista obserwowanych interpelacji:")
-for t, num in st.session_state.watched_interpellations:
-    st.write(f"Kadencja {t}, Interpelacja {num}")
-    if st.button(f"Usuń {t}-{num}"):
-        st.session_state.watched_interpellations.remove((t, num))
-        st.rerun()
-
-# Przycisk do manualnego sprawdzenia aktualizacji
-if st.button("Sprawdź aktualizacje interpelacji"):
-    with st.spinner("Sprawdzanie nowych głosowań i odpowiedzi na interpelacje..."):
-        new_replies = any(check_interpellation_replies(t, num)
-                          for t, num in st.session_state.watched_interpellations)
-
-        if new_replies:
-            st.success("Znaleziono nowe aktualizacje! Sprawdź powiadomienia.")
+    if st.button("Dodaj do obserwowanych"):
+        new_interpellation = (term, interpellation_num)
+        if new_interpellation not in st.session_state.watched_interpellations:
+            st.session_state.watched_interpellations.append(new_interpellation)
+            st.success(
+                f"Dodano interpelację {interpellation_num} z kadencji {term} do obserwowanych.")
         else:
-            st.info("Brak nowych aktualizacji.")
+            st.warning("Ta interpelacja jest już obserwowana.")
 
-# Przycisk do manualnego sprawdzenia aktualizacji
-if st.button("Sprawdź aktualizacje głosowań"):
-    with st.spinner("Sprawdzanie nowych głosowań i odpowiedzi na interpelacje..."):
-        new_voting = check_new_voting()
-        if new_voting:
-            st.success("Znaleziono nowe aktualizacje! Sprawdź powiadomienia.")
-        else:
-            st.info("Brak nowych aktualizacji.")
+    st.subheader("Lista obserwowanych interpelacji:")
+    for t, num in st.session_state.watched_interpellations:
+        st.write(f"Kadencja {t}, Interpelacja {num}")
+        if st.button(f"Usuń {t}-{num}"):
+            st.session_state.watched_interpellations.remove((t, num))
+            st.rerun()
 
-# Automatyczne sprawdzanie co jakiś czas (np. co 5 minut)
-if st.checkbox("Włącz automatyczne sprawdzanie interpelacji"):
-    update_interval = st.slider(
-        "Częstotliwość sprawdzania (w minutach)", 1, 60, 5)
-    st.write(f"Automatyczne sprawdzanie co {update_interval} minut.")
-
-    placeholder = st.empty()
-    while True:
-        with placeholder.container():
+    # Przycisk do manualnego sprawdzenia aktualizacji
+    if st.button("Sprawdź aktualizacje interpelacji"):
+        with st.spinner("Sprawdzanie nowych głosowań i odpowiedzi na interpelacje..."):
             new_replies = any(check_interpellation_replies(t, num)
                               for t, num in st.session_state.watched_interpellations)
 
@@ -116,20 +92,9 @@ if st.checkbox("Włącz automatyczne sprawdzanie interpelacji"):
             else:
                 st.info("Brak nowych aktualizacji.")
 
-            latest_check = time.strftime("%Y-%m-%d %H:%M:%S")
-            st.write(f"Ostatnie sprawdzenie: {latest_check}")
-
-        time.sleep(update_interval * 60)
-
-# Automatyczne sprawdzanie co jakiś czas (np. co 5 minut)
-if st.checkbox("Włącz automatyczne sprawdzanie głosowań"):
-    update_interval = st.slider(
-        "Częstotliwość sprawdzania (w minutach)", 1, 60, 5)
-    st.write(f"Automatyczne sprawdzanie co {update_interval} minut.")
-
-    placeholder = st.empty()
-    while True:
-        with placeholder.container():
+    # Przycisk do manualnego sprawdzenia aktualizacji
+    if st.button("Sprawdź aktualizacje głosowań"):
+        with st.spinner("Sprawdzanie nowych głosowań i odpowiedzi na interpelacje..."):
             new_voting = check_new_voting()
             if new_voting:
                 st.success(
@@ -137,10 +102,49 @@ if st.checkbox("Włącz automatyczne sprawdzanie głosowań"):
             else:
                 st.info("Brak nowych aktualizacji.")
 
-            latest_check = time.strftime("%Y-%m-%d %H:%M:%S")
-            st.write(f"Ostatnie sprawdzenie: {latest_check}")
+    # Automatyczne sprawdzanie co jakiś czas (np. co 5 minut)
+    if st.checkbox("Włącz automatyczne sprawdzanie interpelacji"):
+        update_interval = st.slider(
+            "Częstotliwość sprawdzania (w minutach)", 1, 60, 5)
+        st.write(f"Automatyczne sprawdzanie co {update_interval} minut.")
 
-        time.sleep(update_interval * 60)
+        placeholder = st.empty()
+        while True:
+            with placeholder.container():
+                new_replies = any(check_interpellation_replies(t, num)
+                                  for t, num in st.session_state.watched_interpellations)
+
+                if new_replies:
+                    st.success(
+                        "Znaleziono nowe aktualizacje! Sprawdź powiadomienia.")
+                else:
+                    st.info("Brak nowych aktualizacji.")
+
+                latest_check = time.strftime("%Y-%m-%d %H:%M:%S")
+                st.write(f"Ostatnie sprawdzenie: {latest_check}")
+
+            time.sleep(update_interval * 60)
+
+    # Automatyczne sprawdzanie co jakiś czas (np. co 5 minut)
+    if st.checkbox("Włącz automatyczne sprawdzanie głosowań"):
+        update_interval = st.slider(
+            "Częstotliwość sprawdzania (w minutach)", 1, 60, 5)
+        st.write(f"Automatyczne sprawdzanie co {update_interval} minut.")
+
+        placeholder = st.empty()
+        while True:
+            with placeholder.container():
+                new_voting = check_new_voting()
+                if new_voting:
+                    st.success(
+                        "Znaleziono nowe aktualizacje! Sprawdź powiadomienia.")
+                else:
+                    st.info("Brak nowych aktualizacji.")
+
+                latest_check = time.strftime("%Y-%m-%d %H:%M:%S")
+                st.write(f"Ostatnie sprawdzenie: {latest_check}")
+
+            time.sleep(update_interval * 60)
 
 
 # st.sidebar.title("Informacje")
