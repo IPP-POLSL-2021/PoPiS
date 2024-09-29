@@ -5,7 +5,7 @@ Base = declarative_base()
 
 
 class Reminders(Base):
-    __tablename__ = 'reminder'
+    __tablename__ = 'reminders'
 
     id = Column(Integer, primary_key=True)
     chanelId = Column(Integer, nullable=False)

@@ -50,10 +50,15 @@ async def on_message(message):
     channel = client.get_channel(id)
     # print(message.content[0])
     if message.content[0] == '!':
-        create_event(id, user_message[1:])
-    # await channel.send('hello')
+        date = create_event(id, user_message[1:], "discord")
+        if date == "brak":
+            await channel.send("brak zaplanowanych posiedzień")
+        else:
+            await channel.send(f"zaplonowano przypominine na {date}")
+    # await c)
 
     await send_message(message, user_message)
 
 
-client.run(token=TOKEN)
+def star_discord_bot():
+    client.run(token=TOKEN)

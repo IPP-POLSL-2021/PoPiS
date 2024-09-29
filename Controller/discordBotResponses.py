@@ -26,9 +26,10 @@ def get_respone(User_Input):
         return ""
 
 
-def create_event(id, text):
+def create_event(id, text, platfom):
     # print(id)
     db_context = DatabaseContext()
+
     session = db_context.get_session()
     commitees = CommiteesList(10)
     commiteesList = ""
@@ -38,9 +39,12 @@ def create_event(id, text):
     if text in commiteesList:
         date = CommiteeFutureSetting(10, text)
         new_reminder = Reminders(
-            chanelId=id, committeeSitting=date, platform="discord")
+            chanelId=id, committeeSitting=date, platform=platfom)
         session.add(new_reminder)
         session.commit()
+        db_context.close_session(session)
+        return date
         # print(response)
     # print(response)
     db_context.close_session(session)
+    return "brak"

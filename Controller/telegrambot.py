@@ -1,7 +1,8 @@
 import os
 import telebot
-from Controller.discordBotResponses import get_respone
+from Controller.discordBotResponses import get_respone, create_event
 from dotenv import load_dotenv
+
 load_dotenv()
 
 TELEGRAMTOKEN = os.getenv('TELEGRAMTOKEN')
@@ -20,4 +21,15 @@ def send_welcome(message):
     bot.send_message(message.chat.id, message.text)
 
 
-bot.infinity_polling()
+@bot.message_handler(commands=['przypomnij'])
+def create_reminders(message):
+    response = get_respone(message.text[1:])
+    date = create_event(message.chat.id, response, "telegram")
+    if date == "brak":
+        bot.send_message(message.chat.id, "brak posiedzeń")
+    else:
+        bot.send_message(message.chat.id, f"ustwaiono przypomninie na {date}")
+
+
+def start_telegram_bot():
+    bot.infinity_polling()

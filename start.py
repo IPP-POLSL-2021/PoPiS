@@ -1,10 +1,3 @@
-# import streamlit as st
-# import threading
-# from View import test
-# import asyncio
-# from Controller.dicordBot import run
-# from main import ViewSelection
-# from .View import test2
-# ViewSelection()
-# t1 = threading.Thread(target=run, name='t1')
-# t1.start()
+# plik tylko do uruchamiania bota discodowaego bo telglegram jakimś sposobem działa dopóki nie znjadzie się lepszych roziwąń
+from Controller.dicordBot import star_discord_bot
+star_discord_bot()
