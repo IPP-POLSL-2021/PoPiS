@@ -1,6 +1,6 @@
 import os
 import telebot
-from discordBotResponses import get_respone
+from Controller.discordBotResponses import get_respone
 from dotenv import load_dotenv
 load_dotenv()
 

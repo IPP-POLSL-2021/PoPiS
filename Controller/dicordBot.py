@@ -56,5 +56,4 @@ async def on_message(message):
     await send_message(message, user_message)
 
 
-def run():
-    client.run(token=TOKEN)
+client.run(token=TOKEN)
