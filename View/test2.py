@@ -19,7 +19,7 @@ def loadView():
         "Kod komisij", value="ASW", placeholder="Podaj kod komisji")
 
     st.markdown(
-        f"następne posiedzenie wybranej komisji,{CommiteeFutureSetting(term_number,committeeCode)}")
+        f"posiedzenia wybranej komisji w ciągu ostanich 3 dni,{CommiteeFutureSetting(term_number,committeeCode)}")
     correlationValue = st.number_input(
         label="Podaj jak bardzo wartości mają być skorelowane [-1;1]", min_value=-1.0, max_value=1.0)
     type = st.selectbox("Wybierz rodzaj analizowanych wyników",
