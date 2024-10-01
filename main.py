@@ -23,7 +23,7 @@ def ViewSelection():
 
 
 ViewSelection()
-try:
-    start_telegram_bot()
-except Exception as e:
-    print(f"chyba już działa nwm masz tu błąd i naparw{e}")
+# try:
+#     start_telegram_bot()
+# except Exception as e:
+#     print(f"chyba już działa nwm masz tu błąd i naparw{e}")

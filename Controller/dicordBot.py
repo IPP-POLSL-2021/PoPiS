@@ -52,7 +52,9 @@ async def on_message(message):
     if message.content[0] == '!':
         date = create_event(id, user_message[1:], "discord")
         if date == "brak":
-            await channel.send("brak zaplanowanych posiedzień")
+            await channel.send("nieznalezniono komisji")
+        elif date == "brak posiedzeń":
+            await channel.send(date)
         else:
             await channel.send(f"zaplonowano przypominine na {date}")
     # await c)

@@ -1,11 +1,10 @@
 from sqlalchemy import create_engine
 import requests
 from Controller.Commitees import CommiteesList, CommiteeFutureSetting
-from sqlalchemy.orm import sessionmaker
-from Model.DatabaseContext import DatabaseContext
-from Model.RemindersModel import Reminders
+
 import sys
 
+import pandas as pd
 #####
 
 
@@ -28,9 +27,8 @@ def get_respone(User_Input):
 
 def create_event(id, text, platfom):
     # print(id)
-    db_context = DatabaseContext()
+    remindersList = pd.read_csv("./Data/powiadomienia.csv")
 
-    session = db_context.get_session()
     commitees = CommiteesList(10)
     commiteesList = ""
     for commitee in commitees:
@@ -38,13 +36,15 @@ def create_event(id, text, platfom):
         commiteesList += f":{commitee['code']} "
     if text in commiteesList:
         date = CommiteeFutureSetting(10, text)
-        new_reminder = Reminders(
-            chanelId=id, committeeSitting=date, platform=platfom)
-        session.add(new_reminder)
-        session.commit()
-        db_context.close_session(session)
+        new_reminder = {
+            'chanelId': id, 'committeeSitting': date, 'platform': platfom}
+        if date is None:
+            return "brak posiedzeń"
+        if remindersList.loc[id, date, platfom] is None:
+            df = pd.DataFrame(new_reminder)
+            df.to_csv(remindersList, index=False, mode='a', header=False)
         return date
         # print(response)
     # print(response)
-    db_context.close_session(session)
+
     return "brak"

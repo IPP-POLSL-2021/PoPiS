@@ -8,7 +8,7 @@ class DatabaseContext:
     def __init__(self):
         Base = declarative_base()
         self.engine = create_engine(
-            'postgresql://c179:C577_aee233@psql01.mikr.us/db_c179')
+        )
         engine = self.engine
         self.Session = sessionmaker(bind=self.engine)
         Base.metadata.create_all(engine)
