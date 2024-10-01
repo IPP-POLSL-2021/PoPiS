@@ -56,7 +56,7 @@ async def on_message(message):
         elif date == "brak posiedzeń":
             await channel.send(date)
         else:
-            await channel.send(f"zaplonowano przypominine na {date}")
+            await channel.send(f" {date}")
     # await c)
 
     await send_message(message, user_message)
