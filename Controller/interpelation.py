@@ -2,7 +2,7 @@
 # Or type hints for functions, or comments directly next to function name so vscode nicely displays
 import requests
 import datetime
-from MP import get_name
+from Controller.MP import get_name
 from functools import wraps
 
 def get_interpelation(term, num): # Przyjmuje numer kadencji i interpelacji a zwraca odpowiedź w formie json
