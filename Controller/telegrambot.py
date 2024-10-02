@@ -23,14 +23,15 @@ def send_welcome(message):
 
 @bot.message_handler(commands=['powiadom'])
 def create_reminders(message):
-    response = get_respone(message.text[1:])
+    # message = message.split(" ")[1]
+    response = message.text.split(" ")[1]
     date = create_event(message.chat.id, response, "telegram")
     if date == "brak":
         bot.send_message(message.chat.id, "nieznalezniono komisji")
     elif date == "brak posiedzeń":
         bot.send_message(message.chat.id, date)
     else:
-        bot.send_message(message.chat.id, f"ustwaiono przypomninie na {date}")
+        bot.send_message(message.chat.id, f" {date}")
 
 
 def start_telegram_bot():

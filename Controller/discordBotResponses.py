@@ -39,6 +39,10 @@ def create_event(id, text, platfom, userEvent=True):
         new_reminder = {
             'chanelId': id, 'platform': platfom, 'committee': text}
         if date is None:
+            if not ((new_reminder['chanelId'] in remindersList['chanelId'].values) and (new_reminder['platform'] in remindersList['platform'].values) and (new_reminder['committee'] in remindersList['committee'].values)):
+                df = pd.DataFrame([new_reminder])
+                df.to_csv("./Data/powiadomienia.csv",
+                          mode='a', index=False, header=False)
             return "brak nowych posiedzeń"
         elif userEvent is False:
             return f"w ciągu ostanich trzech dni komijsa o kodzei {text} miała ostanie spotkanie {date}"
@@ -50,9 +54,9 @@ def create_event(id, text, platfom, userEvent=True):
             df.to_csv("./Data/powiadomienia.csv",
                       mode='a', index=False, header=False)
             if date is not None:
-                last = f"ostanie spotkanie miało mijesce {date}"
+                last = f"ostanie o kodzie {text} spotkanie miało mijesce {date}"
         return f"dodano do obserwoanych {last}"
         # print(response)
     # print(response)
-
-    return "brak"
+    else:
+        return "brak"
