@@ -1,11 +1,51 @@
 from sqlalchemy import create_engine
 import requests
 from Controller.Commitees import CommiteesList, CommiteeFutureSetting
-
+from datetime import datetime, timedelta
 import sys
 
 import pandas as pd
 #####
+
+lastCheckDate = ""
+
+
+async def check_24_hours(file):
+    # Odczytaj datę z pliku
+    last_check_str = readDate(file)
+
+    # Sprawdź, czy plik był kiedykolwiek zapisany
+    if last_check_str:
+        last_check = datetime.strptime(last_check_str, '%Y-%m-%d %H:%M:%S')
+    else:
+        last_check = None
+
+    # Oblicz różnicę czasu
+    current_time = datetime.now()
+
+    if last_check is None or (current_time - last_check) >= timedelta(hours=24):
+        remindersList = pd.read_csv("./Data/powiadomienia.csv")
+        write(file, current_time)
+        for reminder in remindersList:
+            create_event(reminder['chanelId'],
+                         reminder['platform'], reminder['committee'], False)
+
+        return True
+    else:
+        return False
+
+
+def write(file, lastCheckDate):
+
+    with open(file, mode="w") as writingFile:
+        writingFile.write(lastCheckDate)
+
+
+def readDate(file):
+    with open(file, mode="r") as readingFile:
+        lastCheckDate = readingFile.read()
+        # isRead = True
+        return lastCheckDate
 
 
 def get_respone(User_Input):
