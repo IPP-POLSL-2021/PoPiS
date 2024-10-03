@@ -37,7 +37,7 @@ async def on_ready():
 
 
 @client.event
-async def on_message(message):
+async def on_message(message, AutoDate, auto=False):
     if message.author == client.user:
         return
     username = str(message.author)
@@ -50,7 +50,9 @@ async def on_message(message):
     channel = client.get_channel(id)
     # print(message.content[0])
     if message.content[0] == '!':
+
         date = create_event(id, user_message[1:], "discord")
+
         if date == "brak":
             await channel.send("nieznalezniono komisji")
         elif date == "brak posiedzeń":

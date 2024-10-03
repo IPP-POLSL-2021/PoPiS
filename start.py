@@ -3,5 +3,5 @@ from Controller.dicordBot import star_discord_bot
 from Controller.telegrambot import start_telegram_bot
 from Controller.discordBotResponses import check_24_hours
 start_telegram_bot()
-check_24_hours()
-star_discord_bot()
+# check_24_hours()
+# star_discord_bot()

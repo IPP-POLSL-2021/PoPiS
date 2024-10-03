@@ -22,8 +22,11 @@ def send_welcome(message):
 
 
 @bot.message_handler(commands=['powiadom'])
-def create_reminders(message):
+def create_reminders(message="", auto=False, id="", Auto_date=""):
     # message = message.split(" ")[1]
+    # if auto == True:
+    #     bot.send_message(id, Auto_date)
+    # else:
     response = message.text.split(" ")[1]
     date = create_event(message.chat.id, response, "telegram")
     if date == "brak":

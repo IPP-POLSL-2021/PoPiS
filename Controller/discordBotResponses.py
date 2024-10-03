@@ -3,6 +3,7 @@ import requests
 from Controller.Commitees import CommiteesList, CommiteeFutureSetting
 from datetime import datetime, timedelta
 import sys
+from Controller.telegrambot import create_reminders
 
 import pandas as pd
 #####
@@ -10,7 +11,7 @@ import pandas as pd
 lastCheckDate = ""
 
 
-async def check_24_hours(file):
+async def check_24_hours(file, platofrm=""):
     # Odczytaj datę z pliku
     last_check_str = readDate(file)
 
@@ -26,11 +27,13 @@ async def check_24_hours(file):
     if last_check is None or (current_time - last_check) >= timedelta(hours=24):
         remindersList = pd.read_csv("./Data/powiadomienia.csv")
         write(file, current_time)
+        newList = ""
         for reminder in remindersList:
-            create_event(reminder['chanelId'],
-                         reminder['platform'], reminder['committee'], False)
-
-        return True
+            # create_event(reminder['chanelId'],
+            #              reminder['platform'], reminder['committee'], False)
+            if reminder['platform'] == platofrm:
+                newList += f"{reminder['chanelId']} {reminder['platform']} {reminder['committee']}\n"
+        return newList
     else:
         return False
 
@@ -85,7 +88,14 @@ def create_event(id, text, platfom, userEvent=True):
                           mode='a', index=False, header=False)
             return "brak nowych posiedzeń"
         elif userEvent is False:
-            return f"w ciągu ostanich trzech dni komijsa o kodzei {text} miała ostanie spotkanie {date}"
+            Auto_date = f"w ciągu ostanich trzech dni komijsa o kodzei {text} miała ostanie spotkanie {date}"
+            if platfom == "discord":
+                # id.send(
+                #     f"w ciągu ostanich trzech dni komijsa o kodzei {text} miała ostanie spotkanie {date}"
+                # )
+                print("narazie pusto")
+            else:
+                create_reminders("", True, id, Auto_date)
         # print(remindersList['platform'])
 
         if not ((new_reminder['chanelId'] in remindersList['chanelId'].values) and (new_reminder['platform'] in remindersList['platform'].values) and (new_reminder['committee'] in remindersList['committee'].values)):
