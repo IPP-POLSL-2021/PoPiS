@@ -1,9 +1,10 @@
 import os
 import telebot
-from Controller.discordBotResponses import get_respone, create_event
+from Controller.discordBotResponses import get_respone, create_event, check_24_hours
 from dotenv import load_dotenv
-
+import threading
 load_dotenv()
+
 
 TELEGRAMTOKEN = os.getenv('TELEGRAMTOKEN')
 bot = telebot.TeleBot(TELEGRAMTOKEN)
@@ -37,5 +38,17 @@ def create_reminders(message="", auto=False, id="", Auto_date=""):
         bot.send_message(message.chat.id, f" {date}")
 
 
+def telegramCheck():
+    while True:
+        list = check_24_hours("./Data/time.txt", "telegram")
+        if list is not False:
+            # firstSplit=list.split("\n")
+            for element in list:
+                create_event(
+                    element["chanelId"], f'!{element["committee"],element["platform"]}')
+
+
 def start_telegram_bot():
+    checkingThread = threading.Thread(target=telegramCheck)
+    checkingThread.start()
     bot.infinity_polling()
