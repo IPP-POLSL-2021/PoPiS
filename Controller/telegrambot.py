@@ -48,6 +48,7 @@ def telegramCheck():
                 # create_reminders("",True)
                 date = create_event(
                     row.chanelId, row.committee, row.platform)
+                # to bardzo istotna część kodu z jakiegoś powodu bez tego nie dizłało
                 print("huuuuuuuuj")
                 print(date)
 

@@ -3,8 +3,8 @@ import asyncio
 import os
 from dotenv import load_dotenv
 from discord import Intents, Client, Message
-
-from Controller.discordBotResponses import get_respone, create_event
+import threading
+from Controller.discordBotResponses import get_respone, create_event, check_24_hours
 load_dotenv()
 # aby wysłąć przypomnienie w  gdzieś musiałbym przetrzymywać cały obiekt message albo przynajmniej podobiekt author
 TOKEN = os.getenv('TOKEN')
@@ -13,6 +13,28 @@ intents = Intents.default()
 intents.messages = True
 intents.message_content = True
 client = Client(intents=intents)
+
+
+async def discorCheck():
+    while True:
+        list = check_24_hours("./Data/time.txt", "discord")
+        if list is not False:
+            # firstSplit=list.split("\n")
+            for row in list.itertuples(index=False):
+                print(row)
+                # create_reminders("",True)
+                date = create_event(
+                    row.chanelId, row.committee, row.platform)
+                # to bardzo istotna część kodu z jakiegoś powodu bez tego nie dizłało
+                print("huuuuuuuuj")
+                print(date)
+
+                if date == "brak":
+                    await row.chanelId.send("nieznalezniono komisji")
+                elif date == "brak posiedzeń":
+                    await row.chanelId.send(date)
+                else:
+                    await row.chanelId.send(f" {date}")
 
 
 async def send_message(message, user_message):
@@ -65,4 +87,6 @@ async def on_message(message, AutoDate, auto=False):
 
 
 def star_discord_bot():
+    checkingThread = threading.Thread(target=discorCheck)
+    checkingThread.start()
     client.run(token=TOKEN)
