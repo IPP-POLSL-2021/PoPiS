@@ -29,6 +29,7 @@ def check_24_hours(file, platofrm=""):
         write(file, current_time)
         newList = ""
         filtered_reminders = remindersList[remindersList['platform'] == platofrm]
+        print(filtered_reminders)
 
         return filtered_reminders
     else:
@@ -100,8 +101,8 @@ def create_event(id, text, platfom, userEvent=True):
             df = pd.DataFrame([new_reminder])
             df.to_csv("./Data/powiadomienia.csv",
                       mode='a', index=False, header=False)
-            if date is not None:
-                last = f"ostanie o kodzie {text} spotkanie miało mijesce {date}"
+        if date is not None:
+            last = f"ostanie o kodzie {text} spotkanie miało mijesce {date}"
         return f"dodano do obserwoanych {last}"
         # print(response)
     # print(response)

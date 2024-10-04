@@ -43,9 +43,20 @@ def telegramCheck():
         list = check_24_hours("./Data/time.txt", "telegram")
         if list is not False:
             # firstSplit=list.split("\n")
-            for element in list:
-                create_event(
-                    element["chanelId"], f'!{element["committee"],element["platform"]}')
+            for row in list.itertuples(index=False):
+                print(row)
+                # create_reminders("",True)
+                date = create_event(
+                    row.chanelId, row.committee, row.platform)
+                print("huuuuuuuuj")
+                print(date)
+
+                if date == "brak":
+                    bot.send_message(row.chanelId, "nieznalezniono komisji")
+                elif date == f"brak posiedzeń komisji {row.committee}":
+                    bot.send_message(row.chanelId, date)
+                else:
+                    bot.send_message(row.chanelId, f" {date}")
 
 
 def start_telegram_bot():
