@@ -26,7 +26,7 @@ async def discorCheck():
                 date = create_event(
                     row.chanelId, row.committee, row.platform)
                 # to bardzo istotna część kodu z jakiegoś powodu bez tego nie dizłało
-                print("huuuuuuuuj")
+                print("działa?")
                 print(date)
 
                 if date == "brak":
