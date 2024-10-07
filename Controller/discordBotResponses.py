@@ -11,7 +11,7 @@ import pandas as pd
 lastCheckDate = ""
 
 
-def check_24_hours(file, platofrm=""):
+def check_24_hours(file, platform=""):
     # Odczytaj datę z pliku
     last_check_str = readDate(file)
 
@@ -28,7 +28,7 @@ def check_24_hours(file, platofrm=""):
         remindersList = pd.read_csv("./Data/powiadomienia.csv")
         write(file, current_time)
         newList = ""
-        filtered_reminders = remindersList[remindersList['platform'] == platofrm]
+        filtered_reminders = remindersList[remindersList['platform'] == platform]
         print(filtered_reminders)
 
         return filtered_reminders
@@ -66,7 +66,7 @@ def get_respone(User_Input):
         return ""
 
 
-def create_event(id, text, platfom, userEvent=True):
+def create_event(id, text, platform, userEvent=True):
     # print(id)
     remindersList = pd.read_csv("./Data/powiadomienia.csv")
     last = ""
@@ -78,7 +78,7 @@ def create_event(id, text, platfom, userEvent=True):
     if text in commiteesList:
         date = CommiteeFutureSetting(10, text)
         new_reminder = {
-            'channelId': id, 'platform': platfom, 'committee': text}
+            'channelId': id, 'platform': platform, 'committee': text}
         if date is None:
             if not ((new_reminder['channelId'] in remindersList['channelId'].values) and (new_reminder['platform'] in remindersList['platform'].values) and (new_reminder['committee'] in remindersList['committee'].values)):
                 df = pd.DataFrame([new_reminder])
@@ -87,7 +87,7 @@ def create_event(id, text, platfom, userEvent=True):
             return "brak nowych posiedzeń"
         elif userEvent is False:
             Auto_date = f"w ciągu ostanich trzech dni komisja o kodzie {text} miała ostatnie spotkanie {date}"
-            if platfom == "discord":
+            if platform == "discord":
                 # id.send(
                 #     f"w ciągu ostatnich trzech dni komisja o kodzie {text} miała ostanie spotkanie {date}"
                 # )
