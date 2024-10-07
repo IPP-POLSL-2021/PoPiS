@@ -8,56 +8,59 @@ st.title("System Powiadomień Sejmowych")
 # @st.cache_data
 
 
-def loadView():
+def load_numbers():
+    term_number = get_term_number()
+    sitting_number = get_sitting_number(term_number)
+    voting_number = get_voting_number(term_number, sitting_number)
+    return term_number, sitting_number, voting_number
 
-    def load_numbers():
-        term_number = get_term_number()
-        sitting_number = get_sitting_number(term_number)
-        voting_number = get_voting_number(term_number, sitting_number)
-        return term_number, sitting_number, voting_number
+# Funkcja do sprawdzania nowych głosowań
 
-    # Funkcja do sprawdzania nowych głosowań
 
-    def check_new_voting():
-        term_number, sitting_number, voting_number = load_numbers()
-        last_voting = st.session_state.get('last_voting', (0, 0, 0))
+def check_new_voting():
+    term_number, sitting_number, voting_number = load_numbers()
+    last_voting = st.session_state.get('last_voting', (0, 0, 0))
 
-        if (term_number, sitting_number, voting_number) != last_voting:
+    if (term_number, sitting_number, voting_number) != last_voting:
+        send_push(
+            title="Nowe głosowanie!",
+            body=f"Głosowanie nr {voting_number} na {sitting_number} posiedzeniu {term_number} kadencji Sejmu"
+        )
+        st.session_state.last_voting = (
+            term_number, sitting_number, voting_number)
+        return True
+    return False
+
+# Funkcja do sprawdzania odpowiedzi na interpelacje
+
+
+def check_interpellation_replies(term, num):
+    current_replies = get_replies(term, num)[0]
+    last_replies = st.session_state.get(f'last_replies_{term}_{num}', [])
+
+    if current_replies != last_replies:
+        new_replies = [
+            reply for reply in current_replies if reply not in last_replies]
+        if new_replies:
+            title = get_title(term, num)
             send_push(
-                title="Nowe głosowanie!",
-                body=f"Głosowanie nr {voting_number} na {sitting_number} posiedzeniu {term_number} kadencji Sejmu"
+                title="Nowa odpowiedź na interpelację!",
+                body=f"Otrzymano nową odpowiedź na interpelację: {title}"
             )
-            st.session_state.last_voting = (
-                term_number, sitting_number, voting_number)
+            st.session_state[f'last_replies_{term}_{num}'] = current_replies
             return True
-        return False
+    return False
 
-    # Funkcja do sprawdzania odpowiedzi na interpelacje
 
-    def check_interpellation_replies(term, num):
-        current_replies = get_replies(term, num)[0]
-        last_replies = st.session_state.get(f'last_replies_{term}_{num}', [])
-
-        if current_replies != last_replies:
-            new_replies = [
-                reply for reply in current_replies if reply not in last_replies]
-            if new_replies:
-                title = get_title(term, num)
-                send_push(
-                    title="Nowa odpowiedź na interpelację!",
-                    body=f"Otrzymano nową odpowiedź na interpelację: {title}"
-                )
-                st.session_state[f'last_replies_{term}_{num}'] = current_replies
-                return True
-        return False
-
+def loadView():
     # Inicjalizacja stanu sesji dla obserwowanych interpelacji
     if 'watched_interpellations' not in st.session_state:
         st.session_state.watched_interpellations = []
 
     # Interface użytkownika
     st.header("Obserwowane Interpelacje")
-    term = st.number_input("Numer Kadencji", value=10, min_value=1)
+    term = st.number_input("Numer Kadencji", value=10,
+                           min_value=1, key='input_1')
     interpellation_num = st.number_input(
         "Numer Interpelacji", value=1, min_value=1)
 
@@ -143,5 +146,6 @@ def loadView():
 
             time.sleep(update_interval * 60)
 
-    # st.sidebar.title("Informacje")
-    # st.sidebar.info("Ta aplikacja pozwala śledzić nowe głosowania w Sejmie oraz odpowiedzi na wybrane interpelacje.")
+
+# st.sidebar.title("Informacje")
+# st.sidebar.info("Ta aplikacja pozwala śledzić nowe głosowania w Sejmie oraz odpowiedzi na wybrane interpelacje.")

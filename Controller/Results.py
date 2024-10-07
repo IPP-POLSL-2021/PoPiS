@@ -14,7 +14,7 @@ def getResults(Correlation, electionSelections, type):
             Results = pd.read_csv(
                 f"./Data/wyniki_gl_na_listy_po_wojewodztwach{str}_sejm_utf8.csv", sep=";",  decimal=",")
             Results = Results.drop(labels=["Województwo"], axis=1)
-            print(Results.columns)
+            # print(Results.columns)
         case"okręgi":
 
             Results = pd.read_csv(
@@ -98,10 +98,10 @@ def getResults(Correlation, electionSelections, type):
     # Drop only the columns that exist in the DataFrame
     Results = Results.drop(
         columns=[col for col in columns_to_drop if col in Results.columns], axis=1)
-    print(Results)
+    # print(Results)
     Corr_Matrix = Results.corr()
     Corr_Matrix_Larger_Than = Corr_Matrix > Correlation
     Corr_Matrix = Corr_Matrix[Corr_Matrix_Larger_Than]
-    print(Corr_Matrix)
+    # print(Corr_Matrix)
 
     return Corr_Matrix, Results

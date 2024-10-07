@@ -81,26 +81,26 @@ if __name__ == "__main__":
     print(get_date(10, 3999, 1, response))
     print(get_authors(10, 3999, response))
     print(get_receipent(10, 3999, response))
-    # Expected Output
-    # Interpelacja w sprawie ministerialnej oceny skutków gospodarczych tzw. kredytu 0%
-    # 2024-07-25
-    # ['Sławomir Mentzen', 'Bartłomiej Pejo', 'Ryszard Wilk']
-    # ['minister rozwoju i technologii']
-    # ['https://orka2.sejm.gov.pl/INT10.nsf/klucz/ATTD8AJ46/$FILE/i03999-o1.pdf']
+    # # Expected Output
+    # # Interpelacja w sprawie ministerialnej oceny skutków gospodarczych tzw. kredytu 0%
+    # # 2024-07-25
+    # # ['Sławomir Mentzen', 'Bartłomiej Pejo', 'Ryszard Wilk']
+    # # ['minister rozwoju i technologii']
+    # # ['https://orka2.sejm.gov.pl/INT10.nsf/klucz/ATTD8AJ46/$FILE/i03999-o1.pdf']
 
     print(get_replies(10, 3999)[0])
     print(get_replies(10, 12)[0])
     print(get_replies(10, 3)[0])
-    # Expected Output
-    # ['https://orka2.sejm.gov.pl/INT10.nsf/klucz/ATTD8AJ46/$FILE/i03999-o1.pdf']
-    # [None]
-    # ['https://orka2.sejm.gov.pl/INT10.nsf/klucz/ATTCYYKKZ/$FILE/i00003-o1.pdf', 'https://orka2.sejm.gov.pl/INT10.nsf/klucz/ATTCZEK3B/$FILE/i00003-o2_1.pdf', 'https://orka2.sejm.gov.pl/INT10.nsf/klucz/ATTCZEK3B/$FILE/i00003-o2_2.pdf']
+    # # Expected Output
+    # # ['https://orka2.sejm.gov.pl/INT10.nsf/klucz/ATTD8AJ46/$FILE/i03999-o1.pdf']
+    # # [None]
+    # # ['https://orka2.sejm.gov.pl/INT10.nsf/klucz/ATTCYYKKZ/$FILE/i00003-o1.pdf', 'https://orka2.sejm.gov.pl/INT10.nsf/klucz/ATTCZEK3B/$FILE/i00003-o2_1.pdf', 'https://orka2.sejm.gov.pl/INT10.nsf/klucz/ATTCZEK3B/$FILE/i00003-o2_2.pdf']
 
     print(get_replies(10, 3999)[1], end="\n ============================ \n")
     print(get_replies(10, 12)[1], end="\n ============================ \n")
     print(get_replies(10, 3)[1])
-    # Expected Output
-    # []
+    # # Expected Output
+    # # []
     # ============================
     # ['<!DOCTYPE html>\n<html lang="pl">\n<head>\n<meta name="charset" content="utf-8">\n<title>Odpowiedź na interpelację w sprawie wydatków na\xa0świadczenie\xa0rodzicielskie\xa0("kosiniakowe"), wysokości tego świadczenia oraz\xa0liczby osób otrzymujących to świadczenie\xa0w\xa0latach 2016-2022</title>\n</head>\n<body>\n<h1>Odpowiedź na interpelację nr 12</h1>\r\n\t<p class="int-title">w sprawie wydatków na\xa0świadczenie\xa0rodzicielskie\xa0("kosiniakowe"), wysokości tego świadczenia oraz\xa0liczby osób otrzymujących to świadczenie\xa0w\xa0latach 2016-2022</p>\r\n\t<p class="intAuthor">Odpowiadający: minister rodziny, pracy i polityki społecznej Agnieszka Dziemianowicz-Bąk</p>\r\n\t<p class="intDate">Warszawa, 06-02-2024</p>\r\n\t<p>Szanowny Panie Marszałku,</p>\r\n<p>w związku z interpelacją nr 12 Pani Poseł Kariny Anny Bosak z dnia 7 grudnia 2023 r. w sprawie wydatków na świadczenie rodzicielskie („kosiniakowe“), wysokości tego świadczenia oraz liczby osób otrzymujących to świadczenie w latach 2016–2022, poniżej przekazuję odpowiednie informacje w tym zakresie.</p>\r\n<p>Pragnę zwrócić uwagę, że sprawozdania rzeczowo-finansowe z realizacji świadczeń rodzinnych zawierają dane zagregowane obejmujące liczbę wypłaconych świadczeń oraz wydatków na nie. Nie zawierają one wyodrębnionej kategorii świadczeń pobranych przez beneficjentów, wynikających z art. 17c ust. 1 i ust. 2 ustawy o świadczeniach rodzinnych.</p>\r\n<p>Ponadto informuję, iż wysokość wypłacanego świadczenia rodzicielskiego pozostaje niezmienna od chwili jego wprowadzenia. W związku z powyższym podczas weryfikacji w 2018 r. oraz 2021 r. Radzie Dialogu Społecznego nie została zaproponowana zmiana wysokości świadczenia. </p>\r\n<p>Informuję również, że kwoty, o których mowa w art. 5 ust. 1 i 2 oraz art. 15b ust. 2, zostaną poddane weryfikacji i odpowiedniej analizie w roku 2024 zgodnie z art. 18 ww. ustawy.</p>\r\n\r\n<p>Tabela 1 – Dane dotyczące wypłat świadczenia rodzicielskiego w latach 2016–2022</p>\r\n\r\n<table border="1" cellpadding="5">\r\n <tbody>\r\n  <tr>\r\n   <td>  </td>\r\n   <td> <p><strong>Wydatki w mln zł</strong></p> </td>\r\n   <td> <p><strong>Przeciętna liczba świadczeniobiorców w tys.</strong></p> </td>\r\n  </tr>\r\n  <tr>\r\n   <td> <p><strong>2016</strong></p> </td>\r\n   <td> <p>862,9</p> </td>\r\n   <td> <p>78</p> </td>\r\n  </tr>\r\n  <tr>\r\n   <td> <p><strong>2017</strong></p> </td>\r\n   <td> <p>1 044,6</p> </td>\r\n   <td> <p>94,5</p> </td>\r\n  </tr>\r\n  <tr>\r\n   <td> <p><strong>2018</strong></p> </td>\r\n   <td> <p>999,4</p> </td>\r\n   <td> <p>91,4</p> </td>\r\n  </tr>\r\n  <tr>\r\n   <td> <p><strong>2019</strong></p> </td>\r\n   <td> <p>920,2</p> </td>\r\n   <td> <p>84,3</p> </td>\r\n  </tr>\r\n  <tr>\r\n   <td> <p><strong>2020</strong></p> </td>\r\n   <td> <p>862,9</p> </td>\r\n   <td> <p>79,1</p> </td>\r\n  </tr>\r\n  <tr>\r\n   <td> <p><strong>2021</strong></p> </td>\r\n   <td> <p>784,6</p> </td>\r\n   <td> <p>72,6</p> </td>\r\n  </tr>\r\n  <tr>\r\n   <td> <p><strong>2022</strong></p> </td>\r\n   <td> <p>678,5</p> </td>\r\n   <td> <p>62,3</p> </td>\r\n  </tr>\r\n </tbody>\r\n</table>\r\n\r\n\r\n<p>Z wyrazami szacunku</p>\r\n<p>Agnieszka Dziemianowicz-Bąk<br>Minister Rodziny, Pracy i Polityki Społecznej</p>\r\n\r\n\r\n</body>\n</html>']
     # ============================
