@@ -13,9 +13,9 @@ bot = telebot.TeleBot(TELEGRAMTOKEN)
 @bot.message_handler(commands=['komisje', ''])
 def send_welcome(message):
     print(message.text)
-    # w przypadku telegramu wystarczy w bazie przechować id cztau i date
-    response = get_respone(message.text[1:])
-    # for responsee in responseArray:
+    # w przypadku telegramu wystarczy w bazie przechować id czatu i date
+    response = get_response(message.text[1:])
+    # for response in responseArray:
 
     # print(response)
     bot.reply_to(message, f"oto lista komisji{response}")
@@ -31,7 +31,7 @@ def create_reminders(message="", auto=False, id="", Auto_date=""):
     response = message.text.split(" ")[1]
     date = create_event(message.chat.id, response, "telegram")
     if date == "brak":
-        bot.send_message(message.chat.id, "nieznalezniono komisji")
+        bot.send_message(message.chat.id, "Nie znaleziono komisji")
     elif date == "brak posiedzeń":
         bot.send_message(message.chat.id, date)
     else:
@@ -47,17 +47,17 @@ def telegramCheck():
                 print(row)
                 # create_reminders("",True)
                 date = create_event(
-                    row.chanelId, row.committee, row.platform)
+                    row.channelId, row.committee, row.platform)
                 # to bardzo istotna część kodu z jakiegoś powodu bez tego nie dizłało
-                print("dizła?")
+                print("działa?")
                 print(date)
 
                 if date == "brak":
-                    bot.send_message(row.chanelId, "nieznalezniono komisji")
+                    bot.send_message(row.channelId, "Nie znaleziono komisji")
                 elif date == f"brak posiedzeń komisji {row.committee}":
-                    bot.send_message(row.chanelId, date)
+                    bot.send_message(row.channelId, date)
                 else:
-                    bot.send_message(row.chanelId, f" {date}")
+                    bot.send_message(row.channelId, f" {date}")
 
 
 def start_telegram_bot():
