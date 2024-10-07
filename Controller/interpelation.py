@@ -77,10 +77,10 @@ def get_replies(term, num, response=False):
 if __name__ == "__main__":
     response = get_interpelation(10, 3999)
 
-    # print(get_title(10, 3999, response))
-    # print(get_date(10, 3999, 1, response))
-    # print(get_authors(10, 3999, response))
-    # print(get_receipent(10, 3999, response))
+    print(get_title(10, 3999, response))
+    print(get_date(10, 3999, 1, response))
+    print(get_authors(10, 3999, response))
+    print(get_receipent(10, 3999, response))
     # # Expected Output
     # # Interpelacja w sprawie ministerialnej oceny skutków gospodarczych tzw. kredytu 0%
     # # 2024-07-25
@@ -88,17 +88,17 @@ if __name__ == "__main__":
     # # ['minister rozwoju i technologii']
     # # ['https://orka2.sejm.gov.pl/INT10.nsf/klucz/ATTD8AJ46/$FILE/i03999-o1.pdf']
 
-    # print(get_replies(10, 3999)[0])
-    # print(get_replies(10, 12)[0])
-    # print(get_replies(10, 3)[0])
+    print(get_replies(10, 3999)[0])
+    print(get_replies(10, 12)[0])
+    print(get_replies(10, 3)[0])
     # # Expected Output
     # # ['https://orka2.sejm.gov.pl/INT10.nsf/klucz/ATTD8AJ46/$FILE/i03999-o1.pdf']
     # # [None]
     # # ['https://orka2.sejm.gov.pl/INT10.nsf/klucz/ATTCYYKKZ/$FILE/i00003-o1.pdf', 'https://orka2.sejm.gov.pl/INT10.nsf/klucz/ATTCZEK3B/$FILE/i00003-o2_1.pdf', 'https://orka2.sejm.gov.pl/INT10.nsf/klucz/ATTCZEK3B/$FILE/i00003-o2_2.pdf']
 
-    # print(get_replies(10, 3999)[1], end="\n ============================ \n")
-    # print(get_replies(10, 12)[1], end="\n ============================ \n")
-    # print(get_replies(10, 3)[1])
+    print(get_replies(10, 3999)[1], end="\n ============================ \n")
+    print(get_replies(10, 12)[1], end="\n ============================ \n")
+    print(get_replies(10, 3)[1])
     # # Expected Output
     # # []
     # ============================
