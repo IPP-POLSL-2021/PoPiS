@@ -15,7 +15,7 @@ intents.message_content = True
 client = Client(intents=intents)
 
 
-async def discorCheck():
+async def discordCheck():
     while True:
         list = check_24_hours("./Data/time.txt", "discord")
         if list is not False:
@@ -24,17 +24,17 @@ async def discorCheck():
                 print(row)
                 # create_reminders("",True)
                 date = create_event(
-                    row.chanelId, row.committee, row.platform)
+                    row.channelId, row.committee, row.platform)
                 # to bardzo istotna część kodu z jakiegoś powodu bez tego nie dizłało
                 print("działa?")
                 print(date)
 
                 if date == "brak":
-                    await row.chanelId.send("nieznalezniono komisji")
+                    await row.channelId.send("nie znaleziono komisji")
                 elif date == "brak posiedzeń":
-                    await row.chanelId.send(date)
+                    await row.channelId.send(date)
                 else:
-                    await row.chanelId.send(f" {date}")
+                    await row.channelId.send(f" {date}")
 
 
 async def send_message(message, user_message):
@@ -46,9 +46,9 @@ async def send_message(message, user_message):
     try:
         response = get_respone(user_message)
         responseArray = response.split('\n')
-        for responsee in responseArray:
-            # print(responsee)
-            await message.author.send(responsee) if is_private else await message.channel.send(responsee)
+        for response in responseArray:
+            # print(response)
+            await message.author.send(response) if is_private else await message.channel.send(response)
     except Exception as e:
         print(e)
 
@@ -76,7 +76,7 @@ async def on_message(message, AutoDate, auto=False):
         date = create_event(id, user_message[1:], "discord")
 
         if date == "brak":
-            await channel.send("nieznalezniono komisji")
+            await channel.send("nie znaleziono komisji")
         elif date == "brak posiedzeń":
             await channel.send(date)
         else:
@@ -86,7 +86,7 @@ async def on_message(message, AutoDate, auto=False):
     await send_message(message, user_message)
 
 
-def star_discord_bot():
-    checkingThread = threading.Thread(target=discorCheck)
+def start_discord_bot():
+    checkingThread = threading.Thread(target=discordCheck)
     checkingThread.start()
     client.run(token=TOKEN)

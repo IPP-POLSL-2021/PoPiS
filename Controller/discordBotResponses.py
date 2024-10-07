@@ -78,32 +78,32 @@ def create_event(id, text, platfom, userEvent=True):
     if text in commiteesList:
         date = CommiteeFutureSetting(10, text)
         new_reminder = {
-            'chanelId': id, 'platform': platfom, 'committee': text}
+            'channelId': id, 'platform': platfom, 'committee': text}
         if date is None:
-            if not ((new_reminder['chanelId'] in remindersList['chanelId'].values) and (new_reminder['platform'] in remindersList['platform'].values) and (new_reminder['committee'] in remindersList['committee'].values)):
+            if not ((new_reminder['channelId'] in remindersList['channelId'].values) and (new_reminder['platform'] in remindersList['platform'].values) and (new_reminder['committee'] in remindersList['committee'].values)):
                 df = pd.DataFrame([new_reminder])
                 df.to_csv("./Data/powiadomienia.csv",
                           mode='a', index=False, header=False)
             return "brak nowych posiedzeń"
         elif userEvent is False:
-            Auto_date = f"w ciągu ostanich trzech dni komijsa o kodzei {text} miała ostanie spotkanie {date}"
+            Auto_date = f"w ciągu ostanich trzech dni komisja o kodzie {text} miała ostatnie spotkanie {date}"
             if platfom == "discord":
                 # id.send(
-                #     f"w ciągu ostanich trzech dni komijsa o kodzei {text} miała ostanie spotkanie {date}"
+                #     f"w ciągu ostatnich trzech dni komisja o kodzie {text} miała ostanie spotkanie {date}"
                 # )
                 print("narazie pusto")
             # else:
                 # create_reminders("", True, id, Auto_date)
         # print(remindersList['platform'])
 
-        if not ((new_reminder['chanelId'] in remindersList['chanelId'].values) and (new_reminder['platform'] in remindersList['platform'].values) and (new_reminder['committee'] in remindersList['committee'].values)):
+        if not ((new_reminder['channelId'] in remindersList['channelId'].values) and (new_reminder['platform'] in remindersList['platform'].values) and (new_reminder['committee'] in remindersList['committee'].values)):
 
             df = pd.DataFrame([new_reminder])
             df.to_csv("./Data/powiadomienia.csv",
                       mode='a', index=False, header=False)
         if date is not None:
-            last = f"ostanie o kodzie {text} spotkanie miało mijesce {date}"
-        return f"dodano do obserwoanych {last}"
+            last = f"ostatnie o kodzie {text} spotkanie miało miejsce {date}"
+        return f"dodano do obserwowanych {last}"
         # print(response)
     # print(response)
     else:
