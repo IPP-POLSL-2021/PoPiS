@@ -34,6 +34,22 @@ def CommiteeFutureSetting(term, code):
             return date
 
 
+def LastNCommitteeSettingDates(committeeCode, numebrOfSitting, term):
+    response_API = requests.get(
+        f'https://api.sejm.gov.pl/sejm/term{term}/committees/{committeeCode}/sittings')
+    if response_API.status_code != 200:
+        return "coś poszło nie tak"
+    committee = response_API.json()
+    settingsCounter = 0
+    datesList = []
+    for setting in reversed(committee):
+        datesList.append(setting['date'])
+        settingsCounter += 1
+        if settingsCounter >= numebrOfSitting:
+            return datesList
+    return datesList
+
+
 def ComitteStats(term, code=None):
     if code == None:
         API = f'https://api.sejm.gov.pl/sejm/term{term}/committees'
