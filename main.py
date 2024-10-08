@@ -2,7 +2,6 @@ import streamlit as st
 import asyncio
 from View import test
 
-from Controller.telegrambot import start_telegram_bot
 from View import test2
 st.sidebar.title("Nawigacja")
 
@@ -22,7 +21,3 @@ def ViewSelection():
 
 
 ViewSelection()
-try:
-    start_telegram_bot()
-except Exception as e:
-    print(f"chyba już działa nwm masz tu błąd i naparw{e}")
