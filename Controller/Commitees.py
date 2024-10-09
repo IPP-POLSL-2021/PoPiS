@@ -51,7 +51,7 @@ def LastNCommitteeSettingDates(committeeCode, numebrOfSitting, term):
 
 
 def ComitteStats(term, code=None):
-    if code == None:
+    if code == None or code == "łącznie":
         API = f'https://api.sejm.gov.pl/sejm/term{term}/committees'
     else:
         API = f'https://api.sejm.gov.pl/sejm/term{term}/committees/{code}'
@@ -72,13 +72,15 @@ def ComitteStats(term, code=None):
                         clubs[member['club']] = member['lastFirstName']
     else:
         for member in API_data['members']:
-            for member in obj['members']:
-                if member['lastFirstName'] in peoples:
-                    peoples[member['lastFirstName']] += 1
+            print(member)
+
+            if member['lastFirstName'] in peoples:
+                peoples[member['lastFirstName']] += 1
+            else:
+                peoples[member['lastFirstName']] = 1
+                if member['club'] in clubs:
+                    clubs[member['club']].append(member['lastFirstName'])
                 else:
-                    peoples[member['lastFirstName']] = 1
-                    if member['club'] in clubs:
-                        clubs[member['club']].append(member['lastFirstName'])
-                    else:
-                        clubs[member['club']] = member['lastFirstName']
+                    clubs[member['club']] = [member['lastFirstName']]
+    print(clubs, peoples)
     return clubs, peoples
