@@ -1,0 +1,14 @@
+from Controller.Commitees import ComitteStats, CommiteesList
+import streamlit as st
+
+
+def loadView():
+    term_number = st.number_input(
+        "kadencja sejmu", min_value=1, value=10)
+    print("puki co psuto")
+
+    codes = [committee['code'] for committee in CommiteesList(term_number)]
+    codes.append("łącznie")
+    selectedCommittee = st.selectbox(
+        "komijsja której statyski cię intersują (niektóre dostępne tylko dla obecnej kadecji)", options=list(codes)
+    )
