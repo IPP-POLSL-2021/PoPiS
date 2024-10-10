@@ -59,7 +59,7 @@ def ComitteStats(term, code=None):
     API_data = response.json()
     clubs = {}
     peoples = {}
-    if code is None:
+    if code is None or code == "łącznie":
         for obj in API_data:
             for member in obj['members']:
                 if member['lastFirstName'] in peoples:
@@ -69,11 +69,9 @@ def ComitteStats(term, code=None):
                     if member['club'] in clubs:
                         clubs[member['club']].append(member['lastFirstName'])
                     else:
-                        clubs[member['club']] = member['lastFirstName']
+                        clubs[member['club']] = [member['lastFirstName']]
     else:
         for member in API_data['members']:
-            print(member)
-
             if member['lastFirstName'] in peoples:
                 peoples[member['lastFirstName']] += 1
             else:
@@ -82,5 +80,10 @@ def ComitteStats(term, code=None):
                     clubs[member['club']].append(member['lastFirstName'])
                 else:
                     clubs[member['club']] = [member['lastFirstName']]
-    print(clubs, peoples)
     return clubs, peoples
+
+
+def CommitteeAge(committee):
+    for patry in committee:
+        for MP in patry:
+            print(MP)
