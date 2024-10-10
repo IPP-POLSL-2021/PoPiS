@@ -1,4 +1,4 @@
-from Controller.Commitees import ComitteStats, CommiteesList
+from Controller.Commitees import ComitteStats, CommiteesList, CommitteeAge
 import streamlit as st
 
 
@@ -13,4 +13,5 @@ def loadView():
         "komijsja której statyski cię intersują (niektóre dostępne tylko dla obecnej kadecji)", options=list(codes)
     )
 
-    ComitteStats(term_number, selectedCommittee)
+    clubs, MPs = ComitteStats(term_number, selectedCommittee)
+    CommitteeAge(clubs)

@@ -1,6 +1,7 @@
 import requests
 
 from datetime import datetime, timedelta
+from Controller import MP
 
 
 def CommiteesList(term):
@@ -83,7 +84,22 @@ def ComitteStats(term, code=None):
     return clubs, peoples
 
 
-def CommitteeAge(committee):
+def CommitteeAge(committee, term=10):
+    response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/MP')
+    MPs = response.json()
+    current_time = datetime.now().replace(microsecond=0, second=0, minute=0, hour=0)
+    MPsAge = {}
     for patry in committee:
-        for MP in patry:
-            print(MP)
+        print(patry)
+        for person in committee[patry]:
+            print(person)
+            filtered_MPs = [
+                mp for mp in MPs if mp['lastFirstName'] == person]
+            # dateOfBirth = [mp['birthDate'] for mp in filtered_MPs]
+            dateOfBirth = [datetime.strptime(
+                mp['birthDate'], '%Y-%m-%d').date() for mp in filtered_MPs]
+            # MPsAge.append()
+            #
+    # do zrobienia uzyskać pełną liczbe posło to w zmiennej a następnie poporstu szukać konkretnych
+    # print(MP.get_MP_ID(10, person))
+    # for MP in patry:

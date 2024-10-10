@@ -7,7 +7,7 @@ import datetime
 
 
 def get_MP_ID(term, last_first_name):
-    response = requests.get(f'https: // api.sejm.gov.pl/sejm/term{term}/MP/')
+    response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/MP')
     MPs = response.json()
     filtered_MPs = [mp for mp in MPs if mp['lastFirstName'] == last_first_name]
     ids = [mp['id'] for mp in filtered_MPs]
