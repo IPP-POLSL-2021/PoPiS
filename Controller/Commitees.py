@@ -2,6 +2,7 @@ import requests
 
 from datetime import datetime, timedelta
 from Controller import MP
+import pandas as pd
 
 
 def CommiteesList(term):
@@ -90,16 +91,23 @@ def CommitteeAge(committee, term=10):
     current_time = datetime.now().replace(microsecond=0, second=0, minute=0, hour=0)
     MPsAge = {}
     for patry in committee:
-        print(patry)
+        # print(patry)
+        ages = []
         for person in committee[patry]:
-            print(person)
+            # print(person)
             filtered_MPs = [
                 mp for mp in MPs if mp['lastFirstName'] == person]
             # dateOfBirth = [mp['birthDate'] for mp in filtered_MPs]
             dateOfBirth = [datetime.strptime(
                 mp['birthDate'], '%Y-%m-%d').date() for mp in filtered_MPs]
-            # MPsAge.append()
-            #
+            ageOfMP = current_time.date()-dateOfBirth
+            ages.append(ageOfMP)
+
+        MPsAge[patry] = ages
+        # MPsAge.append()
+        #
+    agesDataFrame = pd.DataFrame(MPsAge)
+    return agesDataFrame
     # do zrobienia uzyskać pełną liczbe posło to w zmiennej a następnie poporstu szukać konkretnych
     # print(MP.get_MP_ID(10, person))
     # for MP in patry:
