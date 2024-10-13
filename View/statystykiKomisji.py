@@ -14,4 +14,9 @@ def loadView():
     )
 
     clubs, MPs = ComitteStats(term_number, selectedCommittee)
+    # with st.container(height=400):
+    #     for MP in MPs:
+    #         st.markdown(MP)
+    st.dataframe(clubs)
+    st.dataframe(MPs)
     CommitteeAge(clubs)

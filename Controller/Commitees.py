@@ -82,7 +82,9 @@ def ComitteStats(term, code=None):
                     clubs[member['club']].append(member['lastFirstName'])
                 else:
                     clubs[member['club']] = [member['lastFirstName']]
-    return clubs, peoples
+    ClubsDataframe = pd.DataFrame.from_dict(clubs, orient='index')
+    MPsDataframe = pd.DataFrame.from_dict(peoples, orient='index')
+    return ClubsDataframe, MPsDataframe
 
 
 def CommitteeAge(committee, term=10):
@@ -100,13 +102,14 @@ def CommitteeAge(committee, term=10):
             # dateOfBirth = [mp['birthDate'] for mp in filtered_MPs]
             dateOfBirth = [datetime.strptime(
                 mp['birthDate'], '%Y-%m-%d').date() for mp in filtered_MPs]
-            ageOfMP = current_time.date()-dateOfBirth
+            ageOfMP = current_time.date()-dateOfBirth.date()
             ages.append(ageOfMP)
 
         MPsAge[patry] = ages
         # MPsAge.append()
         #
     agesDataFrame = pd.DataFrame(MPsAge)
+
     return agesDataFrame
     # do zrobienia uzyskać pełną liczbe posło to w zmiennej a następnie poporstu szukać konkretnych
     # print(MP.get_MP_ID(10, person))
