@@ -84,19 +84,24 @@ def ComitteStats(term, code=None):
                     clubs[member['club']] = [member['lastFirstName']]
     ClubsDataframe = pd.DataFrame.from_dict(clubs, orient='index')
     MPsDataframe = pd.DataFrame.from_dict(peoples, orient='index')
-    return ClubsDataframe, MPsDataframe
+    ClubsNonDataframe = clubs
+    return ClubsDataframe, MPsDataframe, ClubsNonDataframe
 
 
 def CommitteeAge(committee, term=10):
     response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/MP')
     MPs = response.json()
     current_time = datetime.now().replace(microsecond=0, second=0, minute=0, hour=0)
-    print(current_time)
+    # print(current_time)
     MPsAge = {}
+    # print(committee)
+    # print(committee.to_dict)
+    # committee = committee.to_dict(orient="list")
+    # print(committee)
     for patry in committee:
-        # print(patry)
+        # print(committee[patry])
         ages = []
-        print(patry)
+        # print(patry)
         for person in committee[patry]:
             # print(person)
             filtered_MPs = [
@@ -121,7 +126,7 @@ def CommitteeAge(committee, term=10):
     agesDataFrame = pd.DataFrame.from_dict(MPsAge, orient='index')
 
     # agesDataFrame = pd.DataFrame(MPsAge)
-    print(agesDataFrame)
+    # print(agesDataFrame)
     return agesDataFrame
     # do zrobienia uzyskać pełną liczbe posło to w zmiennej a następnie poporstu szukać konkretnych
     # print(MP.get_MP_ID(10, person))

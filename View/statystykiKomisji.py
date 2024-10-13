@@ -13,10 +13,10 @@ def loadView():
         "komijsja której statyski cię intersują (niektóre dostępne tylko dla obecnej kadecji)", options=list(codes)
     )
 
-    clubs, MPs = ComitteStats(term_number, selectedCommittee)
+    clubs, MPs, clubsButBetter = ComitteStats(term_number, selectedCommittee)
     # with st.container(height=400):
     #     for MP in MPs:
     #         st.markdown(MP)
     st.dataframe(clubs)
     st.dataframe(MPs)
-    CommitteeAge(clubs)
+    CommitteeAge(clubsButBetter)
