@@ -91,25 +91,37 @@ def CommitteeAge(committee, term=10):
     response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/MP')
     MPs = response.json()
     current_time = datetime.now().replace(microsecond=0, second=0, minute=0, hour=0)
+    print(current_time)
     MPsAge = {}
     for patry in committee:
         # print(patry)
         ages = []
+        print(patry)
         for person in committee[patry]:
             # print(person)
             filtered_MPs = [
                 mp for mp in MPs if mp['lastFirstName'] == person]
             # dateOfBirth = [mp['birthDate'] for mp in filtered_MPs]
-            dateOfBirth = [datetime.strptime(
-                mp['birthDate'], '%Y-%m-%d').date() for mp in filtered_MPs]
-            ageOfMP = current_time.date()-dateOfBirth.date()
-            ages.append(ageOfMP)
+            if filtered_MPs:
+                dateOfBirth = str([
+                    mp['birthDate'] for mp in filtered_MPs])
+                # print(datetime.strptime(str(dateOfBirth[0]), '%Y-%m-%d').date())
+                dateOfBirth = dateOfBirth.strip("[]'")
+                # print(dateOfBirth)
+                # print("=================")
+                ageOfMP = current_time.date() - \
+                    datetime.strptime(dateOfBirth, "%Y-%m-%d").date()
+                ageOfMP = ageOfMP.days/365
+
+                ages.append(round(ageOfMP))
 
         MPsAge[patry] = ages
         # MPsAge.append()
-        #
-    agesDataFrame = pd.DataFrame(MPsAge)
+        # print(MPsAge)
+    agesDataFrame = pd.DataFrame.from_dict(MPsAge, orient='index')
 
+    # agesDataFrame = pd.DataFrame(MPsAge)
+    print(agesDataFrame)
     return agesDataFrame
     # do zrobienia uzyskać pełną liczbe posło to w zmiennej a następnie poporstu szukać konkretnych
     # print(MP.get_MP_ID(10, person))
