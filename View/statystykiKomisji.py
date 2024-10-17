@@ -3,6 +3,7 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
+from statistics import mean, median, stdev
 
 
 def loadView():
@@ -46,8 +47,10 @@ def loadView():
     ax.set_ylabel('Liczba członków', fontsize=14)
     st.pyplot(fig)
     for club in AgesButDictionary:
+        avgAge = mean(AgesButDictionary[club])
+
         st.write(
-            f"Dla klubu {club} w wybrnej komisji najstarszy członek ma {max(AgesButDictionary[club])} lat, najmłodszy ma {min(AgesButDictionary[club]) } lat")
+            f"Dla klubu {club} w wybrnej komisji najstarszy członek ma {max(AgesButDictionary[club])} lat, najmłodszy ma {min(AgesButDictionary[club]) } lat, średnia wieku wynosi {round(avgAge)}, mediana wynosi {median(AgesButDictionary[club])}, odchylenie standardowe wynosi około {round(stdev(AgesButDictionary[club]))}")
     st.header(
         "Wykresy rozkłądu wieku klubów dla wybranej komisji jeśli dany klub ma więcej niż2 członków")
     for club in AgesButDictionary:
