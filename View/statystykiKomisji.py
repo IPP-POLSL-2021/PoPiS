@@ -48,3 +48,15 @@ def loadView():
     for club in AgesButDictionary:
         st.write(
             f"Dla klubu {club} w wybrnej komisji najstarszy członek ma {max(AgesButDictionary[club])} lat, najmłodszy ma {min(AgesButDictionary[club]) } lat")
+    st.header(
+        "Wykresy rozkłądu wieku klubów dla wybranej komisji jeśli dany klub ma więcej niż2 członków")
+    for club in AgesButDictionary:
+        fig, ax = plt.subplots(figsize=(10, 6))
+        if len(AgesButDictionary[club]) > 2:
+            ax.hist(AgesButDictionary[club], bins=10,
+                    color='red', edgecolor='black')
+            ax.set_title(
+                f'Ogólny rozkład wiekowy członków komisji dla klubu {club}', fontsize=16)
+            ax.set_xlabel('Wiek', fontsize=14)
+            ax.set_ylabel('Liczba członków', fontsize=14)
+            st.pyplot(fig)
