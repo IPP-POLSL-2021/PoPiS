@@ -101,6 +101,9 @@ def CommitteeAge(committee, term=10):
     for patry in committee:
         # print(committee[patry])
         ages = []
+        MaxMinMP = ["", ""]
+        maxMPsAge = 0
+        minMPsAge = 100
         # print(patry)
         for person in committee[patry]:
             # print(person)
@@ -114,10 +117,14 @@ def CommitteeAge(committee, term=10):
                 dateOfBirth = dateOfBirth.strip("[]'")
                 # print(dateOfBirth)
                 # print("=================")
+
                 ageOfMP = current_time.date() - \
                     datetime.strptime(dateOfBirth, "%Y-%m-%d").date()
-                ageOfMP = ageOfMP.days/365
 
+                ageOfMP = ageOfMP.days/365
+                if ageOfMP > maxMPsAge:
+                    maxMPsAge = ageOfMP
+                    # MaxMinMP[0]=
                 ages.append(round(ageOfMP))
 
         MPsAge[patry] = ages
@@ -127,7 +134,7 @@ def CommitteeAge(committee, term=10):
 
     # agesDataFrame = pd.DataFrame(MPsAge)
     # print(agesDataFrame)
-    return agesDataFrame
+    return agesDataFrame, MPsAge
     # do zrobienia uzyskać pełną liczbe posło to w zmiennej a następnie poporstu szukać konkretnych
     # print(MP.get_MP_ID(10, person))
     # for MP in patry:

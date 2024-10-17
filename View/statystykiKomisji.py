@@ -2,6 +2,7 @@ from Controller.Commitees import ComitteStats, CommiteesList, CommitteeAge
 import streamlit as st
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 
 
 def loadView():
@@ -21,6 +22,7 @@ def loadView():
     #         st.markdown(MP)
     # wyświetlanie informacji o ilości członkó i ilości komijsi
     ClubsCount = clubs.apply(lambda x: x.count(), axis=1)
+
     fig, ax = plt.subplots(figsize=(10, 6))
     ClubsCount.plot(kind='bar', ax=ax)
     ax.set_title('Liczba członków w komisjach', fontsize=16)
@@ -30,10 +32,11 @@ def loadView():
     plt.xticks(rotation=45, ha='right')
     st.pyplot(fig)
     st.dataframe(clubs)
-    if selectedCommittee is "łącznie":
+    if selectedCommittee == "łącznie":
         st.dataframe(MPs)
     # wykresy wieku
-    DataframeAges = CommitteeAge(clubsButBetter)
+    DataframeAges, AgesButDictionary = CommitteeAge(
+        clubsButBetter, term_number)
     all_ages = DataframeAges.values.flatten()
     all_ages = pd.Series(all_ages).dropna()
     fig, ax = plt.subplots(figsize=(10, 6))
@@ -42,3 +45,6 @@ def loadView():
     ax.set_xlabel('Wiek', fontsize=14)
     ax.set_ylabel('Liczba członków', fontsize=14)
     st.pyplot(fig)
+    for club in AgesButDictionary:
+        st.write(
+            f"Dla klubu {club} w wybrnej komisji najstarszy członek ma {max(AgesButDictionary[club])} lat, najmłodszy ma {min(AgesButDictionary[club]) } lat")
