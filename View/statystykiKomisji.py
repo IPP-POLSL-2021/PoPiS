@@ -1,4 +1,4 @@
-from Controller.Commitees import ComitteStats, CommiteesList, CommitteeAge
+from Controller.Commitees import ComitteStats, CommiteesList, CommitteeAge, ComitteEducation
 import streamlit as st
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -62,4 +62,16 @@ def loadView():
                 f'Ogólny rozkład wiekowy członków komisji dla klubu {club}', fontsize=16)
             ax.set_xlabel('Wiek', fontsize=14)
             ax.set_ylabel('Liczba członków', fontsize=14)
+            st.pyplot(fig)
+
+    EducationDictionary = ComitteEducation(clubsButBetter, term_number)
+    for club in EducationDictionary:
+        if len(list(EducationDictionary[club].keys())) > 1:
+            fig, ax = plt.subplots(figsize=(10, 5))
+            labels = list(EducationDictionary[club].keys())
+            values = list(EducationDictionary[club].values())
+            ax.pie(values, labels=labels)
+            ax.set_title(
+                f'Ogólny rozkład edukacji członków komisji dla klubu {club}', fontsize=16)
+
             st.pyplot(fig)

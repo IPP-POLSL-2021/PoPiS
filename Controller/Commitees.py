@@ -105,7 +105,7 @@ def ComitteEducation(commitee, term=10):
                 if educationOfMP in educations:
                     educations[educationOfMP] += 1
                 else:
-                    educations[educationOfMP]
+                    educations[educationOfMP] = 1
         MPsEducation[party] = educations
     return MPsEducation
 
