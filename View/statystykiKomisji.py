@@ -48,9 +48,9 @@ def loadView():
     st.pyplot(fig)
     for club in AgesButDictionary:
         avgAge = mean(AgesButDictionary[club])
-
-        st.write(
-            f"Dla klubu {club} w wybrnej komisji najstarszy członek ma {max(AgesButDictionary[club])} lat, najmłodszy ma {min(AgesButDictionary[club]) } lat, średnia wieku wynosi {round(avgAge)}, mediana wynosi {median(AgesButDictionary[club])}, odchylenie standardowe wynosi około {round(stdev(AgesButDictionary[club]))}")
+        if len(AgesButDictionary[club]) > 1:
+            st.write(
+                f"Dla klubu {club} w wybrnej komisji najstarszy członek ma {max(AgesButDictionary[club])} lat, najmłodszy ma {min(AgesButDictionary[club]) } lat, średnia wieku wynosi {round(avgAge)} lat, mediana wynosi {median(AgesButDictionary[club])} lat, odchylenie standardowe wynosi około {round(stdev(AgesButDictionary[club]))} lat")
     st.header(
         "Wykresy rozkłądu wieku klubów dla wybranej komisji jeśli dany klub ma więcej niż2 członków")
     for club in AgesButDictionary:
