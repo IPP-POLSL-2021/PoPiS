@@ -91,6 +91,23 @@ def ComitteStats(term, code=None):
 def ComitteEducation(commitee, term=10):
     response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/MP')
     MPs = response.json()
+    MPsEducation = {}
+    for party in commitee:
+        educations = {}
+        for person in commitee[party]:
+            filtered_MPs = [
+                mp for mp in MPs if mp['lastFirstName'] == person]
+            # dateOfBirth = [mp['birthDate'] for mp in filtered_MPs]
+            if filtered_MPs:
+                educationOfMP = str([
+                    mp['educationLevel'] for mp in filtered_MPs])
+                educationOfMP = educationOfMP.strip("[]'")
+                if educationOfMP in educations:
+                    educations[educationOfMP] += 1
+                else:
+                    educations[educationOfMP]
+        MPsEducation[party] = educations
+    return MPsEducation
 
 
 def CommitteeAge(committee, term=10):
@@ -111,9 +128,7 @@ def CommitteeAge(committee, term=10):
     for patry in committee:
         # print(committee[patry])
         ages = []
-        MaxMinMP = ["", ""]
-        maxMPsAge = 0
-        minMPsAge = 100
+
         # print(patry)
         for person in committee[patry]:
             # print(person)
@@ -132,9 +147,9 @@ def CommitteeAge(committee, term=10):
                     datetime.strptime(dateOfBirth, "%Y-%m-%d").date()
 
                 ageOfMP = ageOfMP.days/365
-                if ageOfMP > maxMPsAge:
-                    maxMPsAge = ageOfMP
-                    # MaxMinMP[0]=
+                # if ageOfMP > maxMPsAge:
+                #     maxMPsAge = ageOfMP
+                # MaxMinMP[0]=
                 ages.append(round(ageOfMP))
 
         MPsAge[patry] = ages
