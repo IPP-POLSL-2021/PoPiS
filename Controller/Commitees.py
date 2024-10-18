@@ -88,10 +88,20 @@ def ComitteStats(term, code=None):
     return ClubsDataframe, MPsDataframe, ClubsNonDataframe
 
 
+def ComitteEducation(commitee, term=10):
+    response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/MP')
+    MPs = response.json()
+
+
 def CommitteeAge(committee, term=10):
     response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/MP')
     MPs = response.json()
     current_time = datetime.now().replace(microsecond=0, second=0, minute=0, hour=0)
+    if term != 10:
+        termResponse = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}')
+        termInfo = termResponse.json()
+        endOfTerm = termInfo['to']
+        current_time = datetime.strptime(endOfTerm, "%Y-%m-%d")
     # print(current_time)
     MPsAge = {}
     # print(committee)
