@@ -6,6 +6,33 @@ import numpy as np
 from statistics import mean, median, stdev
 
 
+def ageStats(all_ages, AgesButDictionary):
+    print("a")
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.hist(all_ages, bins=10, color='red', edgecolor='black')
+    ax.set_title('Ogólny rozkład wiekowy członków komisji', fontsize=16)
+    ax.set_xlabel('Wiek', fontsize=14)
+    ax.set_ylabel('Liczba członków', fontsize=14)
+    st.pyplot(fig)
+    for club in AgesButDictionary:
+        if len(AgesButDictionary[club]) > 1:
+            avgAge = mean(AgesButDictionary[club])
+            st.write(
+                f"Dla klubu {club} w wybrnej komisji najstarszy członek ma {max(AgesButDictionary[club])} lat, najmłodszy ma {min(AgesButDictionary[club]) } lat, średnia wieku wynosi {round(avgAge)} lat, mediana wynosi {median(AgesButDictionary[club])} lat, odchylenie standardowe wynosi około {round(stdev(AgesButDictionary[club]))} lat")
+    st.header(
+        "Wykresy rozkłądu wieku klubów dla wybranej komisji jeśli dany klub ma więcej niż2 członków")
+    for club in AgesButDictionary:
+        fig, ax = plt.subplots(figsize=(10, 6))
+        if len(AgesButDictionary[club]) > 2:
+            ax.hist(AgesButDictionary[club], bins=10,
+                    color='red', edgecolor='black')
+            ax.set_title(
+                f'Ogólny rozkład wiekowy członków komisji dla klubu {club}', fontsize=16)
+            ax.set_xlabel('Wiek', fontsize=14)
+            ax.set_ylabel('Liczba członków', fontsize=14)
+            st.pyplot(fig)
+
+
 def loadView():
     term_number = st.number_input(
         "kadencja sejmu", min_value=1, value=10)
@@ -40,31 +67,13 @@ def loadView():
         clubsButBetter, term_number)
     all_ages = DataframeAges.values.flatten()
     all_ages = pd.Series(all_ages).dropna()
-    fig, ax = plt.subplots(figsize=(10, 6))
-    ax.hist(all_ages, bins=10, color='red', edgecolor='black')
-    ax.set_title('Ogólny rozkład wiekowy członków komisji', fontsize=16)
-    ax.set_xlabel('Wiek', fontsize=14)
-    ax.set_ylabel('Liczba członków', fontsize=14)
-    st.pyplot(fig)
-    for club in AgesButDictionary:
-        if len(AgesButDictionary[club]) > 1:
-            avgAge = mean(AgesButDictionary[club])
-            st.write(
-                f"Dla klubu {club} w wybrnej komisji najstarszy członek ma {max(AgesButDictionary[club])} lat, najmłodszy ma {min(AgesButDictionary[club]) } lat, średnia wieku wynosi {round(avgAge)} lat, mediana wynosi {median(AgesButDictionary[club])} lat, odchylenie standardowe wynosi około {round(stdev(AgesButDictionary[club]))} lat")
-    st.header(
-        "Wykresy rozkłądu wieku klubów dla wybranej komisji jeśli dany klub ma więcej niż2 członków")
-    for club in AgesButDictionary:
-        fig, ax = plt.subplots(figsize=(10, 6))
-        if len(AgesButDictionary[club]) > 2:
-            ax.hist(AgesButDictionary[club], bins=10,
-                    color='red', edgecolor='black')
-            ax.set_title(
-                f'Ogólny rozkład wiekowy członków komisji dla klubu {club}', fontsize=16)
-            ax.set_xlabel('Wiek', fontsize=14)
-            ax.set_ylabel('Liczba członków', fontsize=14)
-            st.pyplot(fig)
+    st.button("Reset", type='primary')
+    if st.button("dane dot. wieku",
+                 help="wyswietla wykresy wieku"):
+        ageStats(all_ages, AgesButDictionary)
 
     EducationDictionary = ComitteEducation(clubsButBetter, term_number)
+    st.write("wykresy dla klubów w komijsch gdzie cczłonkiwe mają rózne wykształcenie")
     for club in EducationDictionary:
         if len(list(EducationDictionary[club].keys())) > 1:
             fig, ax = plt.subplots(figsize=(10, 5))

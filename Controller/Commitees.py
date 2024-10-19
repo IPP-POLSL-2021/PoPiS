@@ -99,6 +99,7 @@ def ComitteEducation(commitee, term=10):
                 mp for mp in MPs if mp['lastFirstName'] == person]
             # dateOfBirth = [mp['birthDate'] for mp in filtered_MPs]
             if filtered_MPs:
+                print(filtered_MPs)
                 educationOfMP = str([
                     mp['educationLevel'] for mp in filtered_MPs])
                 educationOfMP = educationOfMP.strip("[]'")
