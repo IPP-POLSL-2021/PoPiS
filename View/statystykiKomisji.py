@@ -33,6 +33,21 @@ def ageStats(all_ages, AgesButDictionary):
             st.pyplot(fig)
 
 
+def MoreStats(ChosenDictionary):
+    st.write(
+        "wykresy dla klubów w komijsch gdzie cczłonkiwe mają rózne wykształcenie")
+    for club in ChosenDictionary:
+        if len(list(ChosenDictionary[club].keys())) > 1:
+            fig, ax = plt.subplots(figsize=(10, 5))
+            labels = list(ChosenDictionary[club].keys())
+            values = list(ChosenDictionary[club].values())
+            ax.pie(values, labels=labels)
+            ax.set_title(
+                f'Ogólny rozkład edukacji członków komisji dla klubu {club}', fontsize=16)
+
+            st.pyplot(fig)
+
+
 def loadView():
     term_number = st.number_input(
         "kadencja sejmu", min_value=1, value=10)
@@ -67,20 +82,11 @@ def loadView():
         clubsButBetter, term_number)
     all_ages = DataframeAges.values.flatten()
     all_ages = pd.Series(all_ages).dropna()
-    st.button("Reset", type='primary')
-    if st.button("dane dot. wieku",
-                 help="wyswietla wykresy wieku"):
-        ageStats(all_ages, AgesButDictionary)
-
+    stats = st.selectbox(
+        "Wybierz stytystykę", ["brak", "wiek", "edukacja"])
     EducationDictionary = ComitteEducation(clubsButBetter, term_number)
-    st.write("wykresy dla klubów w komijsch gdzie cczłonkiwe mają rózne wykształcenie")
-    for club in EducationDictionary:
-        if len(list(EducationDictionary[club].keys())) > 1:
-            fig, ax = plt.subplots(figsize=(10, 5))
-            labels = list(EducationDictionary[club].keys())
-            values = list(EducationDictionary[club].values())
-            ax.pie(values, labels=labels)
-            ax.set_title(
-                f'Ogólny rozkład edukacji członków komisji dla klubu {club}', fontsize=16)
-
-            st.pyplot(fig)
+    match stats:
+        case "wiek":
+            ageStats(all_ages, AgesButDictionary)
+        case "edukacja":
+            MoreStats(EducationDictionary)
