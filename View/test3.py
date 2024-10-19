@@ -2,124 +2,61 @@ import requests
 from streamlit_push_notifications import send_push
 from datetime import datetime, date
 import streamlit as st
-
-def get_ten_acts_this_year():
-    thisYear = datetime.now().year
-    var = 1400
-    while (True):
-        response = requests.get(f"http://api.sejm.gov.pl/eli/acts/DU/{thisYear}/{var}")
-        if response.status_code != 200:
-            print(var-1)
-            listOfActs = []
-            for iter in range(1, 11):
-                response = requests.get(f"http://api.sejm.gov.pl/eli/acts/DU/{thisYear}/{var-1}")
-                listOfActs.append(response.json())
-                var=var-1
-            return listOfActs
-        else:
-            var += 1
-
-def did_today_new_ustawa_obowiazuje():
-    thisYear = datetime.now().year
-    today = datetime.date(datetime.now())
-    var = 1400
-    while (True):
-        response = requests.get(f"http://api.sejm.gov.pl/eli/acts/DU/{thisYear}/{var}")
-        if response.status_code != 200:
-            response = requests.get(f"http://api.sejm.gov.pl/eli/acts/DU/{thisYear}/{var - 1}")
-            resjson = response.json()
-            if 'changeDate' in resjson:
-                if (date.fromisoformat(resjson['changeDate'][0:10])==today):
-                    return True
-                else:
-                    return False
-        else:
-            var += 1
-
-
-def get_titles_of_record(records):
-    list_titles = []
-    for i in records:
-        if 'title' in i:
-            list_titles.append(f"{i['type']}: {i['title']}")
-        else:
-            print("Blad, brak tytulu")
-        
-    return list_titles
-
-
-import pdfplumber
-import PyPDF2
-import re
-from bs4 import BeautifulSoup
 from sentimentpl.models import SentimentPLModel
+from Controller.acts import get_all_acts_this_year, get_titles_of_record,did_today_new_ustawa_obowiazuje
 
-def analiza_stenogramow():  
 
+
+
+def fetch_transcripts(url):
     
+    #sitting_number = get_sitting_number(term_number)
+    #response = requests.get(f"http://api.sejm.gov.pl/sejm/term10/proceedings/{sitting_number}/{data}/transcripts/0")
+    response = requests.get(url)
+    if response.status_code == 200:
+        print(response.text)
+        return response.json()  # Zwróć dane w formacie JSON
+    else:
+        raise Exception(f"Nie udało się pobrać danych z API. Kod statusu: {response.status_code}")
 
-    def fetch_pdf_link(html_file):
-        # Otwórz lokalny plik HTML
-        with open(html_file, 'r', encoding='utf-8') as file:
-            page_content = file.read()
-
-        # Parsowanie HTML za pomocą BeautifulSoup
-        soup = BeautifulSoup(page_content, 'html.parser')
-
-        # Znalezienie pierwszego linku do pliku PDF (zgodnie z selektorem CSS)
-        selector = '#view\\:_id1\\:_id2\\:facetMain\\:rContent\\:0\\:_id136\\:0\\:_id138'
-        stenogram_link = soup.select_one(selector)
-
-        if stenogram_link:
-            return stenogram_link['href']
-        else:
-            raise ValueError("Nie znaleziono linku do PDF w podanym pliku HTML.")
-
-    # 2. Pobieranie pliku PDF z podanego linku
-    def download_pdf(pdf_url, output_path='stenogram.pdf'):
-        # Pobieranie pliku PDF z URL
-        response = requests.get(pdf_url)
-
-        if response.status_code == 200:
-            # Zapisz plik PDF lokalnie
-            with open(output_path, 'wb') as file:
-                file.write(response.content)
-            print(f"Plik PDF został pobrany i zapisany jako {output_path}")
-        else:
-            raise Exception(f"Błąd podczas pobierania pliku PDF: {response.status_code}")
-
-    # Główna funkcja, która pobiera link i zapisuje plik PDF
-    def main():
-        html_file = 'C:\\Users\\HP\\Documents\\GitHub\\PoPiS\\Data\\Sprawozdania stenograficzne z posiedzeń Sejmu - Sejm Rzeczypospolitej Polskiej.html'
-
-        try:
-            # Znajdź link do pliku PDF w pliku HTmL
-            pdf_url = fetch_pdf_link(html_file)
-            print(f"Link do pliku PDF: {pdf_url}")
-
-            # Pobierz plik PDF
-            download_pdf(pdf_url)
-
-        except Exception as e:
-            print(f"Wystąpił błąd: {e}")
-
+def get_full_transcripts(base_url, transcript_data):
+    full_transcripts = []
     
+    for entry in transcript_data:
+        # Jeśli wypowiedź ma dodatkowe linki (np. pod linkiem 'transcripts/001')
+        if 'href' in entry:
+            sub_url = f"{base_url}/{entry['href']}"
+            sub_transcript = fetch_transcripts(sub_url)
+            full_transcripts.append(sub_transcript)
+        else:
+            full_transcripts.append(entry)
+    
+    return full_transcripts
+
+#def analyze_sentiment(statements):
+    model = SentimentPLModel()
+    results = []
+    
+    for statement in statements:
+        person = statement.get('speaker', 'Nieznany')  # Ustal osobę wypowiadającą się
+        text = statement.get('text', '')  # Pobierz tekst wypowiedzi
+        sentiment = model.predict(text)  # Analiza sentymentu
+        
+        results.append({
+            'speaker': person,
+            'text': text,
+            'sentiment': sentiment
+        })
+    
+    return results
    
-
     sentiment_analyzer_pl = SentimentPLModel(from_pretrained='latest')
 
 
-
-
-
-
-
-
-
-
 def loadView():
-    analiza_stenogramow()
-    if st.button("Był dziś nowy akt prawny?"):
+    
+    st.title("Śledzenie Procesu Legislacyjnego")
+if st.button("Był dziś nowy akt prawny?"):
         if did_today_new_ustawa_obowiazuje():
             send_push(
                     title="Tak!",
@@ -131,11 +68,25 @@ def loadView():
                     body=f"Nie dodano dzisiaj żadnego aktu prawnego"
                 )
 
-    tenRecords=get_ten_acts_this_year()
-    titlesOfRecords = get_titles_of_record(tenRecords)
-    print(titlesOfRecords)
 
-    st.title("Lista ostatnich 10 obowiązujących aktów prawnych")
+    acts=get_all_acts_this_year()
+    st.write(acts)
+    if acts:
+        # Przetwarzamy rekordy
+        result=get_titles_of_record(acts)
+        
 
-    for title in titlesOfRecords:
-        st.write(title)
+        st.subheader("Ustawy")
+        st.table([{"Tytuł ustawy": title} for title in result['ustawy']]) 
+
+        st.subheader("Rozporządzenia")
+        st.table([{"Tytuł rozporządzenia": title} for title in result['rozporzadzenia']])
+
+        st.subheader("Obwieszczenia")
+        st.table([{"Tytuł obwieszczenia": title} for title in result['obwieszczenia']])
+
+    else:
+        st.error("Nie udało się pobrać danych.")
+
+       #fetch_transcripts(f"https://api.sejm.gov.pl/sejm/term10/proceedings/18/2024-09-25/transcripts/0")
+    
