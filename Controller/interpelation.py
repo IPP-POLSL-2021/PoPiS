@@ -5,7 +5,7 @@ import datetime
 from Controller.MP import get_name
 from functools import wraps
 
-def get_interpelation(term, num): # Przyjmuje numer kadencji i interpelacji a zwraca odpowiedź w formie json
+def get_interpelation(term, num):
     response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/interpellations/{num}')         
     return response
 
@@ -52,6 +52,8 @@ def get_date(term=None, num=None, mode=None, response=False):
             return datetime.datetime.strptime(response.json()['sentDate'], '%Y-%m-%d').date()
         case 'last_modified' | 2 | 'czas_ostatniej_modyfikacji':
             return datetime.datetime.strptime(response.json()['lastModified'], '%Y-%m-%d %H:%M:%S')
+        case _:
+            raise Exception("Mode must be specified")
 
 def get_authors(term=None, num=None, response=False):
     if not response:
