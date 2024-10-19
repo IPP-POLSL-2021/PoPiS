@@ -55,8 +55,9 @@ def get_full_transcripts(base_url, transcript_data):
 
 def loadView():
     
-    st.title("Śledzenie Procesu Legislacyjnego")
-if st.button("Był dziś nowy akt prawny?"):
+    
+
+    if st.button("Był dziś nowy akt prawny?"):
         if did_today_new_ustawa_obowiazuje():
             send_push(
                     title="Tak!",
