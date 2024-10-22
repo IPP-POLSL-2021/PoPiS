@@ -52,10 +52,75 @@ def get_full_transcripts(base_url, transcript_data):
    
     sentiment_analyzer_pl = SentimentPLModel(from_pretrained='latest')
 
+# Ustawienia API
+BASE_URL = "https://api.sejm.gov.pl"
+TERM = 10  # Przykładowy termin Sejmu
+
+# Funkcja pobierająca listę procesów legislacyjnych
+def get_legislative_processes(term):
+    response = requests.get(f"{BASE_URL}/sejm/term{term}/processes")
+    if response.status_code == 200:
+        return response.json()  # Zwraca listę procesów w formacie JSON
+    else:
+        st.error(f"Nie udało się pobrać procesów legislacyjnych. Kod błędu: {response.status_code}")
+        return []
+
+# Funkcja pobierająca szczegóły konkretnego procesu
+def get_process_details(term, process_number):
+    response = requests.get(f"{BASE_URL}/sejm/term{term}/processes/{process_number}")
+    if response.status_code == 200:
+        return response.json()  # Zwraca szczegóły procesu
+    else:
+        st.error(f"Nie udało się pobrać szczegółów procesu. Kod błędu: {response.status_code}")
+        return {}
 
 def loadView():
     
-    
+    st.title("Śledzenie Procesu Legislacyjnego")
+
+    # Pobieramy listę procesów legislacyjnych
+    processes = get_legislative_processes(TERM)
+
+    # Wyświetlamy listę procesów do wyboru przez użytkownika
+    if processes:
+        process_titles = [f"{p['number']} - {p['title']}" for p in processes]
+        selected_process = st.selectbox("Wybierz proces legislacyjny", process_titles)
+        
+        # Wyciągamy numer wybranego procesu
+        selected_process_number = selected_process.split(" - ")[0]
+
+        # Pobieramy szczegóły wybranego procesu
+        process_details = get_process_details(TERM, selected_process_number)
+        
+        # Wyświetlamy szczegóły procesu
+        if process_details:
+            st.subheader("Szczegóły procesu legislacyjnego")
+            st.write(f"**Tytuł:** {process_details.get('title', 'Brak tytułu')}")
+            st.write(f"**Opis:** {process_details.get('description', 'Brak opisu')}")
+            st.write(f"**Data rozpoczęcia:** {process_details.get('processStartDate', 'Brak daty')}")
+            
+            # Wyświetlenie etapów procesu
+            stages = process_details.get('stages', [])
+            if stages:
+                st.subheader("Etapy procesu")
+                for stage in stages:
+                    st.write(f"**Etap:** {stage['stageName']}")
+                    
+                    try:
+                        st.write(f"**Data:** {stage['date']}")
+                    except:
+                        try:
+                            st.write(f"**Decyzja:** {temp['decision']}")
+                        except:
+                            print()
+                    st.write("---")
+                    temp = stage
+
+            else:
+                st.write("Brak dostępnych etapów.")
+    else:
+        st.write("Brak dostępnych procesów legislacyjnych.")
+
 
     if st.button("Był dziś nowy akt prawny?"):
         if did_today_new_ustawa_obowiazuje():
@@ -71,7 +136,6 @@ def loadView():
 
 
     acts=get_all_acts_this_year()
-    st.write(acts)
     if acts:
         # Przetwarzamy rekordy
         result=get_titles_of_record(acts)
