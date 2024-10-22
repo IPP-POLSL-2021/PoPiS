@@ -1,7 +1,25 @@
 import requests
 from datetime import datetime, date
 
+# Ustawienia API
+BASE_URL = "https://api.sejm.gov.pl"
+TERM = 10  # Przykładowy termin Sejmu
 
+def get_legislative_processes(term):
+    response = requests.get(f"{BASE_URL}/sejm/term{term}/processes")
+    if response.status_code == 200:
+        return response.json()  # Zwraca listę procesów w formacie JSON
+    else:
+        st.error(f"Nie udało się pobrać procesów legislacyjnych. Kod błędu: {response.status_code}")
+        return []
+
+def get_process_details(term, process_number):
+    response = requests.get(f"{BASE_URL}/sejm/term{term}/processes/{process_number}")
+    if response.status_code == 200:
+        return response.json()  # Zwraca szczegóły procesu
+    else:
+        st.error(f"Nie udało się pobrać szczegółów procesu. Kod błędu: {response.status_code}")
+        return {}
 
 def get_all_acts_this_year():
     thisYear = datetime.now().year
