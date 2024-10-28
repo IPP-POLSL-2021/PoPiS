@@ -1,5 +1,5 @@
 import streamlit as st
-from streamlit_push_notifications import send_push
+#from streamlit_push_notifications import send_push
 from Controller.current_number import get_term_number, get_sitting_number, get_voting_number
 from Controller.interpelation import get_interpelation, get_title, get_replies
 import time
@@ -22,10 +22,11 @@ def check_new_voting():
     last_voting = st.session_state.get('last_voting', (0, 0, 0))
 
     if (term_number, sitting_number, voting_number) != last_voting:
-        send_push(
-            title="Nowe głosowanie!",
-            body=f"Głosowanie nr {voting_number} na {sitting_number} posiedzeniu {term_number} kadencji Sejmu"
-        )
+        st.write(f"Głosowanie nr {voting_number} na {sitting_number} posiedzeniu {term_number} kadencji Sejmu")
+        #send_push(
+        #    title="Nowe głosowanie!",
+        #    body=f"Głosowanie nr {voting_number} na {sitting_number} posiedzeniu {term_number} kadencji Sejmu"
+        #)
         st.session_state.last_voting = (
             term_number, sitting_number, voting_number)
         return True
@@ -43,10 +44,11 @@ def check_interpellation_replies(term, num):
             reply for reply in current_replies if reply not in last_replies]
         if new_replies:
             title = get_title(term, num)
-            send_push(
-                title="Nowa odpowiedź na interpelację!",
-                body=f"Otrzymano nową odpowiedź na interpelację: {title}"
-            )
+            st.write(f"Otrzymano nową odpowiedź na interpelację: {title}")
+            #send_push(
+            #    title="Nowa odpowiedź na interpelację!",
+            #    body=f"Otrzymano nową odpowiedź na interpelację: {title}"
+            #)
             st.session_state[f'last_replies_{term}_{num}'] = current_replies
             return True
     return False
