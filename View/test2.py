@@ -27,10 +27,11 @@ def loadView():
         committeeCode, numberOfSettings, term_number)
     st.markdown(
         f"ostanie {numberOfSettings} posiedzeń komijsji miały miejsce,{settingsList}")
-    correlationValue = st.number_input(
-        label="Podaj jak bardzo wartości mają być skorelowane [-1;1]", min_value=-1.0, max_value=1.0)
+    # correlationValue = st.number_input(
+    #    label="Podaj jak bardzo wartości mają być skorelowane [-1;1]", min_value=-1.0, max_value=1.0)
     type = st.selectbox("Wybierz rodzaj analizowanych wyników",
-                        ("procentowe", "ilościowe"))
+                        ("procętowe", "ilościowe"))
+    correlationValue = -1
     electionSelections = st.selectbox("wybierz poziom administracyjny do analizy ", (
         "województwa", "okręgi", "powiaty", "gminy", "obwody"))
     matrix, Results = getResults(correlationValue, electionSelections, type)
