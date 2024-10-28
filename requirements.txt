@@ -1,0 +1,7 @@
+requests
+pandas
+sqlalchemy
+telebot
+matplotlib
+statistics
+numpy
