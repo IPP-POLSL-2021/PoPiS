@@ -59,7 +59,7 @@ async def on_ready():
 
 
 @client.event
-async def on_message(message, AutoDate, auto=False):
+async def on_message(message,  auto=False):
     if message.author == client.user:
         return
     username = str(message.author)
