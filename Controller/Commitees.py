@@ -96,6 +96,7 @@ def ComitteEducation(commitee, term=10, searchedInfo='edukacja'):
     for party in commitee:
         educations = {}
         for person in commitee[party]:
+
             filtered_MPs = [
                 mp for mp in MPs if mp['lastFirstName'] == person]
             # dateOfBirth = [mp['birthDate'] for mp in filtered_MPs]
@@ -110,8 +111,9 @@ def ComitteEducation(commitee, term=10, searchedInfo='edukacja'):
                         educationOfMP = str([
                             mp['districtName'] for mp in filtered_MPs])
                     case 'profesja':
-                        educationOfMP = str([
-                            mp['profession'] for mp in filtered_MPs])
+
+                        educationOfMP = str(
+                            [mp['profession'] for mp in filtered_MPs if 'profession' in mp])
                     case 'województwo':
                         educationOfMP = str([
                             mp['voivodeship'] for mp in filtered_MPs])
@@ -144,38 +146,27 @@ def CommitteeAge(committee, term=10, searchedInfo='birthDate'):
     for patry in committee:
         # print(committee[patry])
         ages = []
-        match searchedData:
-            case 'wiek':
-                searchedData = 'birthDate'
-            case 'profesja':
-                searchedData = 'profession'
-            case 'województwo':
-                searchedData = 'voivodeship'
-            case 'okorąg':
-                searchedData = 'districtName'
 
         # print(patry)
         for person in committee[patry]:
             # print(person)
             filtered_MPs = [
                 mp for mp in MPs if mp['lastFirstName'] == person]
-            # dateOfBirth = [mp['birthDate'] for mp in filtered_MPs]
-            if filtered_MPs:
-                dateOfBirth = str([
-                    mp[searchedData] for mp in filtered_MPs])
-                # print(datetime.strptime(str(dateOfBirth[0]), '%Y-%m-%d').date())
-                dateOfBirth = dateOfBirth.strip("[]'")
-                # print(dateOfBirth)
-                # print("=================")
+            dateOfBirth = str([
+                mp[searchedData] for mp in filtered_MPs])
+            # print(datetime.strptime(str(dateOfBirth[0]), '%Y-%m-%d').date())
+            dateOfBirth = dateOfBirth.strip("[]'")
+            # print(dateOfBirth)
+            # print("=================")
 
-                ageOfMP = current_time.date() - \
-                    datetime.strptime(dateOfBirth, "%Y-%m-%d").date()
+            ageOfMP = current_time.date() - \
+                datetime.strptime(dateOfBirth, "%Y-%m-%d").date()
 
-                ageOfMP = ageOfMP.days/365
-                # if ageOfMP > maxMPsAge:
-                #     maxMPsAge = ageOfMP
-                # MaxMinMP[0]=
-                ages.append(round(ageOfMP))
+            ageOfMP = ageOfMP.days/365
+            # if ageOfMP > maxMPsAge:
+            #     maxMPsAge = ageOfMP
+            # MaxMinMP[0]=
+            ages.append(round(ageOfMP))
 
         MPsAge[patry] = ages
         # MPsAge.append()
