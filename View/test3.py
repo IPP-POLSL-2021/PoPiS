@@ -6,60 +6,107 @@ from sentimentpl.models import SentimentPLModel
 from Controller.acts import get_all_acts_this_year, get_titles_of_record,did_today_new_ustawa_obowiazuje,  get_process_details, get_legislative_processes
 
 
-
-
-def fetch_transcripts(url):
-    
-    #sitting_number = get_sitting_number(term_number)
-    #response = requests.get(f"http://api.sejm.gov.pl/sejm/term10/proceedings/{sitting_number}/{data}/transcripts/0")
-    response = requests.get(url)
-    if response.status_code == 200:
-        print(response.text)
-        return response.json()  # Zwróć dane w formacie JSON
-    else:
-        raise Exception(f"Nie udało się pobrać danych z API. Kod statusu: {response.status_code}")
-
-def get_full_transcripts(base_url, transcript_data):
-    full_transcripts = []
-    
-    for entry in transcript_data:
-        # Jeśli wypowiedź ma dodatkowe linki (np. pod linkiem 'transcripts/001')
-        if 'href' in entry:
-            sub_url = f"{base_url}/{entry['href']}"
-            sub_transcript = fetch_transcripts(sub_url)
-            full_transcripts.append(sub_transcript)
-        else:
-            full_transcripts.append(entry)
-    
-    return full_transcripts
-
-#def analyze_sentiment(statements):
-    model = SentimentPLModel()
-    results = []
-    
-    for statement in statements:
-        person = statement.get('speaker', 'Nieznany')  # Ustal osobę wypowiadającą się
-        text = statement.get('text', '')  # Pobierz tekst wypowiedzi
-        sentiment = model.predict(text)  # Analiza sentymentu
-        
-        results.append({
-            'speaker': person,
-            'text': text,
-            'sentiment': sentiment
-        })
-    
-    return results
-   
-    sentiment_analyzer_pl = SentimentPLModel(from_pretrained='latest')
-
-# Ustawienia API
 BASE_URL = "https://api.sejm.gov.pl"
 TERM = 10  # Przykładowy termin Sejmu
 
+model = SentimentPLModel(from_pretrained='latest')
 
+def get_proceedings(term):
+    response = requests.get(f"{BASE_URL}/sejm/term{term}/proceedings", headers={'Accept': 'application/json'})
+    if response.status_code == 200:
+        return response.json()
+    else:
+        st.error(f"Nie udało się pobrać listy posiedzeń. Kod błędu: {response.status_code}")
+        return []
+
+def get_proceeding_details(term, proceeding_number):
+    response = requests.get(f"{BASE_URL}/sejm/term{term}/proceedings/{proceeding_number}", headers={'Accept': 'application/json'})
+    if response.status_code == 200:
+        return response.json()
+    else:
+        st.error(f"Nie udało się pobrać szczegółów posiedzenia. Kod błędu: {response.status_code}")
+        return {}
+
+def get_transcripts(term, proceeding_number, date, transcript_number=0):
+    header = {
+        'Accept': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36',
+        'Referer': BASE_URL
+    }
+    response = requests.get(
+        f"{BASE_URL}/sejm/term{term}/proceedings/{proceeding_number}/{date}/transcripts/{transcript_number}",
+        headers=header
+    )
+    
+    
+    if response.status_code == 200:
+        return response.json().get('statements', [])
+    else:
+        st.error(f"Nie udało się pobrać transkryptów wypowiedzi. Kod błędu: {response.status_code}")
+        return []
+
+def analyze_sentiment(statements):
+    sentiment_results = defaultdict(lambda: {'positive': 0, 'neutral': 0, 'negative': 0, 'total': 0})
+
+    for statement in statements:
+        text = statement.get('content', "")
+        author = statement.get('author', "Nieznany")
+        score = model(text).item()  # Zakres wyniku: od -1 (negatywny) do 1 (pozytywny)
+
+        if score > 0.3:
+            sentiment_results[author]['positive'] += 1
+        elif score < -0.3:
+            sentiment_results[author]['negative'] += 1
+        else:
+            sentiment_results[author]['neutral'] += 1
+
+        sentiment_results[author]['total'] += 1
+
+    for author, counts in sentiment_results.items():
+        total = counts['total']
+        counts['positive'] = round((counts['positive'] / total) * 100, 2)
+        counts['neutral'] = round((counts['neutral'] / total) * 100, 2)
+        counts['negative'] = round((counts['negative'] / total) * 100, 2)
+
+    return sentiment_results
 
 def loadView():
     
+    st.title("Analiza sentymentu wypowiedzi posłów")
+
+    proceedings = get_proceedings(TERM)
+    if proceedings:
+        proceeding_options = [f"{p['number']}" for p in proceedings]
+        selected_proceeding = st.selectbox("Wybierz numer posiedzenia Sejmu", proceeding_options)
+        
+        proceeding_details = get_proceeding_details(TERM, selected_proceeding)
+        dates = proceeding_details.get('dates', [])
+        
+        if dates:
+            selected_date = st.selectbox("Wybierz datę posiedzenia", dates)
+            
+            statements = get_transcripts(TERM, selected_proceeding, selected_date)
+            
+            if statements:
+                st.write(f"**Liczba wypowiedzi pobranych z API:** {len(statements)}")
+                sentiment_results = analyze_sentiment(statements)
+
+                st.subheader("Wyniki analizy sentymentu wypowiedzi posłów")
+                for author, sentiments in sentiment_results.items():
+                    st.write(f"**Poseł:** {author}")
+                    st.write(f"Pozytywne: {sentiments['positive']}%")
+                    st.write(f"Neutralne: {sentiments['neutral']}%")
+                    st.write(f"Negatywne: {sentiments['negative']}%")
+                    st.write("---")
+            else:
+                st.write("Brak wypowiedzi dla wybranej daty posiedzenia.")
+        else:
+            st.write("Brak dostępnych dat dla wybranego posiedzenia.")
+    else:
+        st.write("Brak dostępnych posiedzeń.")
+
+
+
     st.title("Śledzenie Procesu Legislacyjnego")
 
     processes = get_legislative_processes(TERM)
@@ -87,7 +134,7 @@ def loadView():
                     st.write(f"**Etap:** {stage['stageName']}")
                     
                     try:
-                        st.write(f"**Data:** {stage['date']}")
+                        st.write(f"**Data:** {stage['dates']}")
                     except:
                         print("no date")
                     try:
