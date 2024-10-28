@@ -20,7 +20,9 @@ def load_numbers():
 def check_new_voting():
     term_number, sitting_number, voting_number = load_numbers()
     last_voting = st.session_state.get('last_voting', (0, 0, 0))
-
+    if voting_number==0:
+        sitting_number=sitting_number-1
+        voting_number=get_voting_number(sitting=sitting_number)
     if (term_number, sitting_number, voting_number) != last_voting:
         send_push(
             title="Nowe głosowanie!",
