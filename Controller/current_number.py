@@ -45,15 +45,10 @@ if __name__ == "__main__":
     term_number = get_term_number()
     sitting_number = get_sitting_number(term_number)
     voting_number = get_voting_number(term_number, sitting_number)
-<<<<<<< Updated upstream
-     print(
-     f"Głosowanie nr {voting_number} na {sitting_number} posiedzeniu {term_number} kadencji Sejmu")
-=======
     if voting_number==0:
         sitting_number-=1
         voting_number = get_voting_number(term_number,sitting_number)
     print(
         f"Głosowanie nr {voting_number} na {sitting_number} posiedzeniu {term_number} kadencji Sejmu")
->>>>>>> Stashed changes
     # 26.08.2024 Expected Output Głosowanie nr 84 na 17 posiedzeniu 10 kadencji Sejmu
     # Tak zdaję sobie sprawę że to zdanie jest fałszywe ze względu na to że na 17 posiedzeniu nie było jeszcze żadnych głosowań bo jeszcze się nie zaczęło.

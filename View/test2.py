@@ -20,10 +20,6 @@ def loadView():
 
     st.markdown(
         f"posiedzenia wybranej komisji w ciągu ostanich 3 dni,{CommiteeFutureSetting(term_number,committeeCode)}")
-<<<<<<< Updated upstream
-    correlationValue = st.number_input(
-        label="Podaj jak bardzo wartości mają być skorelowane [-1;1]", min_value=-1.0, max_value=1.0)
-=======
     numberOfSettings = st.number_input(
         "ile ostanich posiedzień komijsji cię interesuje", 1, value=1)
     settingsList = LastNCommitteeSettingDates(
@@ -33,7 +29,6 @@ def loadView():
     correlationValue = -1
     #correlationValue = st.number_input(
     #    label="Podaj jak bardzo wartości mają być skorelowane [-1;1]", min_value=-1.0, max_value=1.0)
->>>>>>> Stashed changes
     type = st.selectbox("Wybierz rodzaj analizowanych wyników",
                         ("procentowe", "ilościowe"))
     electionSelections = st.selectbox("wybierz poziom administracyjny do analizy ", (
