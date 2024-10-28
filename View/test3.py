@@ -4,7 +4,10 @@ from datetime import datetime, date
 import streamlit as st
 from sentimentpl.models import SentimentPLModel
 from Controller.acts import get_all_acts_this_year, get_titles_of_record,did_today_new_ustawa_obowiazuje,  get_process_details, get_legislative_processes
-
+import pdfplumber
+from io import BytesIO
+import re
+from collections import defaultdict
 
 BASE_URL = "https://api.sejm.gov.pl"
 TERM = 10  # Przykładowy termin Sejmu
@@ -12,7 +15,7 @@ TERM = 10  # Przykładowy termin Sejmu
 model = SentimentPLModel(from_pretrained='latest')
 
 def get_proceedings(term):
-    response = requests.get(f"{BASE_URL}/sejm/term{term}/proceedings", headers={'Accept': 'application/json'})
+    response = requests.get(f"{BASE_URL}/sejm/term{term}/proceedings")
     if response.status_code == 200:
         return response.json()
     else:
@@ -20,91 +23,63 @@ def get_proceedings(term):
         return []
 
 def get_proceeding_details(term, proceeding_number):
-    response = requests.get(f"{BASE_URL}/sejm/term{term}/proceedings/{proceeding_number}", headers={'Accept': 'application/json'})
+    response = requests.get(f"{BASE_URL}/sejm/term{term}/proceedings/{proceeding_number}")
     if response.status_code == 200:
         return response.json()
     else:
         st.error(f"Nie udało się pobrać szczegółów posiedzenia. Kod błędu: {response.status_code}")
         return {}
 
-def get_transcripts(term, proceeding_number, date, transcript_number=0):
-    header = {
-        'Accept': 'application/json',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36',
-        'Referer': BASE_URL
-    }
+def get_transcript(term, proceeding_number, date, transcript_number=0):
+
     response = requests.get(
-        f"{BASE_URL}/sejm/term{term}/proceedings/{proceeding_number}/{date}/transcripts/{transcript_number}",
-        headers=header
+        f"{BASE_URL}/sejm/term{term}/proceedings/{proceeding_number}/{date}/transcripts/pdf"
     )
     
-    
     if response.status_code == 200:
-        return response.json().get('statements', [])
+        return BytesIO(response.content)
     else:
-        st.error(f"Nie udało się pobrać transkryptów wypowiedzi. Kod błędu: {response.status_code}")
-        return []
+        st.error(f"Nie udało się pobrać pliku PDF. Kod błędu: {response.status_code}")
+        return None
 
-def analyze_sentiment(statements):
-    sentiment_results = defaultdict(lambda: {'positive': 0, 'neutral': 0, 'negative': 0, 'total': 0})
+def extract_text_from_pdf_without_parentheses(pdf_file):
+    text = ""
+    with pdfplumber.open(pdf_file) as pdf:
+        for page in pdf.pages:
+            page_text = page.extract_text()
+            # Usuwamy tekst w nawiasach za pomocą regexu
+            page_text = re.sub(r'\(.*?\)', '', page_text)
+            text += page_text + "\n"
+    return text
 
-    for statement in statements:
-        text = statement.get('content', "")
-        author = statement.get('author', "Nieznany")
-        score = model(text).item()  # Zakres wyniku: od -1 (negatywny) do 1 (pozytywny)
-
-        if score > 0.3:
-            sentiment_results[author]['positive'] += 1
-        elif score < -0.3:
-            sentiment_results[author]['negative'] += 1
-        else:
-            sentiment_results[author]['neutral'] += 1
-
-        sentiment_results[author]['total'] += 1
-
-    for author, counts in sentiment_results.items():
-        total = counts['total']
-        counts['positive'] = round((counts['positive'] / total) * 100, 2)
-        counts['neutral'] = round((counts['neutral'] / total) * 100, 2)
-        counts['negative'] = round((counts['negative'] / total) * 100, 2)
-
-    return sentiment_results
+    
 
 def loadView():
-    
-    st.title("Analiza sentymentu wypowiedzi posłów")
+    st.title("Analiza sentymentu wypowiedzi posłów z transkryptu")
 
-    proceedings = get_proceedings(TERM)
-    if proceedings:
-        proceeding_options = [f"{p['number']}" for p in proceedings]
+    proceeding_number = get_proceedings(TERM)
+    if proceeding_number:
+        proceeding_options = [f"{p['number']}" for p in proceeding_number]
         selected_proceeding = st.selectbox("Wybierz numer posiedzenia Sejmu", proceeding_options)
         
         proceeding_details = get_proceeding_details(TERM, selected_proceeding)
-        dates = proceeding_details.get('dates', [])
+        date = proceeding_details.get('dates', [])
         
-        if dates:
-            selected_date = st.selectbox("Wybierz datę posiedzenia", dates)
-            
-            statements = get_transcripts(TERM, selected_proceeding, selected_date)
-            
-            if statements:
-                st.write(f"**Liczba wypowiedzi pobranych z API:** {len(statements)}")
-                sentiment_results = analyze_sentiment(statements)
+        if date:
+            selected_date = st.selectbox("Wybierz datę posiedzenia", date)
 
-                st.subheader("Wyniki analizy sentymentu wypowiedzi posłów")
-                for author, sentiments in sentiment_results.items():
-                    st.write(f"**Poseł:** {author}")
-                    st.write(f"Pozytywne: {sentiments['positive']}%")
-                    st.write(f"Neutralne: {sentiments['neutral']}%")
-                    st.write(f"Negatywne: {sentiments['negative']}%")
-                    st.write("---")
-            else:
-                st.write("Brak wypowiedzi dla wybranej daty posiedzenia.")
-        else:
-            st.write("Brak dostępnych dat dla wybranego posiedzenia.")
-    else:
-        st.write("Brak dostępnych posiedzeń.")
+    if st.button("Pobierz i analizuj transkrypt"):
+        
+        pdf_file = get_transcript(TERM, proceeding_number, date)
+        if pdf_file:
+            text = extract_text_from_pdf_without_parentheses(pdf_file)
+            st.subheader("Przykładowy tekst bez nawiasów")
+            st.write(text[:1000]) 
 
+            
+            
+    
+    
 
 
     st.title("Śledzenie Procesu Legislacyjnego")
