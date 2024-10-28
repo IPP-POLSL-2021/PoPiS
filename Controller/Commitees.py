@@ -88,10 +88,11 @@ def ComitteStats(term, code=None):
     return ClubsDataframe, MPsDataframe, ClubsNonDataframe
 
 
-def ComitteEducation(commitee, term=10):
+def ComitteEducation(commitee, term=10, searchedInfo='edukacja'):
     response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/MP')
     MPs = response.json()
     MPsEducation = {}
+
     for party in commitee:
         educations = {}
         for person in commitee[party]:
@@ -100,9 +101,22 @@ def ComitteEducation(commitee, term=10):
             # dateOfBirth = [mp['birthDate'] for mp in filtered_MPs]
             if filtered_MPs:
                 # print(filtered_MPs)
-                educationOfMP = str([
-                    mp['educationLevel'] for mp in filtered_MPs])
+                educationOfMP = ""
+                match searchedInfo:
+                    case 'edukacja':
+                        educationOfMP = str([
+                            mp['educationLevel'] for mp in filtered_MPs])
+                    case 'okrąg':
+                        educationOfMP = str([
+                            mp['districtName'] for mp in filtered_MPs])
+                    case 'profesja':
+                        educationOfMP = str([
+                            mp['profession'] for mp in filtered_MPs])
+                    case 'województwo':
+                        educationOfMP = str([
+                            mp['voivodeship'] for mp in filtered_MPs])
                 educationOfMP = educationOfMP.strip("[]'")
+
                 if educationOfMP in educations:
                     educations[educationOfMP] += 1
                 else:
@@ -111,7 +125,7 @@ def ComitteEducation(commitee, term=10):
     return MPsEducation
 
 
-def CommitteeAge(committee, term=10):
+def CommitteeAge(committee, term=10, searchedInfo='birthDate'):
     response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/MP')
     MPs = response.json()
     current_time = datetime.now().replace(microsecond=0, second=0, minute=0, hour=0)
@@ -126,9 +140,19 @@ def CommitteeAge(committee, term=10):
     # print(committee.to_dict)
     # committee = committee.to_dict(orient="list")
     # print(committee)
+    searchedData = f'{searchedInfo}'
     for patry in committee:
         # print(committee[patry])
         ages = []
+        match searchedData:
+            case 'wiek':
+                searchedData = 'birthDate'
+            case 'profesja':
+                searchedData = 'profession'
+            case 'województwo':
+                searchedData = 'voivodeship'
+            case 'okorąg':
+                searchedData = 'districtName'
 
         # print(patry)
         for person in committee[patry]:
@@ -138,7 +162,7 @@ def CommitteeAge(committee, term=10):
             # dateOfBirth = [mp['birthDate'] for mp in filtered_MPs]
             if filtered_MPs:
                 dateOfBirth = str([
-                    mp['birthDate'] for mp in filtered_MPs])
+                    mp[searchedData] for mp in filtered_MPs])
                 # print(datetime.strptime(str(dateOfBirth[0]), '%Y-%m-%d').date())
                 dateOfBirth = dateOfBirth.strip("[]'")
                 # print(dateOfBirth)

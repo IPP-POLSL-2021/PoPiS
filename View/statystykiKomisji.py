@@ -78,15 +78,33 @@ def loadView():
     if selectedCommittee == "łącznie":
         st.dataframe(MPs)
     # wykresy wieku
+
     DataframeAges, AgesButDictionary = CommitteeAge(
         clubsButBetter, term_number)
     all_ages = DataframeAges.values.flatten()
     all_ages = pd.Series(all_ages).dropna()
     stats = st.selectbox(
-        "Wybierz stytystykę", ["brak", "wiek", "edukacja"])
-    EducationDictionary = ComitteEducation(clubsButBetter, term_number)
+        "Wybierz stytystykę", ["brak", "wiek", "edukacja", "okrąg", "profesja",  "województwo"])
     match stats:
         case "wiek":
             ageStats(all_ages, AgesButDictionary)
         case "edukacja":
+            EducationDictionary = ComitteEducation(
+                clubsButBetter, term_number, stats)
             MoreStats(EducationDictionary)
+        case "profesja":
+            EducationDictionary = ComitteEducation(
+                clubsButBetter, term_number, stats)
+            MoreStats(EducationDictionary)
+        case "okrąg":
+            EducationDictionary = ComitteEducation(
+                clubsButBetter, term_number, stats)
+            MoreStats(EducationDictionary)
+        case "województwo":
+            EducationDictionary = ComitteEducation(
+                clubsButBetter, term_number, stats)
+            MoreStats(EducationDictionary)
+
+            MoreStats(EducationDictionary)
+        case "brak":
+            st.write("")
