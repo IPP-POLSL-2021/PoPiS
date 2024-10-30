@@ -15,7 +15,7 @@ intents.message_content = True
 client = Client(intents=intents)
 
 
-async def discordCheck():
+def discordCheck():
     while True:
         list = check_24_hours("./Data/time.txt", "discord")
         if list is not False:
@@ -28,13 +28,13 @@ async def discordCheck():
                 # to bardzo istotna część kodu z jakiegoś powodu bez tego nie dizłało
                 print("działa?")
                 print(date)
-
+                channel = client.get_channel(row.channelId)
                 if date == "brak":
-                    await row.channelId.send("nie znaleziono komisji")
+                    channel.send("nie znaleziono komisji")
                 elif date == "brak posiedzeń":
-                    await row.channelId.send(date)
+                    channel.send(date)
                 else:
-                    await row.channelId.send(f" {date}")
+                    channel.send(f" {date}")
 
 
 async def send_message(message, user_message):
