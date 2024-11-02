@@ -2,14 +2,14 @@ import streamlit as st
 import asyncio
 from View import test
 
-from View import test2, statystykiKomisji
+from View import test2, statystykiKomisji, BasicStats
 st.sidebar.title("Nawigacja")
 
 
 def ViewSelection():
 
     page = st.sidebar.selectbox(
-        "Wybierz stronę", ["Aplikacja 1", "Aplikacja 2", "statystyki"])
+        "Wybierz stronę", ["Aplikacja 1", "Aplikacja 2", "statystyki", "statystyki ogólne"])
 
     # t1 = threading.Thread(target=discordBotStart, name='t1')
     match page:
@@ -19,12 +19,14 @@ def ViewSelection():
             test2.loadView()
         case "statystyki":
             statystykiKomisji.loadView()
-    # if page == "Aplikacja 1":
+        case "statystyki ogólne":
+            BasicStats.loadView()
+            # if page == "Aplikacja 1":
 
-    #     test.loadView()
-    # elif page == "Aplikacja 2":
+            #     test.loadView()
+            # elif page == "Aplikacja 2":
 
-    #     test2.loadView()
+            #     test2.loadView()
 
 
 ViewSelection()
