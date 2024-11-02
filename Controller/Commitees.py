@@ -114,9 +114,9 @@ def ComitteEducation(commitee, term=10, searchedInfo='edukacja'):
 
                         educationOfMP = str(
                             [mp['profession'] for mp in filtered_MPs if 'profession' in mp])
-                    case 'województwo':
-                        educationOfMP = str([
-                            mp['voivodeship'] for mp in filtered_MPs])
+                    # case 'województwo':
+                    #     educationOfMP = str([
+                    #         mp['voivodeship'] for mp in filtered_MPs])
                 educationOfMP = educationOfMP.strip("[]'")
 
                 if educationOfMP in educations:

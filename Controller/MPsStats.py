@@ -68,3 +68,43 @@ def ageStats(term, MpIdByClub, Mplist):
     # agesDataFrame = pd.DataFrame(MPsAge)
     print(agesDataFrame)
     return agesDataFrame, MPsAge
+
+
+def MPsEducation(MPSimpleList, MPIdlist, term=10, searchedInfo='edukacja'):
+
+    MPs = MPSimpleList
+    MPsEducation = {}
+
+    for party in MPIdlist:
+        educations = {}
+        for person in MPIdlist[party]:
+
+            filtered_MPs = [
+                mp for mp in MPs if mp['id'] == person]
+            # dateOfBirth = [mp['birthDate'] for mp in filtered_MPs]
+            if filtered_MPs:
+                # print(filtered_MPs)
+                educationOfMP = ""
+                match searchedInfo:
+                    case 'edukacja':
+                        educationOfMP = str([
+                            mp['educationLevel'] for mp in filtered_MPs])
+                    case 'okrąg':
+                        educationOfMP = str([
+                            mp['districtName'] for mp in filtered_MPs])
+                    case 'profesja':
+
+                        educationOfMP = str(
+                            [mp['profession'] for mp in filtered_MPs if 'profession' in mp])
+                    # case 'województwo':
+                    #     educationOfMP = str([
+                    #         mp['voivodeship'] for mp in filtered_MPs])
+                educationOfMP = educationOfMP.strip("[]'")
+
+                if educationOfMP in educations:
+                    educations[educationOfMP] += 1
+                else:
+                    educations[educationOfMP] = 1
+        MPsEducation[party] = educations
+        print(MPsEducation)
+    return MPsEducation
