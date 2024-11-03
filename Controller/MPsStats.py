@@ -149,5 +149,5 @@ def HistoryOfMp(lastFirstName, currentMpsList):
             # else:
         # print(Mpstats.club)
         # print(termNum)
-    print(HistList)
+    # print(HistList)
     return HistList

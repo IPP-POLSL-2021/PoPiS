@@ -82,3 +82,8 @@ def loadView():
     selectedMp = st.selectbox("Wybierz posła ",  list(
         mp['lastFirstName'] for mp in MpsList))
     HisotryOfMP = MPsStats.HistoryOfMp(selectedMp, MpsList)
+    print(HisotryOfMP)
+    for term in HisotryOfMP:
+        # print(term)
+        st.write(
+            f"podczas {term} kadecji sejmu poseł {selectedMp} {str(HisotryOfMP[term])}")
