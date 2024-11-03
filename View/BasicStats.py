@@ -78,12 +78,28 @@ def loadView():
         case "województwo":
             PDictionary = MPsStats.MoreMPsStats(
                 MpsList, MpGroupedList, term_number, stats)
-            _sharedViews.MoreStats(MPDictionary)
+            _sharedViews.MoreStats(PDictionary)
     selectedMp = st.selectbox("Wybierz posła ",  list(
         mp['lastFirstName'] for mp in MpsList))
     HisotryOfMP = MPsStats.HistoryOfMp(selectedMp, MpsList)
     print(HisotryOfMP)
+    clubDict = {}
+    professionDict = {}
+    termsDict = {}
+    districtDict = {}
+    NumOfVotes = []
     for term in HisotryOfMP:
         # print(term)
         st.write(
             f"podczas {term} kadecji sejmu poseł {selectedMp} {str(HisotryOfMP[term])}")
+        obj = HisotryOfMP[term]
+        clubDict[obj.club] = 1
+        districtDict[obj.districtName] = 1
+        termsDict[term] = term
+        professionDict[obj.profession] = 1
+        NumOfVotes.append(obj.numberOfVotes)
+    # NumOfVotes = list(filter((0).__ne__, NumOfVotes))
+    st.write(f'''podczas swojej kariery poseł  otryzmał mandat {len(termsDict)} krotnie, był w {len(clubDict)} klubach,
+             startował z {len(districtDict)}, pełnił {len(professionDict)} profesji
+             maksymalnie zdobył {max(NumOfVotes)} głosów
+             a minimalnie {min(NumOfVotes)}''')

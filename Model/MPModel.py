@@ -6,6 +6,7 @@ class Mp:
         self.numberOfVotes = numberOfVotes
         self.profession = profession
         self.voivodeship = voivodeship
+
         pass
 
     def __str__(self) -> str:
