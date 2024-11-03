@@ -1,6 +1,7 @@
 import requests
 from datetime import datetime, timedelta
 import pandas as pd
+from Model import MPModel
 
 
 def groupMpsByClub(term):
@@ -108,3 +109,45 @@ def MoreMPsStats(MPSimpleList, MPIdlist, term=10, searchedInfo='edukacja'):
         MPsEducation[party] = educations
         # print(MPsEducation)
     return MPsEducation
+
+
+def HistoryOfMp(lastFirstName, currentMpsList):
+    # print(lastFirstName)
+    request = requests.get("https://api.sejm.gov.pl/sejm/term")
+    response = request.json()
+    termNum = 0
+    for term in response:
+        if term['current']:
+            termNum = term['num']
+            # print(term)
+    curr = termNum
+    HistList = {}
+
+    for termNum in range(termNum, 0, -1):
+        if termNum == curr:
+            Mp = [Mp for Mp in currentMpsList if Mp['lastFirstName'] == lastFirstName]
+            # list[term] = [currentMpsList['club'], currentMpsList['districtName'],,currentMpsList['educationLevel'],currentMpsList['proffesion']]
+            Mp = Mp[0]
+            Mpstats = MPModel.Mp(Mp.get('club', None), Mp.get('districtName', None), Mp.get('educationLevel', None),
+                                 Mp.get('numberOfVotes', None), Mp.get('profession', None), Mp.get('voivodeship', None))
+            HistList[termNum] = Mpstats
+        else:
+            request = requests.get(
+                f"https://api.sejm.gov.pl/sejm/term{termNum}/MP")
+            response = request.json()
+
+            # print(response, "ressssponse")
+            Mp = [Mp for Mp in response if Mp['lastFirstName'] == lastFirstName]
+
+            # print(f"{Mp} Mp zwykłe")
+            # print(f"{Mp[0]} Mp nie zwykłe czytaj spierdolone")
+            if len(Mp) > 0:
+                Mp = Mp[0]
+                Mpstats = MPModel.Mp(Mp.get('club', None), Mp.get('districtName', None), Mp.get('educationLevel', None),
+                                     Mp.get('numberOfVotes', None), Mp.get('profession', None), Mp.get('voivodeship', None))
+                HistList[termNum] = Mpstats
+            # else:
+        # print(Mpstats.club)
+        # print(termNum)
+    print(HistList)
+    return HistList

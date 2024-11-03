@@ -79,3 +79,6 @@ def loadView():
             PDictionary = MPsStats.MoreMPsStats(
                 MpsList, MpGroupedList, term_number, stats)
             _sharedViews.MoreStats(MPDictionary)
+    selectedMp = st.selectbox("Wybierz posła ",  list(
+        mp['lastFirstName'] for mp in MpsList))
+    HisotryOfMP = MPsStats.HistoryOfMp(selectedMp, MpsList)
