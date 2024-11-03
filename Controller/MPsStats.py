@@ -70,7 +70,7 @@ def ageStats(term, MpIdByClub, Mplist):
     return agesDataFrame, MPsAge
 
 
-def MPsEducation(MPSimpleList, MPIdlist, term=10, searchedInfo='edukacja'):
+def MoreMPsStats(MPSimpleList, MPIdlist, term=10, searchedInfo='edukacja'):
 
     MPs = MPSimpleList
     MPsEducation = {}
@@ -96,9 +96,9 @@ def MPsEducation(MPSimpleList, MPIdlist, term=10, searchedInfo='edukacja'):
 
                         educationOfMP = str(
                             [mp['profession'] for mp in filtered_MPs if 'profession' in mp])
-                    # case 'województwo':
-                    #     educationOfMP = str([
-                    #         mp['voivodeship'] for mp in filtered_MPs])
+                    case 'województwo':
+                        educationOfMP = str([
+                            mp['voivodeship'] for mp in filtered_MPs])
                 educationOfMP = educationOfMP.strip("[]'")
 
                 if educationOfMP in educations:
@@ -106,5 +106,5 @@ def MPsEducation(MPSimpleList, MPIdlist, term=10, searchedInfo='edukacja'):
                 else:
                     educations[educationOfMP] = 1
         MPsEducation[party] = educations
-        print(MPsEducation)
+        # print(MPsEducation)
     return MPsEducation
