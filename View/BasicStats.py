@@ -82,7 +82,7 @@ def loadView():
     selectedMp = st.selectbox("Wybierz posła ",  list(
         mp['lastFirstName'] for mp in MpsList))
     HisotryOfMP = MPsStats.HistoryOfMp(selectedMp, MpsList)
-    print(HisotryOfMP)
+    # print(HisotryOfMP)
     clubDict = {}
     professionDict = {}
     termsDict = {}

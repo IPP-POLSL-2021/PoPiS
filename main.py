@@ -2,7 +2,7 @@ import streamlit as st
 import asyncio
 from View import test
 
-from View import test2, statystykiKomisji, BasicStats
+from View import test2, statystykiKomisji, BasicStats, calculator
 st.sidebar.title("Nawigacja")
 
 
@@ -21,6 +21,9 @@ def ViewSelection():
             statystykiKomisji.loadView()
         case "statystyki ogólne":
             BasicStats.loadView()
+        case "kalkuator":
+            calculator.loadView()
+
             # if page == "Aplikacja 1":
 
             #     test.loadView()
