@@ -3,6 +3,12 @@ from Controller import seastCalculators
 import json
 
 
+def clearJSON(clearDict):
+    with open("data.json", "w", encoding="utf-8") as json_file:
+        json.dump(clearDict, json_file,
+                  ensure_ascii=False, indent=4)
+
+
 def loadView():
     # print("huj")
     clublist = []
@@ -27,10 +33,12 @@ def loadView():
         i += 1
     seatsDistricstsDict = districtsDict
     loaded_data = {}
+    type = st.selectbox("rodzaj głosów", ["ilościowy", "procętowy"])
     with st.form("kalkulaotr miejsc w sejmie"):
-        type = st.selectbox("rodzaj głosów", ["ilościowy", "procętowy"])
         st.write("wybierz okrąg który chcesz uzupełnić")
 
+        # if resestAll:
+        #     clearJSON(seatsDistricstsDict)
         district = st.selectbox("wybierz okrąg który chcesz uzupełnić",
                                 districtsDict.keys())
         val = districtsDict[district]
@@ -61,6 +69,17 @@ def loadView():
                     procent = frequency/100
                     newSeats = seastCalculators.dhont(
                         pis*procent, ko*procent, td*procent, lw*procent, kf*procent, val['Frekwencja'], "ilościowy", seatsNum)
+                    with open("data.json", "r", encoding="utf-8") as json_file:
+                        loaded_data = json.load(json_file)
+                        loaded_data[district]['PiS'] = newSeats['PiS']
+                        loaded_data[district]['KO'] = newSeats['KO']
+                        loaded_data[district]['Trzecia Droga'] = newSeats['Trzecia Droga']
+                        loaded_data[district]['Lewica'] = newSeats['Lewica']
+                        loaded_data[district]['Konfederacja'] = newSeats['Konfederacja']
+                    with open("data.json", "w", encoding="utf-8") as json_file:
+                        json.dump(loaded_data, json_file,
+                                  ensure_ascii=False, indent=4)
+                    st.write(newSeats)
 
             else:
                 val['Frekwencja'] = pis+ko+td+lw+kf
@@ -68,11 +87,11 @@ def loadView():
                     pis, ko, td, lw, kf, val['Frekwencja'], "ilościowy", seatsNum)
                 # districtResults = seatsDistricstsDict[district]
                 # trzeba by to gdzeiś przekazać np do pliku aby nie tracić danych
-                seatsDistricstsDict[district]['PiS'] = newSeats['PiS']
-                seatsDistricstsDict[district]['KO'] = newSeats['KO']
-                seatsDistricstsDict[district]['Trzecia Droga'] = newSeats['Trzecia Droga']
-                seatsDistricstsDict[district]['Lewica'] = newSeats['Lewica']
-                seatsDistricstsDict[district]['Konfederacja'] = newSeats['Konfederacja']
+                # seatsDistricstsDict[district]['PiS'] = newSeats['PiS']
+                # seatsDistricstsDict[district]['KO'] = newSeats['KO']
+                # seatsDistricstsDict[district]['Trzecia Droga'] = newSeats['Trzecia Droga']
+                # seatsDistricstsDict[district]['Lewica'] = newSeats['Lewica']
+                # seatsDistricstsDict[district]['Konfederacja'] = newSeats['Konfederacja']
                 # seatsDistricstsDict[district] = districtResults
                 # districtsDict[district] = val
                 # print("dupa")
@@ -87,8 +106,12 @@ def loadView():
                     json.dump(loaded_data, json_file,
                               ensure_ascii=False, indent=4)
                 st.write(newSeats)
-
-                # print(seatsDistricstsDict['Gliwice'])
+    resestAll = st.button("wyczyść wszystkie dane")
+    if resestAll:
+        with open("data.json", "w", encoding="utf-8") as json_file:
+            json.dump(seatsDistricstsDict, json_file,
+                      ensure_ascii=False, indent=4)
+    # print(seatsDistricstsDict['Gliwice'])
 
     # print(districtsDict)
     votesDict = {'PiS': 0, 'KO': 0, 'Trzecia Droga': 0, 'Lewica': 0,

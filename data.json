@@ -1,19 +1,19 @@
 {
     "Legnica": {
         "PiS": 0,
-        "KO": 1,
-        "Trzecia Droga": 4,
+        "KO": 0,
+        "Trzecia Droga": 0,
         "Lewica": 0,
-        "Konfederacja": 7,
-        "Frekwencja": 3649252898,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
         "Miejsca do zdobycia": 12
     },
     "Wałbrzych": {
-        "PiS": 5,
+        "PiS": 0,
         "KO": 0,
-        "Trzecia Droga": 1,
+        "Trzecia Droga": 0,
         "Lewica": 0,
-        "Konfederacja": 2,
+        "Konfederacja": 0,
         "Frekwencja": 0,
         "Miejsca do zdobycia": 8
     },
