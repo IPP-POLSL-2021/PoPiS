@@ -88,6 +88,7 @@ def loadView():
     termsDict = {}
     districtDict = {}
     NumOfVotes = []
+    voivodeshipDict = {}
     for term in HisotryOfMP:
         # print(term)
         st.write(
@@ -97,9 +98,12 @@ def loadView():
         districtDict[obj.districtName] = 1
         termsDict[term] = term
         professionDict[obj.profession] = 1
-        NumOfVotes.append(obj.numberOfVotes)
+        if obj.voivodeship is not None:
+            voivodeshipDict[obj.voivodeship] = 1
+        if obj.numberOfVotes > 0:
+            NumOfVotes.append(obj.numberOfVotes)
     # NumOfVotes = list(filter((0).__ne__, NumOfVotes))
     st.write(f'''podczas swojej kariery poseł  otryzmał mandat {len(termsDict)} krotnie, był w {len(clubDict)} klubach,
-             startował z {len(districtDict)}, pełnił {len(professionDict)} profesji
+             startował z {len(districtDict)} okręgów mieszczących się w {len(voivodeshipDict)} róznych województwach, pełnił {len(professionDict)} profesji
              maksymalnie zdobył {max(NumOfVotes)} głosów
              a minimalnie {min(NumOfVotes)}''')
