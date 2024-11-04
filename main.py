@@ -9,7 +9,7 @@ st.sidebar.title("Nawigacja")
 def ViewSelection():
 
     page = st.sidebar.selectbox(
-        "Wybierz stronę", ["Aplikacja 1", "Aplikacja 2", "statystyki", "statystyki ogólne"])
+        "Wybierz stronę", ["Aplikacja 1", "Aplikacja 2", "statystyki", "statystyki ogólne", "kalkuator"])
 
     # t1 = threading.Thread(target=discordBotStart, name='t1')
     match page:
