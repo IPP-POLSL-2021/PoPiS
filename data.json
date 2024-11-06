@@ -1,10 +1,10 @@
 {
     "Legnica": {
-        "PiS": 0,
-        "KO": 0,
-        "Trzecia Droga": 0,
-        "Lewica": 0,
-        "Konfederacja": 0,
+        "PiS": 2,
+        "KO": 1,
+        "Trzecia Droga": 2,
+        "Lewica": 5,
+        "Konfederacja": 2,
         "Frekwencja": 0,
         "Miejsca do zdobycia": 12
     },

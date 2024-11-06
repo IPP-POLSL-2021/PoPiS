@@ -11,6 +11,9 @@ def clearJSON(clearDict):
 
 def loadView():
     # print("huj")
+    lastParty = ""
+    nextParty = ""
+    diff = 0
     clublist = []
     votesDict = {'PiS': 0, 'KO': 0, 'Trzecia Droga': 0, 'Lewica': 0,
                  'Konfederacja': 0, 'Frekwencja': 0, 'Miejsca do zdobycia': 0}
@@ -67,7 +70,7 @@ def loadView():
                     st.warning("Wyniki powinny sumować się do 100%")
                 else:
                     procent = frequency/100
-                    newSeats = seastCalculators.dhont(
+                    newSeats, lastParty, nextParty = seastCalculators.dhont(
                         pis*procent, ko*procent, td*procent, lw*procent, kf*procent, val['Frekwencja'], "ilościowy", seatsNum)
                     with open("data.json", "r", encoding="utf-8") as json_file:
                         loaded_data = json.load(json_file)
@@ -83,7 +86,7 @@ def loadView():
 
             else:
                 val['Frekwencja'] = pis+ko+td+lw+kf
-                newSeats = seastCalculators.dhont(
+                newSeats, lastParty, nextParty = seastCalculators.dhont(
                     pis, ko, td, lw, kf, val['Frekwencja'], "ilościowy", seatsNum)
                 # districtResults = seatsDistricstsDict[district]
                 # trzeba by to gdzeiś przekazać np do pliku aby nie tracić danych
@@ -106,6 +109,8 @@ def loadView():
                     json.dump(loaded_data, json_file,
                               ensure_ascii=False, indent=4)
                 st.write(newSeats)
+                st.write(
+                    f"Partia która zdobyła ostanie miejsce w okręgu to {lastParty} koljnne miejsce zdobyła by partia {nextParty}")
     resestAll = st.button("wyczyść wszystkie dane")
     if resestAll:
         with open("data.json", "w", encoding="utf-8") as json_file:
