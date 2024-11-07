@@ -6,9 +6,18 @@ def chooseMethod(PiS, KO, TD, Lewica, Konf, Freq, type, seatsNum, method):
         case "Sainte-Laguë":
             return SainteLague(PiS, KO, TD, Lewica, Konf, Freq, type, seatsNum)
         case "Kwota Hare’a (metoda największych reszt)":
-            return HareDrop(PiS, KO, TD, Lewica, Konf, Freq, type, seatsNum)
+            # print(HareDrop(PiS, KO, TD, Lewica,
+            #       Konf, Freq, type, seatsNum)[:2])
+            # print(HareDrop(PiS, KO, TD, Lewica,
+            #       Konf, Freq, type, seatsNum+1)[1])
+            return HareDrop(PiS, KO, TD, Lewica, Konf, Freq, type, seatsNum)[0], \
+                HareDrop(PiS, KO, TD, Lewica, Konf, Freq, type, seatsNum)[1], \
+                HareDrop(PiS, KO, TD, Lewica, Konf, Freq, type, seatsNum+1)[1]
         case "Kwota Hare’a (metoda najmniejszych reszt)":
-            return HareDrop(PiS, KO, TD, Lewica, Konf, Freq, type, seatsNum, False)
+            return HareDrop(PiS, KO, TD, Lewica, Konf, Freq, type, seatsNum, False)[0], \
+                HareDrop(PiS, KO, TD, Lewica, Konf, Freq, type, seatsNum, False)[1], \
+                HareDrop(PiS,  KO, TD, Lewica, Konf,
+                         Freq, type, seatsNum+1, False)[1]
 
 
 def HareDrop(PiS, KO, TD, Lewica, Konf, Freq, type, seatsNum, biggest=True):
