@@ -5,7 +5,7 @@
         "Trzecia Droga": 2,
         "Lewica": 2,
         "Konfederacja": 2,
-        "Frekwencja": 0,
+        "Frekwencja": 287341,
         "Miejsca do zdobycia": 12,
         "Uzupełniono": true
     },
@@ -60,14 +60,14 @@
         "Uzupełniono": false
     },
     "Chełm": {
-        "PiS": 0,
-        "KO": 0,
-        "Trzecia Droga": 0,
-        "Lewica": 0,
-        "Konfederacja": 0,
-        "Frekwencja": 0,
+        "PiS": 3,
+        "KO": 3,
+        "Trzecia Droga": 2,
+        "Lewica": 2,
+        "Konfederacja": 2,
+        "Frekwencja": 287341,
         "Miejsca do zdobycia": 12,
-        "Uzupełniono": false
+        "Uzupełniono": true
     },
     "Zielona Góra": {
         "PiS": 0,
@@ -400,13 +400,13 @@
         "Uzupełniono": false
     },
     "Szczecin": {
-        "PiS": 0,
-        "KO": 0,
-        "Trzecia Droga": 0,
-        "Lewica": 0,
-        "Konfederacja": 0,
-        "Frekwencja": 0,
+        "PiS": 3,
+        "KO": 3,
+        "Trzecia Droga": 2,
+        "Lewica": 2,
+        "Konfederacja": 2,
+        "Frekwencja": 287341,
         "Miejsca do zdobycia": 12,
-        "Uzupełniono": false
+        "Uzupełniono": true
     }
 }

@@ -37,6 +37,11 @@ def loadView():
         i += 1
     seatsDistricstsDict = districtsDict
     loaded_data = {}
+    pis = 0
+    ko = 0
+    td = 0
+    lw = 0
+    kf = 0
     type = st.selectbox("rodzaj głosów", ["ilościowy", "procętowy"])
     with st.form("kalkulaotr miejsc w sejmie"):
         st.write("wybierz okrąg który chcesz uzupełnić")
@@ -57,6 +62,8 @@ def loadView():
         kf = st.number_input("głosy parti Konfederacja", 0)
         if type == "procętowy":
             frequency = st.number_input("frekwencja", 0)
+        else:
+            frequency = pis+ko+td+lw+kf
 
         submitted = st.form_submit_button("Licz")
         if submitted:
@@ -101,6 +108,7 @@ def loadView():
                 loaded_data[district]['Lewica'] = newSeats['Lewica']
                 loaded_data[district]['Konfederacja'] = newSeats['Konfederacja']
                 loaded_data[district]['Frekwencja'] = frequency
+                print(frequency)
                 loaded_data[district]['Uzupełniono'] = True
                 with open("data.json", "w", encoding="utf-8") as json_file:
                     json.dump(loaded_data, json_file,
@@ -117,7 +125,9 @@ def loadView():
 
     # print(districtsDict)
     votesDict = {'PiS': 0, 'KO': 0, 'Trzecia Droga': 0, 'Lewica': 0,
-                 'Konfederacja': 0, 'Frekwencja': 0, 'Miejsca do zdobycia': 0, 'Uzupełniono': False}
+                 'Konfederacja': 0, 'Frekwencja': 0}
+    votesDictProcent = {'PiS': 0, 'KO': 0, 'Trzecia Droga': 0, 'Lewica': 0,
+                        'Konfederacja': 0, 'Frekwencja': 0}
     emptyDistricDict = {}
     for region in loaded_data:
 
@@ -131,8 +141,9 @@ def loadView():
             emptyDistricDict[region] = 1
             # print(region)
     st.write(votesDict)
+
     keys = str(list(emptyDistricDict.keys())).removeprefix(
         "[").removesuffix("]").replace("'", "")
-    print(keys)
+
     st.write(
         f"regiony pozostające do uzupełnienia to {keys}")
