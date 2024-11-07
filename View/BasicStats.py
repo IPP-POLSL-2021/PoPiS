@@ -1,10 +1,8 @@
 import streamlit as st
 from Controller import MPsStats
-import matplotlib.pyplot as plt
 import pandas as pd
-import numpy as np
-from statistics import mean, median, stdev
 from View import _sharedViews
+
 
 
 # def ageGraphs(all_ages, AgesButDictionary, term=""):
@@ -34,7 +32,6 @@ from View import _sharedViews
 #             ax.set_ylabel('Liczba członków', fontsize=14)
 #             st.pyplot(fig)
 
-
 def loadView():
     # term = 10
     # searchedInfo = 'edukacja'
@@ -49,61 +46,68 @@ def loadView():
     # educationDictionary = MPsStats.MoreMPsStats(
     #     MpsList, MpGroupedList, term, searchedInfo)
     # _sharedViews.MoreStats(educationDictionary)
-    term_number = st.number_input(
-        "kadencja sejmu", min_value=1, value=10)
+    term_number = st.number_input("kadencja sejmu", min_value=1, value=10)
     stats = st.selectbox(
-        "Wybierz stytystykę", ["brak", "wiek", "edukacja", "okrąg", "profesja",  "województwo"])
+        "Wybierz stytystykę", ["brak", "wiek", "edukacja", "okrąg", "profesja", "województwo"]
+    )
+    
     match stats:
         case "brak":
             st.write("")
         case "wiek":
-            ageDataframe, ageDictionary = MPsStats.ageStats(
-                term_number, MpGroupedList, MpsList)
+            ageDataframe, ageDictionary = MPsStats.ageStats(term_number, MpGroupedList, MpsList)
             all_ages = ageDataframe.values.flatten()
             all_ages = pd.Series(all_ages).dropna()
             _sharedViews.ageGraphs(all_ages, ageDictionary, term_number)
         case "edukacja":
-            MPDictionary = MPsStats.MoreMPsStats(
-                MpsList, MpGroupedList, term_number, stats)
+            MPDictionary = MPsStats.MoreMPsStats(MpsList, MpGroupedList, term_number, stats)
             _sharedViews.MoreStats(MPDictionary)
         case "profesja":
-            MPDictionary = MPsStats.MoreMPsStats(
-                MpsList, MpGroupedList, term_number, stats)
+            MPDictionary = MPsStats.MoreMPsStats(MpsList, MpGroupedList, term_number, stats)
             _sharedViews.MoreStats(MPDictionary)
-
         case "okrąg":
-            MPDictionary = MPsStats.MoreMPsStats(
-                MpsList, MpGroupedList, term_number, stats)
+            MPDictionary = MPsStats.MoreMPsStats(MpsList, MpGroupedList, term_number, stats)
             _sharedViews.MoreStats(MPDictionary)
         case "województwo":
-            PDictionary = MPsStats.MoreMPsStats(
-                MpsList, MpGroupedList, term_number, stats)
-            _sharedViews.MoreStats(PDictionary)
-    selectedMp = st.selectbox("Wybierz posła ",  list(
-        mp['lastFirstName'] for mp in MpsList))
+            MPDictionary = MPsStats.MoreMPsStats(MpsList, MpGroupedList, term_number, stats)
+            _sharedViews.MoreStats(MPDictionary)
+
+    selectedMp = st.selectbox("Wybierz posła ", list(mp['lastFirstName'] for mp in MpsList))
     HisotryOfMP = MPsStats.HistoryOfMp(selectedMp, MpsList)
-    # print(HisotryOfMP)
-    clubDict = {}
-    professionDict = {}
-    termsDict = {}
-    districtDict = {}
-    NumOfVotes = []
-    voivodeshipDict = {}
+    
+    # Data structure to collect all rows for the table
+    data = []
+    total_votes = 0
+    
+    # Loop through each term in the MP's history
     for term in HisotryOfMP:
-        # print(term)
-        st.write(
-            f"podczas {term} kadecji sejmu poseł {selectedMp} {str(HisotryOfMP[term])}")
         obj = HisotryOfMP[term]
-        clubDict[obj.club] = 1
-        districtDict[obj.districtName] = 1
-        termsDict[term] = term
-        professionDict[obj.profession] = 1
-        if obj.voivodeship is not None:
-            voivodeshipDict[obj.voivodeship] = 1
-        if obj.numberOfVotes > 0:
-            NumOfVotes.append(obj.numberOfVotes)
-    # NumOfVotes = list(filter((0).__ne__, NumOfVotes))
-    st.write(f'''podczas swojej kariery poseł  otryzmał mandat {len(termsDict)} krotnie, był w {len(clubDict)} klubach,
-             startował z {len(districtDict)} okręgów mieszczących się w {len(voivodeshipDict)} róznych województwach, pełnił {len(professionDict)} profesji
-             maksymalnie zdobył {max(NumOfVotes)} głosów
-             a minimalnie {min(NumOfVotes)}''')
+        
+        # Accumulate total votes for summary row
+        total_votes += obj.numberOfVotes
+        
+        # Append a row of data for this term
+        data.append({
+            "Term": term,
+            "Club": obj.club,
+            "District": obj.districtName,
+            "Voivodeship": obj.voivodeship,
+            "Education": getattr(obj, "educationLevel", "N/A"),  # Use "N/A" if education attribute is missing
+            "Votes": obj.numberOfVotes if obj.numberOfVotes > 0 else "N/A",
+            "Profession": obj.profession if obj.profession else "None"
+        })
+
+    # Add a summary (total) row
+    data.append({
+        "Term": "Total",
+        "Club": f"{len(set(d['Club'] for d in data))} unique clubs",
+        "District": f"{len(set(d['District'] for d in data))} unique districts",
+        "Voivodeship": f"{len(set(d['Voivodeship'] for d in data if d['Voivodeship'] is not None))} unique voivodeships",
+        "Education": f"{len(set(d['Education'] for d in data if d['Education'] != 'None'))} unique education",
+        "Votes": total_votes,
+        "Profession": f"{len(set(d['Profession'] for d in data if d['Profession'] != 'None'))} unique professions"
+    })
+    
+    # Convert data to a DataFrame and display as a table
+    summary_df = pd.DataFrame(data)
+    st.table(summary_df)
