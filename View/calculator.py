@@ -46,7 +46,7 @@ def loadView():
     with st.form("kalkulaotr miejsc w sejmie"):
         st.write("wybierz okrąg który chcesz uzupełnić")
         method = st.selectbox("metoda liczenia głosów", [
-                              "d'Hondt", "Sainte-Laguë"])
+                              "d'Hondt", "Sainte-Laguë", "Kwota Hare’a (metoda największych reszt)", "Kwota Hare’a (metoda najmniejszych reszt)"])
         # if resestAll:
         #     clearJSON(seatsDistricstsDict)
         district = st.selectbox("wybierz okrąg który chcesz uzupełnić",
