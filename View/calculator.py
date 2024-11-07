@@ -39,7 +39,8 @@ def loadView():
     type = st.selectbox("rodzaj głosów", ["ilościowy", "procętowy"])
     with st.form("kalkulaotr miejsc w sejmie"):
         st.write("wybierz okrąg który chcesz uzupełnić")
-
+        method = st.selectbox("metoda liczenia głosów", [
+                              "d'Hondt", "Sainte-Laguë"])
         # if resestAll:
         #     clearJSON(seatsDistricstsDict)
         district = st.selectbox("wybierz okrąg który chcesz uzupełnić",
@@ -48,11 +49,11 @@ def loadView():
         seatsNum = val['Miejsca do zdobycia']
         st.write(f"w tym okręgu jest do rozdania {seatsNum} miejsc")
         st.write("Uzupełnij ilośc głosów otrzymanych przez partie")
-        pis = st.number_input("mijesca parti PiS", 0)
-        ko = st.number_input("mijesca parti KO", 0)
-        td = st.number_input("mijesca parti Trzecia Droga", 0)
-        lw = st.number_input("mijesca parti Lewica", 0)
-        kf = st.number_input("mijesca parti Konfederacja", 0)
+        pis = st.number_input("głosy parti PiS", 0)
+        ko = st.number_input("głosy parti KO", 0)
+        td = st.number_input("głosy parti Trzecia Droga", 0)
+        lw = st.number_input("głosy  parti Lewica", 0)
+        kf = st.number_input("głosy parti Konfederacja", 0)
         if type == "procętowy":
             frequency = st.number_input("frekwencja", 0)
 
@@ -70,8 +71,8 @@ def loadView():
                     st.warning("Wyniki powinny sumować się do 100%")
                 else:
                     procent = frequency/100
-                    newSeats, lastParty, nextParty = seastCalculators.dhont(
-                        pis*procent, ko*procent, td*procent, lw*procent, kf*procent, val['Frekwencja'], "ilościowy", seatsNum)
+                    newSeats, lastParty, nextParty = seastCalculators.chooseMethod(
+                        pis*procent, ko*procent, td*procent, lw*procent, kf*procent, val['Frekwencja'], "ilościowy", seatsNum, method)
                     with open("data.json", "r", encoding="utf-8") as json_file:
                         loaded_data = json.load(json_file)
                         loaded_data[district]['PiS'] = newSeats['PiS']
@@ -86,8 +87,8 @@ def loadView():
 
             else:
                 val['Frekwencja'] = pis+ko+td+lw+kf
-                newSeats, lastParty, nextParty = seastCalculators.dhont(
-                    pis, ko, td, lw, kf, val['Frekwencja'], "ilościowy", seatsNum)
+                newSeats, lastParty, nextParty = seastCalculators.chooseMethod(
+                    pis, ko, td, lw, kf, val['Frekwencja'], "ilościowy", seatsNum, method)
                 # districtResults = seatsDistricstsDict[district]
                 # trzeba by to gdzeiś przekazać np do pliku aby nie tracić danych
                 # seatsDistricstsDict[district]['PiS'] = newSeats['PiS']
