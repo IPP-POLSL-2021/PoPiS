@@ -14,9 +14,10 @@ def loadView():
     lastParty = ""
     nextParty = ""
     diff = 0
+    frequency = 0
     clublist = []
     votesDict = {'PiS': 0, 'KO': 0, 'Trzecia Droga': 0, 'Lewica': 0,
-                 'Konfederacja': 0, 'Frekwencja': 0, 'Miejsca do zdobycia': 0}
+                 'Konfederacja': 0, 'Frekwencja': 0, 'Miejsca do zdobycia': 0, 'Uzupełniono': False}
     districtsDict = {'Legnica': {}, 'Wałbrzych': {},
                      'Wrocław': {}, 'Bydgoszcz': {}, 'Toruń': {}, 'Lublin': {}, 'Chełm': {}, 'Zielona Góra': {}, 'Łódź': {},
                      'Piotrków Trybunalski': {}, 'Sieradz': {}, 'Chrzanów': {}, 'Kraków': {}, 'Nowy Sącz': {},
@@ -80,6 +81,8 @@ def loadView():
                         loaded_data[district]['Trzecia Droga'] = newSeats['Trzecia Droga']
                         loaded_data[district]['Lewica'] = newSeats['Lewica']
                         loaded_data[district]['Konfederacja'] = newSeats['Konfederacja']
+                        loaded_data[district]['Frekwencja'] = frequency
+                        loaded_data[district]['Uzupełniono'] = True
                     with open("data.json", "w", encoding="utf-8") as json_file:
                         json.dump(loaded_data, json_file,
                                   ensure_ascii=False, indent=4)
@@ -89,16 +92,7 @@ def loadView():
                 val['Frekwencja'] = pis+ko+td+lw+kf
                 newSeats, lastParty, nextParty = seastCalculators.chooseMethod(
                     pis, ko, td, lw, kf, val['Frekwencja'], "ilościowy", seatsNum, method)
-                # districtResults = seatsDistricstsDict[district]
-                # trzeba by to gdzeiś przekazać np do pliku aby nie tracić danych
-                # seatsDistricstsDict[district]['PiS'] = newSeats['PiS']
-                # seatsDistricstsDict[district]['KO'] = newSeats['KO']
-                # seatsDistricstsDict[district]['Trzecia Droga'] = newSeats['Trzecia Droga']
-                # seatsDistricstsDict[district]['Lewica'] = newSeats['Lewica']
-                # seatsDistricstsDict[district]['Konfederacja'] = newSeats['Konfederacja']
-                # seatsDistricstsDict[district] = districtResults
-                # districtsDict[district] = val
-                # print("dupa")
+
                 with open("data.json", "r", encoding="utf-8") as json_file:
                     loaded_data = json.load(json_file)
                 loaded_data[district]['PiS'] = newSeats['PiS']
@@ -106,6 +100,8 @@ def loadView():
                 loaded_data[district]['Trzecia Droga'] = newSeats['Trzecia Droga']
                 loaded_data[district]['Lewica'] = newSeats['Lewica']
                 loaded_data[district]['Konfederacja'] = newSeats['Konfederacja']
+                loaded_data[district]['Frekwencja'] = frequency
+                loaded_data[district]['Uzupełniono'] = True
                 with open("data.json", "w", encoding="utf-8") as json_file:
                     json.dump(loaded_data, json_file,
                               ensure_ascii=False, indent=4)
@@ -121,7 +117,8 @@ def loadView():
 
     # print(districtsDict)
     votesDict = {'PiS': 0, 'KO': 0, 'Trzecia Droga': 0, 'Lewica': 0,
-                 'Konfederacja': 0, 'Frekwencja': 0, 'Miejsca do zdobycia': 0}
+                 'Konfederacja': 0, 'Frekwencja': 0, 'Miejsca do zdobycia': 0, 'Uzupełniono': False}
+    emptyDistricDict = {}
     for region in loaded_data:
 
         votesDict['KO'] += loaded_data[region]['KO']
@@ -129,4 +126,13 @@ def loadView():
         votesDict['Trzecia Droga'] += loaded_data[region]['Trzecia Droga']
         votesDict['Lewica'] += loaded_data[region]['Lewica']
         votesDict['Konfederacja'] += loaded_data[region]['Konfederacja']
+        votesDict['Frekwencja'] += loaded_data[region]['Frekwencja']
+        if loaded_data[region]['Uzupełniono'] is False:
+            emptyDistricDict[region] = 1
+            # print(region)
     st.write(votesDict)
+    keys = str(list(emptyDistricDict.keys())).removeprefix(
+        "[").removesuffix("]").replace("'", "")
+    print(keys)
+    st.write(
+        f"regiony pozostające do uzupełnienia to {keys}")
