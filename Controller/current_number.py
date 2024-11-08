@@ -1,52 +1,90 @@
-# By robić losowe opóźnienia. Niech ktoś się wypowie czy cringe czy dobry pomysł
-import random
-from time import sleep
 import requests
 
 
-# 21.08.2024 - Ostatnia kadencja sejmu miała numer 10
 def get_term_number(current_term_number=10):
-    # 1 kadencja Sejmu też nie zwraca nic XDDD
-    erw = current_term_number
-    while (True):
-        response = requests.get(f'https://api.sejm.gov.pl/sejm/term{erw}')
-        if response.status_code != 200:
-            return erw-1
-        erw += 1
-        sleep(random.random()/10)
+    """
+    Retrieve the latest term number for the Polish Sejm.
+    
+    Args:
+        current_term_number (int, optional): Starting term number to check. Defaults to 10.
+    
+    Returns:
+        int: The latest term number found.
+    """
+    term = current_term_number
+    while True:
+        try:
+            response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}', timeout=5)
+            if response.status_code != 200:
+                return term - 1
+            term += 1
+        except requests.RequestException:
+            return term - 1
 
 
-# 21.08.2024 - Ostatnie posiedzenie sejmu 10 kadencji miało numer 16
-def get_sitting_number(term=get_term_number(), current_sitting_number=16):
-    # 26.08.2024 Psikus się stał bo dodali 17 posiedzenie które jeszcze się nie odbyło ani nie jest w trakcie i nie ma opcji na sprawdzenia poza sprawdzeniem dat
-    erw = current_sitting_number
-    while (True):
-        response = requests.get(
-            f'https://api.sejm.gov.pl/sejm/term{term}/proceedings/{erw}')
-        if response.status_code != 200:
-            return erw-1
-        erw += 1
-        sleep(random.random()/10)
+def get_sitting_number(term=None, current_sitting_number=16):
+    """
+    Retrieve the latest sitting number for a given term.
+    
+    Args:
+        term (int, optional): Term number to check. Defaults to the latest term.
+        current_sitting_number (int, optional): Starting sitting number to check. Defaults to 16.
+    
+    Returns:
+        int: The latest sitting number found.
+    """
+    if term is None:
+        term = get_term_number()
+    
+    sitting = current_sitting_number
+    while True:
+        try:
+            response = requests.get(
+                f'https://api.sejm.gov.pl/sejm/term{term}/proceedings/{sitting}', 
+                timeout=5
+            )
+            if response.status_code != 200:
+                return sitting - 1
+            sitting += 1
+        except requests.RequestException:
+            return sitting - 1
 
 
-# 21.08.2024 - Ostatnie głosowanie 16 posiedzenia sejmu 10 kadencji miało numer 85
-def get_voting_number(term=get_term_number(), sitting=get_sitting_number(), current_voting_number=85):
-    erw = current_voting_number
-    while (True):
-        response = requests.get(
-            f"https://api.sejm.gov.pl/sejm/term{term}/votings/{sitting}/{erw}")
-        if response.status_code != 200:
-            return erw-1
-        erw += 1
-        sleep(random.random()/100)
+def get_voting_number(term=None, sitting=None, current_voting_number=1):
+    """
+    Retrieve the latest voting number for a given term and sitting.
+    
+    Args:
+        term (int, optional): Term number to check. Defaults to the latest term.
+        sitting (int, optional): Sitting number to check. Defaults to the latest sitting.
+        current_voting_number (int, optional): Starting voting number to check. Defaults to 85.
+    
+    Returns:
+        int: The latest voting number found.
+    """
+    if term is None:
+        term = get_term_number()
+    if sitting is None:
+        sitting = get_sitting_number(term)
+    
+    voting = current_voting_number
+    while True:
+        try:
+            response = requests.get(
+                f"https://api.sejm.gov.pl/sejm/term{term}/votings/{sitting}/{voting}", 
+                timeout=5
+            )
+            if response.status_code != 200:
+                return voting - 1
+            voting += 1
+        except requests.RequestException:
+            return voting - 1
 
 
-# Jeśli wywołujemy skrypt bezpośrednio
 if __name__ == "__main__":
     term_number = get_term_number()
     sitting_number = get_sitting_number(term_number)
     voting_number = get_voting_number(term_number, sitting_number)
     print(
-        f"Głosowanie nr {voting_number} na {sitting_number} posiedzeniu {term_number} kadencji Sejmu")
-    # 26.08.2024 Expected Output Głosowanie nr 84 na 17 posiedzeniu 10 kadencji Sejmu
-    # Tak zdaję sobie sprawę że to zdanie jest fałszywe ze względu na to że na 17 posiedzeniu nie było jeszcze żadnych głosowań bo jeszcze się nie zaczęło.
+        f"Voting No. {voting_number} during the {sitting_number} session of the {term_number}th term of the Sejm"
+    )

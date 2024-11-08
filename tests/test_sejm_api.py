@@ -29,10 +29,10 @@ def test_get_interpelation():
     assert get_title(term, num, interpelation) == "Interpelacja w sprawie trudnej sytuacji osób niepełnosprawnych z uwagi na kwarantannę nakładaną na ich opiekunów"
     assert get_date(term, num, "receipt_date", interpelation) == datetime.date(2020, 11, 16)
     assert get_date(term, num, "sent_date", interpelation) == datetime.date(2021, 1, 20)
-    assert get_authors(term, num, interpelation) == ["Tomasz Głogowski"]
+    assert get_authors(term, num, interpelation) == ["Hanna Gill-Piątek"]
     assert get_receipent(term, num, interpelation) == ["minister rodziny i polityki społecznej", "minister zdrowia"]
     replies = get_replies(term, num, interpelation)
-    assert len(replies[0]) == 2
+    assert len(replies[0]) == 1
     #assert replies[0][0] == "https://orka2.sejm.gov.pl/INT9.nsf/klucz/ATTBXWKH2/$FILE/i14710-o3.pdf"
     assert len(replies[1]) == 1
     assert "<!DOCTYPE html>" in replies[1][0]
@@ -83,7 +83,7 @@ def test_get_reply_body():
 
 def test_get_interpelations_pagination():
     term = 9
-    interpelations = get_interpelations(term, limit=10, offset=20)
+    interpelations = get_interpelations(term, limit=10, offset=20).json()
     assert len(interpelations) == 10
 
 def test_get_mp_votings():

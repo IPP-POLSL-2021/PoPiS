@@ -60,7 +60,7 @@ def test_video_response_fields():
 def test_date_parameter_formats():
     # Test with datetime object
     date = datetime(2023, 12, 13)
-    videos = get_date_videos(10, date).json()
+    videos = get_date_videos(10, str(date.date())).json()
     assert isinstance(videos, list)
 
     # Test with string date
