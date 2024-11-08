@@ -1,6 +1,6 @@
 import pytest
-from Controller.interpelation import get_interpelation, get_title, get_date, get_authors, get_receipent, get_replies
-from Controller.MP import get_MP_ID, get_MP, get_name, get_status, get_reason, get_club, get_district, get_other
+from Controller.interpelation import get_interpelation, get_title, get_date, get_authors, get_receipent, get_replies, get_interpelation_body, get_reply_body, get_interpelations
+from Controller.MP import get_MP_ID, get_MP, get_name, get_status, get_reason, get_club, get_district, get_other, get_mp_votings, get_mp_photo, get_mp_photo_mini
 import datetime
 
 def test_get_mp_details():
@@ -37,3 +37,70 @@ def test_get_interpelation():
     assert len(replies[1]) == 1
     assert "<!DOCTYPE html>" in replies[1][0]
 
+def test_invalid_mp_id():
+    invalid_id = 99999
+    response = get_MP(10, invalid_id)
+    assert response.status_code == 404
+
+def test_invalid_interpelation():
+    invalid_term = 99
+    invalid_num = 99999
+    response = get_interpelation(invalid_term, invalid_num)  
+    assert response.status_code == 404
+
+def test_mp_response_fields():
+    mp_id = get_MP_ID(10, "Golbik Marta")
+    if mp_id:
+        response = get_MP(10, mp_id[0])
+        data = response.json()
+        assert isinstance(data['id'], int)
+        assert isinstance(data['firstLastName'], str)
+        assert isinstance(data['lastFirstName'], str)
+        assert isinstance(data['active'], bool)
+        assert isinstance(data['club'], str)
+        assert isinstance(data['districtNum'], int)
+        assert isinstance(data['districtName'], str)
+        assert isinstance(data['voivodeship'], str)
+        assert isinstance(data['birthDate'], str)
+        assert isinstance(data['birthLocation'], str)
+        assert isinstance(data['educationLevel'], str)
+        assert isinstance(data['numberOfVotes'], int)
+    else:
+        pytest.skip("get_MP_ID returned an empty list")
+
+def test_get_interpelation_body():
+    term = 9
+    num = 14710
+    body = get_interpelation_body(term, num)
+    assert "<!DOCTYPE html>" in body
+
+def test_get_reply_body():
+    term = 9
+    num = 14710
+    key = "BW7JYC"
+    body = get_reply_body(term, num, key)
+    assert "<!DOCTYPE html>" in body
+
+def test_get_interpelations_pagination():
+    term = 9
+    interpelations = get_interpelations(term, limit=10, offset=20)
+    assert len(interpelations) == 10
+
+def test_get_mp_votings():
+    term = 10
+    mp_id = 1
+    sitting = 1
+    date = "2023-11-29"
+    votings = get_mp_votings(term, mp_id, sitting, date)
+    assert isinstance(votings, list)
+    if votings:
+        assert "votingNumber" in votings[0]
+        assert "vote" in votings[0]
+
+def test_get_mp_photos():
+    term = 10
+    mp_id = 1
+    photo = get_mp_photo(term, mp_id)
+    assert isinstance(photo, bytes)
+    photo_mini = get_mp_photo_mini(term, mp_id)
+    assert isinstance(photo_mini, bytes)

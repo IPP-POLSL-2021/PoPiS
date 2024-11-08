@@ -73,6 +73,40 @@ def get_replies(term, num, response=False):
                 f"https://api.sejm.gov.pl/sejm/term{term}/interpellations/{num}/reply/{i['key']}/body").text)
     return (file_urls, htmls)
 
+# New function to get interpellation body HTML
+def get_interpelation_body(term, num):
+    response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/interpellations/{num}/body')
+    return response.text
+
+# New function to get reply body HTML  
+def get_reply_body(term, num, key):
+    response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/interpellations/{num}/reply/{key}/body')
+    return response.text
+
+# Updated get_interpelation function to support pagination
+def get_interpelations(term, limit=50, offset=0, sort_by=None, since=None, till=None, title=None, to=None, from_mp=None, modified_since=None):
+    params = {
+        'limit': limit,
+        'offset': offset
+    }
+    if sort_by:
+        params['sort_by'] = sort_by
+    if since:  
+        params['since'] = since
+    if till:
+        params['till'] = till
+    if title:
+        params['title'] = title
+    if to:
+        params['to'] = to  
+    if from_mp:
+        params['from'] = from_mp
+    if modified_since:
+        params['modifiedSince'] = modified_since
+
+    response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/interpellations', params=params)
+    return response.json()
+
 
 if __name__ == "__main__":
     response = get_interpelation(10, 3999)
@@ -102,6 +136,6 @@ if __name__ == "__main__":
     # # Expected Output
     # # []
     # ============================
-    # ['<!DOCTYPE html>\n<html lang="pl">\n<head>\n<meta name="charset" content="utf-8">\n<title>Odpowiedź na interpelację w sprawie wydatków na\xa0świadczenie\xa0rodzicielskie\xa0("kosiniakowe"), wysokości tego świadczenia oraz\xa0liczby osób otrzymujących to świadczenie\xa0w\xa0latach 2016-2022</title>\n</head>\n<body>\n<h1>Odpowiedź na interpelację nr 12</h1>\r\n\t<p class="int-title">w sprawie wydatków na\xa0świadczenie\xa0rodzicielskie\xa0("kosiniakowe"), wysokości tego świadczenia oraz\xa0liczby osób otrzymujących to świadczenie\xa0w\xa0latach 2016-2022</p>\r\n\t<p class="intAuthor">Odpowiadający: minister rodziny, pracy i polityki społecznej Agnieszka Dziemianowicz-Bąk</p>\r\n\t<p class="intDate">Warszawa, 06-02-2024</p>\r\n\t<p>Szanowny Panie Marszałku,</p>\r\n<p>w związku z interpelacją nr 12 Pani Poseł Kariny Anny Bosak z dnia 7 grudnia 2023 r. w sprawie wydatków na świadczenie rodzicielskie („kosiniakowe“), wysokości tego świadczenia oraz liczby osób otrzymujących to świadczenie w latach 2016–2022, poniżej przekazuję odpowiednie informacje w tym zakresie.</p>\r\n<p>Pragnę zwrócić uwagę, że sprawozdania rzeczowo-finansowe z realizacji świadczeń rodzinnych zawierają dane zagregowane obejmujące liczbę wypłaconych świadczeń oraz wydatków na nie. Nie zawierają one wyodrębnionej kategorii świadczeń pobranych przez beneficjentów, wynikających z art. 17c ust. 1 i ust. 2 ustawy o świadczeniach rodzinnych.</p>\r\n<p>Ponadto informuję, iż wysokość wypłacanego świadczenia rodzicielskiego pozostaje niezmienna od chwili jego wprowadzenia. W związku z powyższym podczas weryfikacji w 2018 r. oraz 2021 r. Radzie Dialogu Społecznego nie została zaproponowana zmiana wysokości świadczenia. </p>\r\n<p>Informuję również, że kwoty, o których mowa w art. 5 ust. 1 i 2 oraz art. 15b ust. 2, zostaną poddane weryfikacji i odpowiedniej analizie w roku 2024 zgodnie z art. 18 ww. ustawy.</p>\r\n\r\n<p>Tabela 1 – Dane dotyczące wypłat świadczenia rodzicielskiego w latach 2016–2022</p>\r\n\r\n<table border="1" cellpadding="5">\r\n <tbody>\r\n  <tr>\r\n   <td>  </td>\r\n   <td> <p><strong>Wydatki w mln zł</strong></p> </td>\r\n   <td> <p><strong>Przeciętna liczba świadczeniobiorców w tys.</strong></p> </td>\r\n  </tr>\r\n  <tr>\r\n   <td> <p><strong>2016</strong></p> </td>\r\n   <td> <p>862,9</p> </td>\r\n   <td> <p>78</p> </td>\r\n  </tr>\r\n  <tr>\r\n   <td> <p><strong>2017</strong></p> </td>\r\n   <td> <p>1 044,6</p> </td>\r\n   <td> <p>94,5</p> </td>\r\n  </tr>\r\n  <tr>\r\n   <td> <p><strong>2018</strong></p> </td>\r\n   <td> <p>999,4</p> </td>\r\n   <td> <p>91,4</p> </td>\r\n  </tr>\r\n  <tr>\r\n   <td> <p><strong>2019</strong></p> </td>\r\n   <td> <p>920,2</p> </td>\r\n   <td> <p>84,3</p> </td>\r\n  </tr>\r\n  <tr>\r\n   <td> <p><strong>2020</strong></p> </td>\r\n   <td> <p>862,9</p> </td>\r\n   <td> <p>79,1</p> </td>\r\n  </tr>\r\n  <tr>\r\n   <td> <p><strong>2021</strong></p> </td>\r\n   <td> <p>784,6</p> </td>\r\n   <td> <p>72,6</p> </td>\r\n  </tr>\r\n  <tr>\r\n   <td> <p><strong>2022</strong></p> </td>\r\n   <td> <p>678,5</p> </td>\r\n   <td> <p>62,3</p> </td>\r\n  </tr>\r\n </tbody>\r\n</table>\r\n\r\n\r\n<p>Z wyrazami szacunku</p>\r\n<p>Agnieszka Dziemianowicz-Bąk<br>Minister Rodziny, Pracy i Polityki Społecznej</p>\r\n\r\n\r\n</body>\n</html>']
+    # ['<!DOCTYPE html>\n<html lang="pl">\n<head>\n<meta name="charset" content="utf-8">\n<title>Odpowiedź na interpelację w sprawie wydatków na\xa0świadczenie\xa0rodzicielskie\xa0("kosiniakowe"), wysokości tego świadczenia oraz\xa0liczby osób otrzymujących to świadczenie\xa0w\xa0latach 2016-2022</title>\n</head>\n<body>\n<h1>Odpowiedź na interpelację nr 12</h1>\r\n\t<p class="int-title">w sprawie wydatków na\xa0świadczenie\xa0rodzicielskie\xa0("kosiniakowe"), wysokości tego świadczenia oraz\xa0liczby osób otrzymujących to świadczenie\xa0w\xa0latach 2016-2022</p>\r\n\t<p class="intAuthor">Odpowiadający: minister rodziny, pracy i polityki społecznej Agnieszka Dziemianowicz-Bąk</p>\r\n\t<p class="intDate">Warszawa, 06-02-2024</p>\r\n\t<p>Szanowny Panie Marszałku,</p>\r\n<p>w związku z interpelacją nr 12 Pani Poseł Kariny Anny Bosak z dnia 7 grudnia 2023 r. w sprawie wydatków na świadczenie rodzicielskie („kosiniakowe"), wysokości tego świadczenia oraz liczby osób otrzymujących to świadczenie w latach 2016–2022, poniżej przekazuję odpowiednie informacje w tym zakresie.</p>\r\n<p>Pragnę zwrócić uwagę, że sprawozdania rzeczowo-finansowe z realizacji świadczeń rodzinnych zawierają dane zagregowane obejmujące liczbę wypłaconych świadczeń oraz wydatków na nie. Nie zawierają one wyodrębnionej kategorii świadczeń pobranych przez beneficjentów, wynikających z art. 17c ust. 1 i ust. 2 ustawy o świadczeniach rodzinnych.</p>\r\n<p>Ponadto informuję, iż wysokość wypłacanego świadczenia rodzicielskiego pozostaje niezmienna od chwili jego wprowadzenia. W związku z powyższym podczas weryfikacji w 2018 r. oraz 2021 r. Radzie Dialogu Społecznego nie została zaproponowana zmiana wysokości świadczenia. </p>\r\n<p>Informuję również, że kwoty, o których mowa w art. 5 ust. 1 i 2 oraz art. 15b ust. 2, zostaną poddane weryfikacji i odpowiedniej analizie w roku 2024 zgodnie z art. 18 ww. ustawy.</p>\r\n\r\n<p>Tabela 1 – Dane dotyczące wypłat świadczenia rodzicielskiego w latach 2016–2022</p>\r\n\r\n<table border="1" cellpadding="5">\r\n <tbody>\r\n  <tr>\r\n   <td>  </td>\r\n   <td> <p><strong>Wydatki w mln zł</strong></p> </td>\r\n   <td> <p><strong>Przeciętna liczba świadczeniobiorców w tys.</strong></p> </td>\r\n  </tr>\r\n  <tr>\r\n   <td> <p><strong>2016</strong></p> </td>\r\n   <td> <p>862,9</p> </td>\r\n   <td> <p>78</p> </td>\r\n  </tr>\r\n  <tr>\r\n   <td> <p><strong>2017</strong></p> </td>\r\n   <td> <p>1 044,6</p> </td>\r\n   <td> <p>94,5</p> </td>\r\n  </tr>\r\n  <tr>\r\n   <td> <p><strong>2018</strong></p> </td>\r\n   <td> <p>999,4</p> </td>\r\n   <td> <p>91,4</p> </td>\r\n  </tr>\r\n  <tr>\r\n   <td> <p><strong>2019</strong></p> </td>\r\n   <td> <p>920,2</p> </td>\r\n   <td> <p>84,3</p> </td>\r\n  </tr>\r\n  <tr>\r\n   <td> <p><strong>2020</strong></p> </td>\r\n   <td> <p>862,9</p> </td>\r\n   <td> <p>79,1</p> </td>\r\n  </tr>\r\n  <tr>\r\n   <td> <p><strong>2021</strong></p> </td>\r\n   <td> <p>784,6</p> </td>\r\n   <td> <p>72,6</p> </td>\r\n  </tr>\r\n  <tr>\r\n   <td> <p><strong>2022</strong></p> </td>\r\n   <td> <p>678,5</p> </td>\r\n   <td> <p>62,3</p> </td>\r\n  </tr>\r\n </tbody>\r\n</table>\r\n\r\n\r\n<p>Z wyrazami szacunku</p>\r\n<p>Agnieszka Dziemianowicz-Bąk<br>Minister Rodziny, Pracy i Polityki Społecznej</p>\r\n\r\n\r\n</body>\n</html>']
     # ============================
-    # ['<!DOCTYPE html>\n<html lang="pl">\n<head>\n<meta name="charset" content="utf-8">\n<title>Odpowiedź na interpelację w sprawie spisów wyborców udostępnionych Poczcie Polskiej SA przez gminy na wybory prezydenckie</title>\n</head>\n<body>\n<h1>Odpowiedź na interpelację nr 3</h1>\r\n\t<p class="int-title">w sprawie spisów wyborców udostępnionych Poczcie Polskiej SA przez gminy na wybory prezydenckie</p>\r\n\t<p class="intAuthor">Odpowiadający: minister aktywów państwowych Borys Budka</p>\r\n\t<p class="intDate">Warszawa, 10-01-2024</p>\r\n \t<p>Treść odpowiedzi znajduje się w załączniku.</p>\r\n\t<h2 class="attachments">Załączniki</h2><ol class="attachments-list"><li><a href="https://sejm.gov.pl/int10.nsf/klucz/ATTCZEK3B/$FILE/i00003-o2_1.pdf" target="_blank">MAP_K10INT3_uzupełnienie.pdf</a></li><li><a href="https://sejm.gov.pl/int10.nsf/klucz/ATTCZEK3B/$FILE/i00003-o2_2.pdf" target="_blank">Zał. Wykaz jednostek samorządowych, które przesłały Poczcie Polskiej S.A. dane ze spisów wyborczych na potrzeby wyborów korespondencyjnych.pdf</a></li></ol>\r\n</body>\n</html>']
+    # ['<!DOCTYPE html>\n<html lang="pl">\n<head>\n<meta name="charset" content="utf-8">\n<title>Odpowiedź na interpelację w sprawie spisów wyborców udostępnionych Poczcie Polskiej SA przez gminy na wybory prezydenckie</title>\n</head>\n<body>\n<h1>Odpowiedź na interpelację nr 3</h1>\r\n\t<p class="int-title">w sprawie spisów wyborców udostępnionych Poczcie Polskiej SA przez gminy na wybory prezydenckie</p>\r\n\t<p class="intAuthor">Odpowiadający: minister aktywów państwowych Borys Budka</p>\r\n\t<p class="intDate">Warszawa, 10-01-2024</p>\r\n \t<p>Treść odpowiedzi znajduje się w załączniku.</p>\r\n\t<h2 class="attachments">

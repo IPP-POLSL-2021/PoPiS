@@ -88,6 +88,20 @@ def get_other(term, id, mode, response=False):
         case _:
             raise Exception("Mode must be specified")
 
+# New function to get MP votings
+def get_mp_votings(term, id, sitting, date):
+    response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/MP/{id}/votings/{sitting}/{date}')
+    return response.json()
+
+# New functions to get MP photos
+def get_mp_photo(term, id):
+    response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/MP/{id}/photo')
+    return response.content
+
+def get_mp_photo_mini(term, id):
+    response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/MP/{id}/photo-mini')
+    return response.content
+
 
 if __name__ == "__main__":
     # Zwykły - Zrzeczenie - Zgon
