@@ -1,5 +1,5 @@
 import pytest
-from Controller.proceedings import get_proceedings, get_proceeding
+from api_wrappers.proceedings import get_proceedings, get_proceeding
 
 def test_get_proceedings():
     proceedings = get_proceedings(10).json()

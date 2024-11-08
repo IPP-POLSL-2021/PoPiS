@@ -1,5 +1,5 @@
 import pytest
-from Controller.terms import get_terms, get_term
+from api_wrappers.terms import get_terms, get_term
 
 def test_get_terms():
     terms = get_terms().json()

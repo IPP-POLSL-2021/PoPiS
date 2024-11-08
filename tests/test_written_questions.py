@@ -1,5 +1,5 @@
 import pytest
-from Controller.written_questions import (
+from api_wrappers.written_questions import (
     get_written_questions, 
     get_written_question, 
     get_question_body, 

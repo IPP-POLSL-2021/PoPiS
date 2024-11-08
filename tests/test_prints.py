@@ -1,5 +1,5 @@
 import pytest
-from Controller.prints import get_prints, get_print, get_print_attachment
+from api_wrappers.prints import get_prints, get_print, get_print_attachment
 
 def test_get_prints():
     prints = get_prints(10).json()

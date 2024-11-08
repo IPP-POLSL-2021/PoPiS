@@ -1,5 +1,5 @@
 import pytest
-from Controller.clubs import get_clubs, get_club, get_club_logo
+from api_wrappers.clubs import get_clubs, get_club, get_club_logo
 
 def test_get_clubs():
     clubs = get_clubs(10).json()

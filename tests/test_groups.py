@@ -1,5 +1,5 @@
 import pytest
-from Controller.groups import get_groups, get_group
+from api_wrappers.groups import get_groups, get_group
 
 def test_get_groups():
     groups = get_groups(10).json()

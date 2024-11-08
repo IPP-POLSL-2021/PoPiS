@@ -1,6 +1,6 @@
 import pytest
 import requests
-from Controller.votings import get_votings, search_votings, get_proceeding_votings, get_voting_details
+from api_wrappers.votings import get_votings, search_votings, get_proceeding_votings, get_voting_details
 
 def test_get_votings():
     votings = get_votings(10).json()

@@ -1,5 +1,5 @@
 import pytest
-from Controller.transcripts import get_statements, get_pdf_transcript, get_statement
+from api_wrappers.transcripts import get_statements, get_pdf_transcript, get_statement
 from datetime import datetime
 
 def test_get_statements():

@@ -1,5 +1,5 @@
 import pytest
-from Controller.committees import (
+from api_wrappers.committees import (
     get_committees, 
     get_committee, 
     get_committee_sittings, 

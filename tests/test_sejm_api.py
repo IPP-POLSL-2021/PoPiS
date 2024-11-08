@@ -1,6 +1,6 @@
 import pytest
-from Controller.interpelation import get_interpelation, get_title, get_date, get_authors, get_receipent, get_replies, get_interpelation_body, get_reply_body, get_interpelations
-from Controller.MP import get_MP_ID, get_MP, get_name, get_status, get_reason, get_club, get_district, get_other, get_mp_votings, get_mp_photo, get_mp_photo_mini
+from api_wrappers.interpelation import get_interpelation, get_title, get_date, get_authors, get_receipent, get_replies, get_interpelation_body, get_reply_body, get_interpelations
+from api_wrappers.MP import get_MP_ID, get_MP, get_name, get_status, get_reason, get_club, get_district, get_other, get_mp_votings, get_mp_photo, get_mp_photo_mini
 import datetime
 
 def test_get_mp_details():

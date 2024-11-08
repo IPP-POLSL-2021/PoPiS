@@ -1,5 +1,5 @@
 import pytest
-from Controller.videos import get_videos, get_today_videos, get_date_videos, get_video
+from api_wrappers.videos import get_videos, get_today_videos, get_date_videos, get_video
 from datetime import datetime
 
 def test_get_videos():

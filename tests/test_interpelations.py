@@ -1,6 +1,6 @@
 import pytest
 import datetime
-from Controller.interpelation import (
+from api_wrappers.interpelation import (
     get_interpelations,
     get_interpelation,
     get_interpelation_body,

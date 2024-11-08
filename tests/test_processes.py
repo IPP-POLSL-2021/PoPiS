@@ -1,5 +1,5 @@
 import pytest
-from Controller.processes import get_processes, get_process
+from api_wrappers.processes import get_processes, get_process
 
 def test_get_processes():
     processes = get_processes(10).json()
