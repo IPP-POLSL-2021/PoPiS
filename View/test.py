@@ -1,7 +1,7 @@
 import streamlit as st
 #from streamlit_push_notifications import send_push
 from Controller.current_number import get_term_number, get_sitting_number, get_voting_number
-from Controller.interpelation import get_interpelation, get_title, get_replies
+from api_wrappers.interpelation import get_interpelation, get_title, get_replies
 import time
 
 st.title("System Powiadomień Sejmowych")

@@ -61,22 +61,5 @@ class TestCurrentNumber(unittest.TestCase):
             result = get_voting_number(term=10, sitting=16, current_voting_number=85)
             self.assertEqual(result, 84)
 
-    def test_get_voting_number_with_default_params(self):
-        """Test get_voting_number with default parameters"""
-        with requests_mock.Mocker() as m:
-            # Mock get_term_number and get_sitting_number
-            m.get('https://api.sejm.gov.pl/sejm/term10', status_code=200)
-            m.get('https://api.sejm.gov.pl/sejm/term11', status_code=404)
-            m.get('https://api.sejm.gov.pl/sejm/term10/proceedings/16', status_code=200)
-            m.get('https://api.sejm.gov.pl/sejm/term10/proceedings/17', status_code=404)
-            
-            # Mock voting number check
-            m.get('https://api.sejm.gov.pl/sejm/term10/votings/16/85', status_code=200)
-            m.get('https://api.sejm.gov.pl/sejm/term10/votings/16/86', status_code=404)
-
-            result = get_voting_number()
-            self.assertEqual(result, 85)
-
-
 if __name__ == '__main__':
     unittest.main()

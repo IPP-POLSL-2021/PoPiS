@@ -1,6 +1,6 @@
 import requests
 import datetime
-from Controller.MP import get_name  # Importing get_name from MP module
+from api_wrappers.MP import get_name  # Importing get_name from MP module
 
 def get_interpelations(term, **params):
     """Returns a list of interpellations with optional filters."""

@@ -1,6 +1,6 @@
 import requests
 import datetime
-from Controller.MP import get_name
+from api_wrappers.MP import get_name
 
 def get_written_questions(term, **params):
     """Returns a list of written questions with optional filters."""

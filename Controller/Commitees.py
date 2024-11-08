@@ -1,7 +1,8 @@
 import requests
 
 from datetime import datetime, timedelta
-from Controller import MP
+# Nie korzystasz z tego i tak
+#from Controller import MP
 import pandas as pd
 
 
