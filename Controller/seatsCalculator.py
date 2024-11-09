@@ -42,8 +42,8 @@ def HareDrop(PiS, KO, TD, Lewica, Konf, Freq, type, seatsNum, biggest=True):
     SeatsDict["Trzecia Droga"] = int(TD)
     SeatsDict["Lewica"] = int(Lewica)
     SeatsDict["Konfederacja"] = int(Konf)
-    remaninginSeats = seatsNum-(int(PiS)+int(KO)+int(TD)+int(Lewica)+int(Konf))
-    if remaninginSeats == 0:
+    remainingSeats = seatsNum-(int(PiS)+int(KO)+int(TD)+int(Lewica)+int(Konf))
+    if remainingSeats == 0:
         return SeatsDict,  SeatsDict[reversedSeatsDict.get(max(reversedSeatsDict))], " jeszcze nie zaimplementowano"
     PiS -= int(PiS)
     KO -= int(KO)
@@ -56,7 +56,7 @@ def HareDrop(PiS, KO, TD, Lewica, Konf, Freq, type, seatsNum, biggest=True):
                          Lewica: "Lewica", Konf: "Konfederacja"}
     currentMax = ""
 
-    for a in range(0, remaninginSeats, 1):
+    for a in range(0, remainingSeats, 1):
         if biggest is True:
             SeatsDict[reversedSeatsDict.get(max(reversedSeatsDict))] += 1
             currentMax = reversedSeatsDict.get(max(reversedSeatsDict))
@@ -107,7 +107,7 @@ def dhont(PiS, KO, TD, Lewica, Konf, Freq, type, seatsNum):
     for seatNum in gatheredSeats[newMax]:
         diff *= seatNum
     print(
-        f"do zdobycia mijesca zabrałko {int(diff)} głosów")
+        f"Do zdobycia mandatu zabrakło {int(diff)} głosów")
     return SeatsDict, currentMax, newMax
 
 
@@ -142,5 +142,5 @@ def SainteLague(PiS, KO, TD, Lewica, Konf, Freq, type, seatsNum):
     for seatNum in gatheredSeats[newMax]:
         diff *= seatNum
     print(
-        f"do zdobycia mijesca zabrałko {int(diff)} głosów")
+        f"Do zdobycia mandatu zabrakło {int(diff)} głosów")
     return SeatsDict, currentMax, newMax

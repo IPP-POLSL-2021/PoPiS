@@ -22,7 +22,7 @@ def get_term_number(current_term_number=10):
             return term - 1
 
 
-def get_sitting_number(term=None, current_sitting_number=16):
+def get_sitting_number(term=10, current_sitting_number=21):
     """
     Retrieve the latest sitting number for a given term.
     
@@ -33,24 +33,17 @@ def get_sitting_number(term=None, current_sitting_number=16):
     Returns:
         int: The latest sitting number found.
     """
-    if term is None:
-        term = get_term_number()
-    
+
     sitting = current_sitting_number
     while True:
-        try:
-            response = requests.get(
-                f'https://api.sejm.gov.pl/sejm/term{term}/proceedings/{sitting}', 
-                timeout=5
-            )
-            if response.status_code != 200:
-                return sitting - 1
-            sitting += 1
-        except requests.RequestException:
+        response = requests.get(
+            f'https://api.sejm.gov.pl/sejm/term{term}/proceedings/{sitting}')
+        if response.status_code != 200:
             return sitting - 1
+        sitting += 1
 
 
-def get_voting_number(term=None, sitting=None, current_voting_number=1):
+def get_voting_number(term=10, sitting=21, current_voting_number=1):
     """
     Retrieve the latest voting number for a given term and sitting.
     
@@ -62,29 +55,22 @@ def get_voting_number(term=None, sitting=None, current_voting_number=1):
     Returns:
         int: The latest voting number found.
     """
-    if term is None:
-        term = get_term_number()
-    if sitting is None:
-        sitting = get_sitting_number(term)
-    
-    voting = current_voting_number
-    while True:
-        try:
-            response = requests.get(
-                f"https://api.sejm.gov.pl/sejm/term{term}/votings/{sitting}/{voting}", 
-                timeout=5
-            )
-            if response.status_code != 200:
-                return voting - 1
-            voting += 1
-        except requests.RequestException:
-            return voting - 1
-
-
+    return len(requests.get(f"https://api.sejm.gov.pl/sejm/term{term}/votings/{sitting}").json())
+    #voting = current_voting_number
+    #while True:
+    #    response = requests.get(
+    #        f"https://api.sejm.gov.pl/sejm/term{term}/votings/{sitting}/{voting}")
+    #    if response.status_code != 200:
+    #        voting = voting - 1
+    #        return voting
+    #    voting += 1
 if __name__ == "__main__":
     term_number = get_term_number()
     sitting_number = get_sitting_number(term_number)
     voting_number = get_voting_number(term_number, sitting_number)
+    if voting_number == 0:
+        sitting_number = sitting_number-1
+        voting_number = get_voting_number(term_number,sitting_number)
     print(
         f"Voting No. {voting_number} during the {sitting_number} session of the {term_number}th term of the Sejm"
     )

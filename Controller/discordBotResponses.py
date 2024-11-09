@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 import requests
-from Controller.Commitees import CommiteesList, CommiteeFutureSetting
+from Controller.Committees import CommiteesList, CommiteeFutureSetting
 from datetime import datetime, timedelta
 import sys
 # from Controller.telegrambot import create_reminders
@@ -54,14 +54,14 @@ def get_respone(User_Input):
     if lowered == '':
         return ""
     elif lowered == "komisje":
-        commitees = CommiteesList(10)
-        commiteesList = ""
-        for commitee in commitees:
+        committees = CommitteesList(10)
+        committeesList = ""
+        for committee in committees:
 
-            commiteesList += f"{commitee['name']} o kodzie: {commitee['code']}\n"
+            committeesList += f"{committee['name']} o kodzie: {committee['code']}\n"
 
         # print(commiteesList)
-        return f"oto lista komisji\n{commiteesList}"
+        return f"oto lista komisji\n{committeesList}"
     else:
         return ""
 
@@ -70,13 +70,13 @@ def create_event(id, text, platform, userEvent=True):
     # print(id)
     remindersList = pd.read_csv("./Data/powiadomienia.csv")
     last = ""
-    commitees = CommiteesList(10)
-    commiteesList = ""
-    for commitee in commitees:
+    committees = CommitteesList(10)
+    committeesList = ""
+    for committee in committees:
 
-        commiteesList += f":{commitee['code']} "
-    if text in commiteesList:
-        date = CommiteeFutureSetting(10, text)
+        committeesList += f":{committee['code']} "
+    if text in committeesList:
+        date = CommitteeFutureSetting(10, text)
         new_reminder = {
             'channelId': id, 'platform': platform, 'committee': text}
         if date is None:
@@ -86,7 +86,7 @@ def create_event(id, text, platform, userEvent=True):
                           mode='a', index=False, header=False)
             return "brak nowych posiedzeń"
         elif userEvent is False:
-            Auto_date = f"w ciągu ostanich trzech dni komisja o kodzie {text} miała ostatnie spotkanie {date}"
+            Auto_date = f"w ciągu ostatnich trzech dni komisja o kodzie {text} miała ostatnie spotkanie {date}"
             if platform == "discord":
                 # id.send(
                 #     f"w ciągu ostatnich trzech dni komisja o kodzie {text} miała ostanie spotkanie {date}"

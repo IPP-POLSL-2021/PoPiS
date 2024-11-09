@@ -10,11 +10,11 @@ class Mp:
         pass
 
     def __str__(self) -> str:
-        base = f" był w klubie {self.club}, został wybrany z okręgu {self.districtName} znajdującym się w woj. {self.voivodeship}, miał wykształcenie {self.educationLevel} "
+        base = f"Był w klubie {self.club}, został wybrany z okręgu {self.districtName} znajdującym się w woj. {self.voivodeship}, miał wykształcenie {self.educationLevel} "
         if self.numberOfVotes != 0:
             base += f" , otrzymał {self.numberOfVotes} głosów "
         if self.profession is None:
-            base += " poczas tej kadecji poseł nie pełnił żadenej profesji "
+            base += " Podczas tej kadencji poseł nie pełnił żadnej profesji "
         else:
-            base += f" podczas tej kadencji poseł miał preofesje {self.profession}"
+            base += f" podczas tej kadencji poseł miał profesję {self.profession}"
         return base

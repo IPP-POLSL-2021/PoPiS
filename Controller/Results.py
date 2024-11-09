@@ -5,7 +5,7 @@ import time
 
 def getResults(Correlation, electionSelections, type):
     str = ""
-    if type == "procętowe":
+    if type == "procentowe":
         str = "_proc"
     match electionSelections:
         case"województwa":
@@ -102,6 +102,7 @@ def getResults(Correlation, electionSelections, type):
     Corr_Matrix = Results.corr()
     Corr_Matrix_Larger_Than = Corr_Matrix > Correlation
     Corr_Matrix = Corr_Matrix[Corr_Matrix_Larger_Than]
+    Corr_Matrix=round(Corr_Matrix,2)
     # print(Corr_Matrix)
 
     return Corr_Matrix, Results

@@ -16,7 +16,6 @@ def groupMpsByClub(term):
         else:
             MpIdByClub[Mp["club"]] = [Mp["id"]]
             MpNamesByClub[Mp["club"]] = [Mp["lastFirstName"]]
-    # print(MpIdByClub)
     return MpIdByClub, MpsList, MpNamesByClub
 
 

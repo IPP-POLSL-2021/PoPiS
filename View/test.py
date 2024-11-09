@@ -12,6 +12,9 @@ def load_numbers():
     term_number = get_term_number()
     sitting_number = get_sitting_number(term_number)
     voting_number = get_voting_number(term_number, sitting_number)
+    if voting_number == 0:
+        sitting_number = sitting_number-1
+        voting_number = get_voting_number(term_number,sitting_number)
     return term_number, sitting_number, voting_number
 
 # Funkcja do sprawdzania nowych głosowań
@@ -19,7 +22,7 @@ def load_numbers():
 
 def check_new_voting():
     term_number, sitting_number, voting_number = load_numbers()
-    last_voting = st.session_state.get('last_voting', (0, 0, 0))
+    last_voting = st.session_state.get('last_voting', (10, 21, 1))
 
     if (term_number, sitting_number, voting_number) != last_voting:
         st.write(f"Głosowanie nr {voting_number} na {sitting_number} posiedzeniu {term_number} kadencji Sejmu")

@@ -1,7 +1,7 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 
-from Controller.Commitees import CommiteesList, CommiteeFutureSetting, LastNCommitteeSettingDates
+from Controller.Committees import CommitteesList, CommitteeFutureSetting, LastNCommitteeSettingDates
 import json
 from Controller.Results import getResults
 
@@ -12,25 +12,25 @@ def loadView():
         "Numer Kadencji", value=10, placeholder="Wpisz numer"
     )
 
-    commitees = CommiteesList(term_number)
-    for commitee in commitees:
+    committees = CommitteesList(term_number)
+    for committee in committees:
         st.markdown(
-            f"{commitee['name']} o kodzie: {commitee['code']}")
+            f"{committee['name']} o kodzie: {committee['code']}")
 
     committeeCode = st.text_input(
-        "Kod komisij", value="ASW", placeholder="Podaj kod komisji")
+        "Kod komisji", value="ASW", placeholder="Podaj kod komisji")
     st.markdown(
-        f"posiedzenia wybranej komisji w ciągu ostanich 3 dni,{CommiteeFutureSetting(term_number,committeeCode)}")
+        f"Posiedzenia wybranej komisji w ciągu ostatnich 3 dni,{CommitteeFutureSetting(term_number,committeeCode)}")
     numberOfSettings = st.number_input(
-        "ile ostanich posiedzień komijsji cię interesuje", 1, value=1)
+        "Ilość ostatnich posiedzień komisji które chcesz zobaczyć", 1, value=1)
     settingsList = LastNCommitteeSettingDates(
         committeeCode, numberOfSettings, term_number)
     st.markdown(
-        f"ostanie {numberOfSettings} posiedzeń komijsji miały miejsce,{settingsList}")
+        f"ostatnie {numberOfSettings} posiedzeń komisji miały miejsce,{settingsList}")
     # correlationValue = st.number_input(
     #    label="Podaj jak bardzo wartości mają być skorelowane [-1;1]", min_value=-1.0, max_value=1.0)
     type = st.selectbox("Wybierz rodzaj analizowanych wyników",
-                        ("procętowe", "ilościowe"))
+                        ("procentowe", "ilościowe"))
     correlationValue = -1
     electionSelections = st.selectbox("wybierz poziom administracyjny do analizy ", (
         "województwa", "okręgi", "powiaty", "gminy", "obwody"))

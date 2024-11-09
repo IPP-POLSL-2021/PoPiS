@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 from discord import Intents, Client, Message
 import threading
-from Controller.discordBotResponses import get_respone, create_event, check_24_hours
+from Controller.discordBotResponses import get_response, create_event, check_24_hours
 load_dotenv()
 # aby wysłąć przypomnienie w  gdzieś musiałbym przetrzymywać cały obiekt message albo przynajmniej podobiekt author
 TOKEN = os.getenv('TOKEN')
@@ -44,7 +44,7 @@ async def send_message(message, user_message):
     if is_private := user_message[0] == '?':
         user_message = user_message[1:]
     try:
-        response = get_respone(user_message)
+        response = get_response(user_message)
         responseArray = response.split('\n')
         for response in responseArray:
             # print(response)
@@ -64,13 +64,9 @@ async def on_message(message,  auto=False):
         return
     username = str(message.author)
     user_message = message.content
-
-    # print(user_message)
     channel = str(message.channel)
-    # print(f'[{channel}] {username} "{user_message}"')
     id = message.channel.id
     channel = client.get_channel(id)
-    # print(message.content[0])
     if message.content[0] == '!':
 
         date = create_event(id, user_message[1:], "discord")

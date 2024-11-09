@@ -1,5 +1,5 @@
 import streamlit as st
-from Controller import seastCalculators
+from Controller import seatsCalculator
 import json
 
 
@@ -42,25 +42,25 @@ def loadView():
     td = 0
     lw = 0
     kf = 0
-    type = st.selectbox("rodzaj głosów", ["ilościowy", "procętowy"])
-    with st.form("kalkulaotr miejsc w sejmie"):
+    type = st.selectbox("rodzaj głosów", ["ilościowy", "procentowy"])
+    with st.form("kalkulator mandatów w sejmie"):
         st.write("wybierz okrąg który chcesz uzupełnić")
         method = st.selectbox("metoda liczenia głosów", [
                               "d'Hondt", "Sainte-Laguë", "Kwota Hare’a (metoda największych reszt)", "Kwota Hare’a (metoda najmniejszych reszt)"])
         # if resestAll:
         #     clearJSON(seatsDistricstsDict)
-        district = st.selectbox("wybierz okrąg który chcesz uzupełnić",
+        district = st.selectbox("wybierz okręg który chcesz uzupełnić",
                                 districtsDict.keys())
         val = districtsDict[district]
         seatsNum = val['Miejsca do zdobycia']
-        st.write(f"w tym okręgu jest do rozdania {seatsNum} miejsc")
-        st.write("Uzupełnij ilośc głosów otrzymanych przez partie")
+        st.write(f"w tym okręgu jest do rozdania {seatsNum} mandatów")
+        st.write("Uzupełnij ilość głosów otrzymanych przez partie")
         pis = st.number_input("głosy parti PiS", 0)
         ko = st.number_input("głosy parti KO", 0)
         td = st.number_input("głosy parti Trzecia Droga", 0)
         lw = st.number_input("głosy  parti Lewica", 0)
         kf = st.number_input("głosy parti Konfederacja", 0)
-        if type == "procętowy":
+        if type == "procentowy":
             frequency = st.number_input("frekwencja", 0)
         else:
             frequency = pis+ko+td+lw+kf
@@ -73,13 +73,13 @@ def loadView():
             val['Trzecia Droga'] = td
             val['Lewica'] = lw
             val['Konfederacja'] = kf
-            if type == "procętowy":
+            if type == "procentowy":
                 val['Frekwencja'] = frequency
                 if pis+ko+td+lw+kf != 100:
                     st.warning("Wyniki powinny sumować się do 100%")
                 else:
                     procent = frequency/100
-                    newSeats, lastParty, nextParty = seastCalculators.chooseMethod(
+                    newSeats, lastParty, nextParty = seatsCalculator.chooseMethod(
                         pis*procent, ko*procent, td*procent, lw*procent, kf*procent, val['Frekwencja'], "ilościowy", seatsNum, method)
                     with open("data.json", "r", encoding="utf-8") as json_file:
                         loaded_data = json.load(json_file)
@@ -97,7 +97,7 @@ def loadView():
 
             else:
                 val['Frekwencja'] = pis+ko+td+lw+kf
-                newSeats, lastParty, nextParty = seastCalculators.chooseMethod(
+                newSeats, lastParty, nextParty = seatsCalculator.chooseMethod(
                     pis, ko, td, lw, kf, val['Frekwencja'], "ilościowy", seatsNum, method)
 
                 with open("data.json", "r", encoding="utf-8") as json_file:
@@ -115,7 +115,7 @@ def loadView():
                               ensure_ascii=False, indent=4)
                 st.write(newSeats)
                 st.write(
-                    f"Partia która zdobyła ostanie miejsce w okręgu to {lastParty} koljnne miejsce zdobyła by partia {nextParty}")
+                    f"Partia która zdobyła ostatni mandat w okręgu to {lastParty} a kolejny zdobyła by partia {nextParty}")
     resestAll = st.button("wyczyść wszystkie dane")
     if resestAll:
         with open("data.json", "w", encoding="utf-8") as json_file:
@@ -128,7 +128,7 @@ def loadView():
                  'Konfederacja': 0, 'Frekwencja': 0}
     votesDictProcent = {'PiS': 0, 'KO': 0, 'Trzecia Droga': 0, 'Lewica': 0,
                         'Konfederacja': 0, 'Frekwencja': 0}
-    emptyDistricDict = {}
+    emptyDistrictDict = {}
     for region in loaded_data:
 
         votesDict['KO'] += loaded_data[region]['KO']
@@ -138,11 +138,11 @@ def loadView():
         votesDict['Konfederacja'] += loaded_data[region]['Konfederacja']
         votesDict['Frekwencja'] += loaded_data[region]['Frekwencja']
         if loaded_data[region]['Uzupełniono'] is False:
-            emptyDistricDict[region] = 1
+            emptyDistrictDict[region] = 1
             # print(region)
     st.write(votesDict)
 
-    keys = str(list(emptyDistricDict.keys())).removeprefix(
+    keys = str(list(emptyDistrictDict.keys())).removeprefix(
         "[").removesuffix("]").replace("'", "")
 
     st.write(
