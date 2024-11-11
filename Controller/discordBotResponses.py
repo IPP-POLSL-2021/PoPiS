@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 import requests
-from Controller.Committees import CommiteesList, CommiteeFutureSetting
+from api_wrappers.committees import get_committees, get_committee_future_sitting
 from datetime import datetime, timedelta
 import sys
 # from Controller.telegrambot import create_reminders
@@ -37,7 +37,6 @@ def check_24_hours(file, platform=""):
 
 
 def write(file, lastCheckDate):
-
     with open(file, mode="w") as writingFile:
         writingFile.write(str(lastCheckDate))
 
@@ -54,10 +53,9 @@ def get_respone(User_Input):
     if lowered == '':
         return ""
     elif lowered == "komisje":
-        committees = CommitteesList(10)
+        committees = get_committees(10)
         committeesList = ""
         for committee in committees:
-
             committeesList += f"{committee['name']} o kodzie: {committee['code']}\n"
 
         # print(commiteesList)
@@ -70,21 +68,24 @@ def create_event(id, text, platform, userEvent=True):
     # print(id)
     remindersList = pd.read_csv("./Data/powiadomienia.csv")
     last = ""
-    committees = CommitteesList(10)
+    committees = get_committees(10)
     committeesList = ""
     for committee in committees:
-
         committeesList += f":{committee['code']} "
+    
     if text in committeesList:
-        date = CommitteeFutureSetting(10, text)
+        date = get_committee_future_sitting(10, text)
         new_reminder = {
             'channelId': id, 'platform': platform, 'committee': text}
+        
         if date is None:
-            if not ((new_reminder['channelId'] in remindersList['channelId'].values) and (new_reminder['platform'] in remindersList['platform'].values) and (new_reminder['committee'] in remindersList['committee'].values)):
+            if not ((new_reminder['channelId'] in remindersList['channelId'].values) and 
+                    (new_reminder['platform'] in remindersList['platform'].values) and 
+                    (new_reminder['committee'] in remindersList['committee'].values)):
                 df = pd.DataFrame([new_reminder])
-                df.to_csv("./Data/powiadomienia.csv",
-                          mode='a', index=False, header=False)
+                df.to_csv("./Data/powiadomienia.csv", mode='a', index=False, header=False)
             return "brak nowych posiedzeń"
+        
         elif userEvent is False:
             Auto_date = f"w ciągu ostatnich trzech dni komisja o kodzie {text} miała ostatnie spotkanie {date}"
             if platform == "discord":
@@ -96,15 +97,14 @@ def create_event(id, text, platform, userEvent=True):
                 # create_reminders("", True, id, Auto_date)
         # print(remindersList['platform'])
 
-        if not ((new_reminder['channelId'] in remindersList['channelId'].values) and (new_reminder['platform'] in remindersList['platform'].values) and (new_reminder['committee'] in remindersList['committee'].values)):
-
+        if not ((new_reminder['channelId'] in remindersList['channelId'].values) and 
+                (new_reminder['platform'] in remindersList['platform'].values) and 
+                (new_reminder['committee'] in remindersList['committee'].values)):
             df = pd.DataFrame([new_reminder])
-            df.to_csv("./Data/powiadomienia.csv",
-                      mode='a', index=False, header=False)
+            df.to_csv("./Data/powiadomienia.csv", mode='a', index=False, header=False)
+        
         if date is not None:
             last = f"ostatnie o kodzie {text} spotkanie miało miejsce {date}"
         return f"dodano do obserwowanych {last}"
-        # print(response)
-    # print(response)
     else:
         return "brak"

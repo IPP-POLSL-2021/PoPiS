@@ -1,4 +1,4 @@
-from Controller.Committees import CommitteeStats, CommitteesList, CommitteeAge, CommitteeEducation
+from api_wrappers.committees import get_committee_stats, get_committees, get_committee_member_ages, get_committee_member_details
 import streamlit as st
 import plotly.express as px
 import pandas as pd
@@ -11,13 +11,17 @@ def loadView():
     term_number = st.number_input(
         "kadencja sejmu", min_value=1, value=10)
 
-    codes = [committee['code'] for committee in CommitteesList(term_number)]
+    codes = [committee['code'] for committee in get_committees(term_number)]
     codes.append("łącznie")
     selectedCommittee = st.selectbox(
         "komisja której statystyki cię interesują (niektóre dostępne tylko dla obecnej kadencji)", options=list(codes)
     )
 
-    clubs, MPs, clubsButBetter = CommitteeStats(term_number, selectedCommittee)
+    committee_stats = get_committee_stats(term_number, selectedCommittee)
+    clubs = pd.DataFrame.from_dict(committee_stats['clubs'], orient='index')
+    MPs = pd.DataFrame.from_dict(committee_stats['members'], orient='index')
+    clubsButBetter = committee_stats['clubs']
+
     ClubsCount = clubs.apply(lambda x: x.count(), axis=1)
 
     # Plotly bar chart for ClubsCount
@@ -45,7 +49,7 @@ def loadView():
     if selectedCommittee == "łącznie":
         st.dataframe(MPs, use_container_width=True)
 
-    DataframeAges, AgesButDictionary = CommitteeAge(clubsButBetter, term_number)
+    DataframeAges, AgesButDictionary = get_committee_member_ages(clubsButBetter, term_number)
     all_ages = DataframeAges.values.flatten()
     all_ages = pd.Series(all_ages).dropna()
 
@@ -57,10 +61,10 @@ def loadView():
         case "wiek":
             _sharedViews.ageGraphs(all_ages, AgesButDictionary, term_number)
         case "edukacja":
-            EducationDictionary = CommitteeEducation(clubsButBetter, term_number, stats)
+            EducationDictionary = get_committee_member_details(clubsButBetter, term_number, 'edukacja')
             _sharedViews.MoreStats(EducationDictionary)
         case "profesja":
-            EducationDictionary = CommitteeEducation(clubsButBetter, term_number, stats)
+            EducationDictionary = get_committee_member_details(clubsButBetter, term_number, 'profesja')
             _sharedViews.MoreStats(EducationDictionary)
         case "brak":
             st.write("")

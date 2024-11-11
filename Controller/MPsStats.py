@@ -1,6 +1,7 @@
 import requests
 from datetime import datetime, timedelta
 import pandas as pd
+import numpy as np
 from Model import MPModel
 
 
@@ -10,14 +11,12 @@ def groupMpsByClub(term):
     MpIdByClub = {}
     MpNamesByClub = {}
     for Mp in MpsList:
-        # print(Mp)
-        if 'club' in Mp:
-            if Mp["club"] in MpIdByClub:
-                MpIdByClub[Mp["club"]].append(Mp["id"])
-                MpNamesByClub[Mp["club"]].append(Mp["lastFirstName"])
-            else:
-                MpIdByClub[Mp["club"]] = [Mp["id"]]
-                MpNamesByClub[Mp["club"]] = [Mp["lastFirstName"]]
+        if Mp.get("club","brak informacji") in MpIdByClub:
+            MpIdByClub[Mp.get("club","brak informacji")].append(Mp["id"])
+            MpNamesByClub[Mp.get("club","brak informacji")].append(Mp["lastFirstName"])
+        else:
+            MpIdByClub[Mp.get("club","brak informacji")] = [Mp["id"]]
+            MpNamesByClub[Mp.get("club","brak informacji")] = [Mp["lastFirstName"]]
     return MpIdByClub, MpsList, MpNamesByClub
 
 
@@ -90,7 +89,7 @@ def MoreMPsStats(MPSimpleList, MPIdlist, term=10, searchedInfo='edukacja'):
                 match searchedInfo:
                     case 'edukacja':
                         educationOfMP = str([
-                            mp['educationLevel'] for mp in filtered_MPs if 'educationLevel' in mp])
+                            mp.get('educationLevel','Brak') for mp in filtered_MPs])
                     case 'okrąg':
                         educationOfMP = str([
                             mp['districtName'] for mp in filtered_MPs])
