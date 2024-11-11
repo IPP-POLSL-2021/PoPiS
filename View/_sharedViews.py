@@ -8,11 +8,12 @@ import plotly.graph_objects as go
 from st_aggrid import AgGrid
 from statistics import mean, median, stdev
 
+
 def ageGraphs(all_ages, AgesButDictionary, term=""):
     # General age distribution histogram
     fig = px.histogram(
-        x=all_ages, 
-        nbins=10, 
+        x=all_ages,
+        nbins=10,
         title=f'Ogólny rozkład wiekowy posłów {term} kadencji sejmu',
         labels={'x': 'Wiek', 'y': 'Liczba członków'},
         color_discrete_sequence=['red']
@@ -31,7 +32,7 @@ def ageGraphs(all_ages, AgesButDictionary, term=""):
             min_age = min(ages)
             median_age = median(ages)
             std_dev_age = stdev(ages)
-            
+
             data.append({
                 'Klub': club,
                 'Najstarszy członek (lat)': max_age,
@@ -50,8 +51,8 @@ def ageGraphs(all_ages, AgesButDictionary, term=""):
     for club, ages in AgesButDictionary.items():
         if len(ages) > 2:
             fig = px.histogram(
-                x=ages, 
-                nbins=10, 
+                x=ages,
+                nbins=10,
                 title=f'Ogólny rozkład wiekowy klubu {club} dla {term} kadencji sejmu',
                 labels={'x': 'Wiek', 'y': 'Liczba członków'},
                 color_discrete_sequence=['red']
@@ -61,6 +62,7 @@ def ageGraphs(all_ages, AgesButDictionary, term=""):
                 yaxis_title='Liczba członków'
             )
             st.plotly_chart(fig)
+
 
 def MoreStats(ChosenDictionary):
     st.write("Wykresy dla klubów jeśli członkowie mają różne atrybuty")

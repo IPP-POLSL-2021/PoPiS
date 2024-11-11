@@ -10,12 +10,14 @@ def groupMpsByClub(term):
     MpIdByClub = {}
     MpNamesByClub = {}
     for Mp in MpsList:
-        if Mp["club"] in MpIdByClub:
-            MpIdByClub[Mp["club"]].append(Mp["id"])
-            MpNamesByClub[Mp["club"]].append(Mp["lastFirstName"])
-        else:
-            MpIdByClub[Mp["club"]] = [Mp["id"]]
-            MpNamesByClub[Mp["club"]] = [Mp["lastFirstName"]]
+        # print(Mp)
+        if 'club' in Mp:
+            if Mp["club"] in MpIdByClub:
+                MpIdByClub[Mp["club"]].append(Mp["id"])
+                MpNamesByClub[Mp["club"]].append(Mp["lastFirstName"])
+            else:
+                MpIdByClub[Mp["club"]] = [Mp["id"]]
+                MpNamesByClub[Mp["club"]] = [Mp["lastFirstName"]]
     return MpIdByClub, MpsList, MpNamesByClub
 
 
@@ -88,7 +90,7 @@ def MoreMPsStats(MPSimpleList, MPIdlist, term=10, searchedInfo='edukacja'):
                 match searchedInfo:
                     case 'edukacja':
                         educationOfMP = str([
-                            mp['educationLevel'] for mp in filtered_MPs])
+                            mp['educationLevel'] for mp in filtered_MPs if 'educationLevel' in mp])
                     case 'okrąg':
                         educationOfMP = str([
                             mp['districtName'] for mp in filtered_MPs])
@@ -110,7 +112,7 @@ def MoreMPsStats(MPSimpleList, MPIdlist, term=10, searchedInfo='edukacja'):
     return MPsEducation
 
 
-def HistoryOfMp(lastFirstName, currentMpsList):
+def HistoryOfMp(lastFirstName, currentMpsList, selectedTem):
     # print(lastFirstName)
     request = requests.get("https://api.sejm.gov.pl/sejm/term")
     response = request.json()
@@ -120,6 +122,7 @@ def HistoryOfMp(lastFirstName, currentMpsList):
             termNum = term['num']
             # print(term)
     curr = termNum
+    termNum = selectedTem
     HistList = {}
 
     for termNum in range(termNum, 0, -1):
