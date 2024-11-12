@@ -1,5 +1,7 @@
 import requests
 from typing import Dict, List, Optional, Union
+import datetime
+from functools import wraps
 
 def get_votings(term: int) -> Dict:
     """
@@ -12,6 +14,57 @@ def get_votings(term: int) -> Dict:
         Dict: A dictionary of voting information for each day
     """
     return requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/votings')
+
+def get_vote(term: int, sitting: int, id: int) -> requests.Response:
+    """
+    Retrieve details of a specific voting.
+    
+    Args:
+        term (int): The Sejm term number
+        sitting (int): The sitting number
+        id (int): The voting ID
+    
+    Returns:
+        requests.Response: Response containing voting details
+    """
+    response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/votings/{sitting}/{id}')
+    return response
+
+def handle_response(func):
+    """
+    Decorator to handle response retrieval and error checking for voting-related functions.
+    
+    Args:
+        func (callable): The function to be wrapped
+    
+    Returns:
+        callable: Wrapped function with response handling
+    """
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        response = kwargs.get('response')
+
+        # If response is not provided, try extracting term, sitting, and id from args or kwargs
+        if not response:
+            if len(args) >= 3:
+                term, sitting, id = args[:3]  # Positional arguments
+            else:
+                term = kwargs.get('term')
+                sitting = kwargs.get('sitting')
+                id = kwargs.get('id')
+            
+            # Ensure term, sitting, and id are provided
+            if term is None or sitting is None or id is None:
+                raise ValueError("Provide term, sitting, and id when response is not given")
+            
+            # Fetch the response
+            response = get_vote(term, sitting, id)
+            kwargs['response'] = response
+
+        # Call the wrapped function with response
+        return func(*args, **kwargs)
+    
+    return wrapper
 
 def search_votings(term: int, **params) -> List[Dict]:
     """
@@ -75,6 +128,93 @@ def get_mp_voting_details(term: int, mp_id: int, sitting: int, date: str) -> Lis
     """
     response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/MP/{mp_id}/votings/{sitting}/{date}')
     return response
+
+@handle_response
+def get_date(term: Optional[int] = None, sitting: Optional[int] = None, 
+             id: Optional[int] = None, response: Optional[requests.Response] = None) -> datetime.datetime:
+    """
+    Extract the date of a specific voting.
+    
+    Args:
+        term (int, optional): The Sejm term number
+        sitting (int, optional): The sitting number
+        id (int, optional): The voting ID
+        response (requests.Response, optional): Pre-fetched response
+    
+    Returns:
+        datetime.datetime: Date of the voting
+    """
+    return datetime.datetime.strptime(response.json()['date'], '%Y-%m-%dT%H:%M:%S')
+
+@handle_response
+def get_votes_with_mode(term: Optional[int] = None, sitting: Optional[int] = None, 
+                         id: Optional[int] = None, mode: Optional[Union[str, int]] = None, 
+                         response: Optional[requests.Response] = None) -> Union[int, str]:
+    """
+    Retrieve voting results based on a specified mode.
+    
+    Args:
+        term (int, optional): The Sejm term number
+        sitting (int, optional): The sitting number
+        id (int, optional): The voting ID
+        mode (str or int, optional): Mode of vote retrieval
+        response (requests.Response, optional): Pre-fetched response
+    
+    Returns:
+        int or str: Voting results based on the specified mode
+    """
+    vote_data = response.json()
+    
+    vote_modes = {
+        "yes": ["yes", 0, "za"],
+        "no": ["no", 1, "przeciw"],
+        "abstain": ["abstain", 2, "wstrzymał"],
+        "notParticipating": ["notParticipating", 3, "nieobecni"],
+        "totalVoted": ["totalVoted", 4, "suma"]
+    }
+    
+    # Normalize mode to a standard key
+    normalized_mode = next((key for key, values in vote_modes.items() if mode in values), mode)
+    
+    if normalized_mode in vote_modes or normalized_mode is None:
+        if normalized_mode is None:
+            return f"{vote_data['yes']} - {vote_data['no']} - {vote_data['abstain']} - {vote_data['notParticipating']}"
+        return vote_data[normalized_mode]
+    
+    raise ValueError(f"Invalid mode: {mode}")
+
+@handle_response
+def get_info(term: Optional[int] = None, sitting: Optional[int] = None, 
+              id: Optional[int] = None, mode: Optional[Union[str, int]] = None, 
+              response: Optional[requests.Response] = None) -> str:
+    """
+    Retrieve specific information about a voting.
+    
+    Args:
+        term (int, optional): The Sejm term number
+        sitting (int, optional): The sitting number
+        id (int, optional): The voting ID
+        mode (str or int, optional): Type of information to retrieve
+        response (requests.Response, optional): Pre-fetched response
+    
+    Returns:
+        str: Requested voting information
+    """
+    info_modes = {
+        "votingNumber": ["votingNumber", 0, "nr_głosowania"],
+        "sitting": ["sitting", 1, "nr_posiedzenia"],
+        "title": ["title", 2, "punkt_obrad"],
+        "topic": ["topic", 3, "przedmiot"],
+        "kind": ["kind", 4, "typ"]
+    }
+    
+    # Normalize mode to a standard key
+    normalized_mode = next((key for key, values in info_modes.items() if mode in values), mode)
+    
+    if normalized_mode in info_modes:
+        return response.json()[normalized_mode]
+    
+    raise ValueError(f"Invalid mode: {mode}")
 
 def analyze_voting_results(voting_details: Dict) -> Dict:
     """
@@ -151,7 +291,7 @@ if __name__ == "__main__":
     # Example usage
     term = 10
     proceeding = 1
-    voting_num = 1
+    voting_num = 3
 
     # Get voting details
     voting_details = get_voting_details(term, proceeding, voting_num).json()
@@ -168,4 +308,5 @@ if __name__ == "__main__":
     for club, votes in club_votes.items():
         print(f"{club}:")
         for vote_type, count in votes.items():
-            print(f"  {vote_type.title()}: {count}")
+            if count>0:
+                print(f"  {vote_type.title()}: {count}")
