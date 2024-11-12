@@ -2,89 +2,88 @@ import requests
 from streamlit_push_notifications import send_push
 from datetime import datetime, date
 import streamlit as st
-from sentimentpl.models import SentimentPLModel
+#from sentimentpl.models import SentimentPLModel
 from Controller.acts import get_all_acts_this_year, get_titles_of_record,did_today_new_ustawa_obowiazuje,  get_process_details, get_legislative_processes
-import pdfplumber
-from io import BytesIO,StringIO
-import re
-from collections import defaultdict
-import PyPDF2
-import pandas as pd
+#import pdfplumber
+#from io import BytesIO,StringIO
+#import re
+#from collections import defaultdict
+#import pandas as pd
 
 BASE_URL = "https://api.sejm.gov.pl"
 TERM = 10  # Przykładowy termin Sejmu
 
-sentiment_analyzer_pl = SentimentPLModel(from_pretrained='latest')
-
-def load_pdf_text_with_pdfplumber(file_path):
-    text = ""
-    with pdfplumber.open(file_path) as pdf:
-        for page in pdf.pages:
-            page_text = page.extract_text()
-            if page_text:
-                text += page_text + "\n"
-    text = re.sub(r'\(.*?\)', '', text)
-    return text
-
-
-def find_unique_names(text):
-    polish_letters = "A-Za-zĄąĆćĘęŁłŃńÓóŚśŹźŻż"
-    names = re.findall(rf'(Poseł\s+[{polish_letters}]+ [{polish_letters}]+)', text)
-    unique_names = set(names)
-    return unique_names
-
-
-def extract_speeches(text, unique_names):
-    polish_letters = "A-Za-zĄąĆćĘęŁłŃńÓóŚśŹźŻż"
-    speeches = defaultdict(list)
-    for name in unique_names:
-        pattern = rf'{name}:(.*?)(?=(Poseł\s+[{polish_letters}]+\s+[{polish_letters}]+:|$))'
-        matches = re.findall(pattern, text, re.DOTALL)
-        speeches[name].extend(matches)
-    return speeches
-
-def analyze_sentiment(text):
-
-    if not isinstance(text, str):
-        raise ValueError("Oczekiwano ciągu tekstowego, ale otrzymano obiekt typu: {}".format(type(text)))
-    
-    if not text.strip():
-        return "Neutralny", 0  
-
-    fragments = [text[i:i+512] for i in range(0, len(text), 512)]
-    scores = []
-    for fragment in fragments:
-        try:
-            score = sentiment_analyzer_pl(fragment).item()  
-            scores.append(score)
-        except IndexError:
-            scores.append(0)  
-
-    avg_score = sum(scores) / len(scores) if scores else 0
-    label = "Pozytywny" if avg_score > 0 else "Negatywny"
-    return label, abs(avg_score)  
+#sentiment_analyzer_pl = SentimentPLModel(from_pretrained='latest')
+#
+#def load_pdf_text_with_pdfplumber(file_path):
+#    text = ""
+#    with pdfplumber.open(file_path) as pdf:
+#        for page in pdf.pages:
+#            page_text = page.extract_text()
+#            if page_text:
+#                text += page_text + "\n"
+#    text = re.sub(r'\(.*?\)', '', text)
+#    return text
+#
+#
+#def find_unique_names(text):
+#    polish_letters = "A-Za-zĄąĆćĘęŁłŃńÓóŚśŹźŻż"
+#    names = re.findall(rf'(Poseł\s+[{polish_letters}]+ [{polish_letters}]+)', text)
+#    unique_names = set(names)
+#    return unique_names
+#
+#
+#def extract_speeches(text, unique_names):
+#    polish_letters = "A-Za-zĄąĆćĘęŁłŃńÓóŚśŹźŻż"
+#    speeches = defaultdict(list)
+#    for name in unique_names:
+#        pattern = rf'{name}:(.*?)(?=(Poseł\s+[{polish_letters}]+\s+[{polish_letters}]+:|$))'
+#        matches = re.findall(pattern, text, re.DOTALL)
+#        speeches[name].extend(matches)
+#    return speeches
+#
+#def analyze_sentiment(text):
+#
+#    if not isinstance(text, str):
+#        raise ValueError("Oczekiwano ciągu tekstowego, ale otrzymano obiekt typu: {}".format(type(text)))
+#    
+#    if not text.strip():
+#        return "Neutralny", 0  
+#
+#    fragments = [text[i:i+512] for i in range(0, len(text), 512)]
+#    scores = []
+#    for fragment in fragments:
+#        try:
+#            score = sentiment_analyzer_pl(fragment).item()  
+#            scores.append(score)
+#        except IndexError:
+#            scores.append(0)  
+#
+#    avg_score = sum(scores) / len(scores) if scores else 0
+ #   label = "Pozytywny" if avg_score > 0 else "Negatywny"
+#    return label, abs(avg_score)  
 
 
 def loadView():
     
-    pdf_text = load_pdf_text_with_pdfplumber("Data\81 - 16.08.2023.pdf")
-    unique_names = find_unique_names(pdf_text)
-    speeches = extract_speeches(pdf_text, unique_names)
- 
-    results = []
-    for name, speech_list in speeches.items():
-        for speech in speech_list:
-            if isinstance(speech, tuple):
-                speech = speech[0]
-            sentiment, score = analyze_sentiment(speech)
-            results.append({"Poseł": name, "Wypowiedź": speech, "Sentyment": sentiment, "Wynik": score})
-     
-    
-    
-    df_results = pd.DataFrame(results)
-    st.title("Analiza Sentymentu Stenogramu Sejmowego")
-    st.write("Tabela wyników analizy sentymentu dla posłów:")
-    st.dataframe(df_results)
+#    pdf_text = load_pdf_text_with_pdfplumber("Data\81 - 16.08.2023.pdf")
+#    unique_names = find_unique_names(pdf_text)
+# 
+#    speeches = extract_speeches(pdf_text, unique_names)
+#    results = []
+#    for name, speech_list in speeches.items():
+#        for speech in speech_list:
+#            if isinstance(speech, tuple):
+#                speech = speech[0]
+#            sentiment, score = analyze_sentiment(speech)
+#            results.append({"Poseł": name, "Wypowiedź": speech, "Sentyment": sentiment, "Wynik": score})
+#     
+#    
+#    
+#    df_results = pd.DataFrame(results)
+#    st.title("Analiza Sentymentu Stenogramu Sejmowego")
+#    st.write("Tabela wyników analizy sentymentu dla posłów:")
+#    st.dataframe(df_results)
 
 
 
@@ -148,7 +147,6 @@ def loadView():
 
     acts=get_all_acts_this_year()
     if acts:
-        # Przetwarzamy rekordy
         result=get_titles_of_record(acts)
         
 
@@ -160,6 +158,3 @@ def loadView():
 
     else:
         st.error("Nie udało się pobrać danych.")
-
-       #fetch_transcripts(f"https://api.sejm.gov.pl/sejm/term10/proceedings/18/2024-09-25/transcripts/0")
-    
