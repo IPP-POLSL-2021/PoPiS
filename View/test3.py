@@ -5,81 +5,89 @@ import streamlit as st
 from sentimentpl.models import SentimentPLModel
 from Controller.acts import get_all_acts_this_year, get_titles_of_record,did_today_new_ustawa_obowiazuje,  get_process_details, get_legislative_processes
 import pdfplumber
-from io import BytesIO
+from io import BytesIO,StringIO
 import re
 from collections import defaultdict
+import PyPDF2
+import pandas as pd
 
 BASE_URL = "https://api.sejm.gov.pl"
 TERM = 10  # Przykładowy termin Sejmu
 
-model = SentimentPLModel(from_pretrained='latest')
+sentiment_analyzer_pl = SentimentPLModel(from_pretrained='latest')
 
-def get_proceedings(term):
-    response = requests.get(f"{BASE_URL}/sejm/term{term}/proceedings")
-    if response.status_code == 200:
-        return response.json()
-    else:
-        st.error(f"Nie udało się pobrać listy posiedzeń. Kod błędu: {response.status_code}")
-        return []
-
-def get_proceeding_details(term, proceeding_number):
-    response = requests.get(f"{BASE_URL}/sejm/term{term}/proceedings/{proceeding_number}")
-    if response.status_code == 200:
-        return response.json()
-    else:
-        st.error(f"Nie udało się pobrać szczegółów posiedzenia. Kod błędu: {response.status_code}")
-        return {}
-
-def get_transcript(term, proceeding_number, date, transcript_number=0):
-
-    response = requests.get(
-        f"{BASE_URL}/sejm/term{term}/proceedings/{proceeding_number}/{date}/transcripts/pdf"
-    )
-    
-    if response.status_code == 200:
-        return BytesIO(response.content)
-    else:
-        st.error(f"Nie udało się pobrać pliku PDF. Kod błędu: {response.status_code}")
-        return None
-
-def extract_text_from_pdf_without_parentheses(pdf_file):
+def load_pdf_text_with_pdfplumber(file_path):
     text = ""
-    with pdfplumber.open(pdf_file) as pdf:
+    with pdfplumber.open(file_path) as pdf:
         for page in pdf.pages:
             page_text = page.extract_text()
-            # Usuwamy tekst w nawiasach za pomocą regexu
-            page_text = re.sub(r'\(.*?\)', '', page_text)
-            text += page_text + "\n"
+            if page_text:
+                text += page_text + "\n"
+    text = re.sub(r'\(.*?\)', '', text)
     return text
 
+
+def find_unique_names(text):
+    polish_letters = "A-Za-zĄąĆćĘęŁłŃńÓóŚśŹźŻż"
+    names = re.findall(rf'(Poseł\s+[{polish_letters}]+ [{polish_letters}]+)', text)
+    unique_names = set(names)
+    return unique_names
+
+
+def extract_speeches(text, unique_names):
+    polish_letters = "A-Za-zĄąĆćĘęŁłŃńÓóŚśŹźŻż"
+    speeches = defaultdict(list)
+    for name in unique_names:
+        pattern = rf'{name}:(.*?)(?=(Poseł\s+[{polish_letters}]+\s+[{polish_letters}]+:|$))'
+        matches = re.findall(pattern, text, re.DOTALL)
+        speeches[name].extend(matches)
+    return speeches
+
+def analyze_sentiment(text):
+
+    if not isinstance(text, str):
+        raise ValueError("Oczekiwano ciągu tekstowego, ale otrzymano obiekt typu: {}".format(type(text)))
     
+    if not text.strip():
+        return "Neutralny", 0  
+
+    fragments = [text[i:i+512] for i in range(0, len(text), 512)]
+    scores = []
+    for fragment in fragments:
+        try:
+            score = sentiment_analyzer_pl(fragment).item()  
+            scores.append(score)
+        except IndexError:
+            scores.append(0)  
+
+    avg_score = sum(scores) / len(scores) if scores else 0
+    label = "Pozytywny" if avg_score > 0 else "Negatywny"
+    return label, abs(avg_score)  
+
 
 def loadView():
-    st.title("Analiza sentymentu wypowiedzi posłów z transkryptu")
-
-    proceeding_number = get_proceedings(TERM)
-    if proceeding_number:
-        proceeding_options = [f"{p['number']}" for p in proceeding_number]
-        selected_proceeding = st.selectbox("Wybierz numer posiedzenia Sejmu", proceeding_options)
-        
-        proceeding_details = get_proceeding_details(TERM, selected_proceeding)
-        date = proceeding_details.get('dates', [])
-        
-        if date:
-            selected_date = st.selectbox("Wybierz datę posiedzenia", date)
-
-    if st.button("Pobierz i analizuj transkrypt"):
-        
-        pdf_file = get_transcript(TERM, proceeding_number, date)
-        if pdf_file:
-            text = extract_text_from_pdf_without_parentheses(pdf_file)
-            st.subheader("Przykładowy tekst bez nawiasów")
-            st.write(text[:1000]) 
-
-            
-            
+    
+    pdf_text = load_pdf_text_with_pdfplumber("Data\81 - 16.08.2023.pdf")
+    unique_names = find_unique_names(pdf_text)
+    speeches = extract_speeches(pdf_text, unique_names)
+ 
+    results = []
+    for name, speech_list in speeches.items():
+        for speech in speech_list:
+            if isinstance(speech, tuple):
+                speech = speech[0]
+            sentiment, score = analyze_sentiment(speech)
+            results.append({"Poseł": name, "Wypowiedź": speech, "Sentyment": sentiment, "Wynik": score})
+     
     
     
+    df_results = pd.DataFrame(results)
+    st.title("Analiza Sentymentu Stenogramu Sejmowego")
+    st.write("Tabela wyników analizy sentymentu dla posłów:")
+    st.dataframe(df_results)
+
+
+
 
 
     st.title("Śledzenie Procesu Legislacyjnego")
