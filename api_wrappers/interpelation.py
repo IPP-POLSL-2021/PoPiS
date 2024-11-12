@@ -1,6 +1,9 @@
 import requests
 import datetime
-from api_wrappers.MP import get_name  # Importing get_name from MP module
+try:
+    from api_wrappers.MP import get_name  # Importing get_name from MP module
+except ModuleNotFoundError:
+    from MP import get_name
 from functools import wraps
 
 

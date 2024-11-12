@@ -1,6 +1,9 @@
 import requests
 import datetime
-from api_wrappers.MP import get_name
+try:
+    from api_wrappers.MP import get_name
+except ModuleNotFoundError:
+    from MP import get_name
 
 def get_written_questions(term, **params):
     """Returns a list of written questions with optional filters."""
