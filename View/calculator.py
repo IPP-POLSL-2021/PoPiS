@@ -28,7 +28,7 @@ def loadView():
                      'Kalisz': {}, 'Konin': {}, 'Piła': {}, 'Poznań': {}, 'Koszalin': {}, 'Szczecin': {}}
     seats = [12, 8, 14, 12, 13, 15, 12, 12, 10, 9, 12, 8, 14, 10, 9, 10, 9, 12, 20,
              12, 12, 11, 15, 14, 12, 14, 9, 7, 9, 9, 12, 9, 16, 8, 10, 12, 9, 9, 10, 8, 12]
-    st.write("pusto")
+
     i = 0
 
     for dist in districtsDict:
@@ -36,7 +36,11 @@ def loadView():
         districtsDict[dist] = votesDict.copy()
         i += 1
     seatsDistricstsDict = districtsDict
+    votesNumber = seatsDistricstsDict
     loaded_data = {}
+    loaded_votes = seatsDistricstsDict
+
+    print(loaded_votes)
     pis = 0
     ko = 0
     td = 0
@@ -81,6 +85,11 @@ def loadView():
                     procent = frequency/100
                     newSeats, lastParty, nextParty = seatsCalculator.chooseMethod(
                         pis*procent, ko*procent, td*procent, lw*procent, kf*procent, val['Frekwencja'], "ilościowy", seatsNum, method)
+                    votesNumber[district]['PiS'] = pis*procent
+                    votesNumber[district]['KO'] = ko*procent
+                    votesNumber[district]['Trzecia Droga'] = td*procent
+                    votesNumber[district]['Lewica'] = lw*procent
+                    votesNumber[district]['Konfederacja'] = kf*procent
                     with open("data.json", "r", encoding="utf-8") as json_file:
                         loaded_data = json.load(json_file)
                         loaded_data[district]['PiS'] = newSeats['PiS']
@@ -88,10 +97,20 @@ def loadView():
                         loaded_data[district]['Trzecia Droga'] = newSeats['Trzecia Droga']
                         loaded_data[district]['Lewica'] = newSeats['Lewica']
                         loaded_data[district]['Konfederacja'] = newSeats['Konfederacja']
-                        loaded_data[district]['Frekwencja'] = frequency
-                        loaded_data[district]['Uzupełniono'] = True
+
+                    with open("votes.json", "r", encoding="utf-8") as json_file:
+                        loaded_votes = json.load(json_file)
+                        loaded_votes[district]['PiS'] = votesNumber[district]['PiS']
+                        loaded_votes[district]['KO'] = votesNumber[district]['KO']
+                        loaded_votes[district]['Trzecia Droga'] = votesNumber[district]['Trzecia Droga']
+                        loaded_votes[district]['Lewica'] = votesNumber[district]['Lewica']
+                        loaded_votes[district]['Konfederacja'] = votesNumber[district]['Konfederacja']
+
                     with open("data.json", "w", encoding="utf-8") as json_file:
                         json.dump(loaded_data, json_file,
+                                  ensure_ascii=False, indent=4)
+                    with open("votes.json", "w", encoding="utf-8") as json_file:
+                        json.dump(loaded_votes, json_file,
                                   ensure_ascii=False, indent=4)
                     st.write(newSeats)
 
@@ -102,16 +121,27 @@ def loadView():
 
                 with open("data.json", "r", encoding="utf-8") as json_file:
                     loaded_data = json.load(json_file)
+                with open("votes.json", "r", encoding="utf-8") as json_file:
+                    loaded_votes = json.load(json_file)
                 loaded_data[district]['PiS'] = newSeats['PiS']
                 loaded_data[district]['KO'] = newSeats['KO']
                 loaded_data[district]['Trzecia Droga'] = newSeats['Trzecia Droga']
                 loaded_data[district]['Lewica'] = newSeats['Lewica']
                 loaded_data[district]['Konfederacja'] = newSeats['Konfederacja']
                 loaded_data[district]['Frekwencja'] = frequency
-                print(frequency)
+                loaded_votes[district]['PiS'] = votesNumber[district]['PiS']
+                loaded_votes[district]['KO'] = votesNumber[district]['KO']
+                loaded_votes[district]['Trzecia Droga'] = votesNumber[district]['Trzecia Droga']
+                loaded_votes[district]['Lewica'] = votesNumber[district]['Lewica']
+                loaded_votes[district]['Konfederacja'] = votesNumber[district]['Konfederacja']
+
+                # print(frequency)
                 loaded_data[district]['Uzupełniono'] = True
                 with open("data.json", "w", encoding="utf-8") as json_file:
                     json.dump(loaded_data, json_file,
+                              ensure_ascii=False, indent=4)
+                with open("votes.json", "w", encoding="utf-8") as json_file:
+                    json.dump(loaded_votes, json_file,
                               ensure_ascii=False, indent=4)
                 st.write(newSeats)
                 st.write(
@@ -121,13 +151,16 @@ def loadView():
         with open("data.json", "w", encoding="utf-8") as json_file:
             json.dump(seatsDistricstsDict, json_file,
                       ensure_ascii=False, indent=4)
+        with open("votes.json", "w", encoding="utf-8") as json_file:
+            json.dump(loaded_votes, json_file,
+                      ensure_ascii=False, indent=4)
     # print(seatsDistricstsDict['Gliwice'])
 
     # print(districtsDict)
     votesDict = {'PiS': 0, 'KO': 0, 'Trzecia Droga': 0, 'Lewica': 0,
                  'Konfederacja': 0, 'Frekwencja': 0}
     votesDictProcent = {'PiS': 0, 'KO': 0, 'Trzecia Droga': 0, 'Lewica': 0,
-                        'Konfederacja': 0, 'Frekwencja': 0}
+                        'Konfederacja': 0}
     emptyDistrictDict = {}
     for region in loaded_data:
 
@@ -137,11 +170,38 @@ def loadView():
         votesDict['Lewica'] += loaded_data[region]['Lewica']
         votesDict['Konfederacja'] += loaded_data[region]['Konfederacja']
         votesDict['Frekwencja'] += loaded_data[region]['Frekwencja']
+        votesDictProcent['KO'] += loaded_votes[region]['KO']
+        votesDictProcent['PiS'] += loaded_votes[region]['PiS']
+        votesDictProcent['Trzecia Droga'] += loaded_votes[region]['Trzecia Droga']
+        votesDictProcent['Lewica'] += loaded_votes[region]['Lewica']
+        votesDictProcent['Konfederacja'] += loaded_votes[region]['Konfederacja']
         if loaded_data[region]['Uzupełniono'] is False:
             emptyDistrictDict[region] = 1
             # print(region)
     st.write(votesDict)
+    if votesDictProcent['KO'] > 0:
+        votesDictProcent['KO'] /= votesDict['Frekwencja']/100
+        votesDictProcent['KO'] = round(votesDictProcent['KO'], 2)
+    if votesDictProcent['PiS'] > 0:
+        votesDictProcent['PiS'] /= votesDict['Frekwencja']/100
+        votesDictProcent['PiS'] = round(votesDictProcent['PiS'], 2)
+    if votesDictProcent['Trzecia Droga'] > 0:
+        votesDictProcent['Trzecia Droga'] /= votesDict['Frekwencja']/100
+        votesDictProcent['Trzecia Droga'] = round(
+            votesDictProcent['Trzecia Droga'], 2)
 
+    if votesDictProcent['Lewica'] > 0:
+        votesDictProcent['Lewica'] /= votesDict['Frekwencja']/100
+        votesDictProcent['Lewica'] = round(votesDictProcent['Lewica'], 2)
+
+    if votesDictProcent['Konfederacja'] > 0:
+        votesDictProcent['Konfederacja'] /= votesDict['Frekwencja']/100
+        votesDictProcent['Konfederacja'] = round(
+            votesDictProcent['Konfederacja'], 2)
+    for key in votesDictProcent.keys():
+        st.write(
+            f"Na podstawie wprowadzonych wyników partia: {key} uzyskała wynik na poziomie: {votesDictProcent[key]}%")
+    # st.write(f"wyniki w skali kraju: {votesDictProcent}")
     keys = str(list(emptyDistrictDict.keys())).removeprefix(
         "[").removesuffix("]").replace("'", "")
 

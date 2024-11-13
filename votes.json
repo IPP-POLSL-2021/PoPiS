@@ -1,0 +1,412 @@
+{
+    "Legnica": {
+        "PiS": 4122,
+        "KO": 12412,
+        "Trzecia Droga": 35535,
+        "Lewica": 34543,
+        "Konfederacja": 4345,
+        "Frekwencja": 90957,
+        "Miejsca do zdobycia": 12,
+        "Uzupełniono": true
+    },
+    "Wałbrzych": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 8,
+        "Uzupełniono": false
+    },
+    "Wrocław": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 14,
+        "Uzupełniono": false
+    },
+    "Bydgoszcz": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 12,
+        "Uzupełniono": false
+    },
+    "Toruń": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 13,
+        "Uzupełniono": false
+    },
+    "Lublin": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 15,
+        "Uzupełniono": false
+    },
+    "Chełm": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 12,
+        "Uzupełniono": false
+    },
+    "Zielona Góra": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 12,
+        "Uzupełniono": false
+    },
+    "Łódź": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 10,
+        "Uzupełniono": false
+    },
+    "Piotrków Trybunalski": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 9,
+        "Uzupełniono": false
+    },
+    "Sieradz": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 12,
+        "Uzupełniono": false
+    },
+    "Chrzanów": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 8,
+        "Uzupełniono": false
+    },
+    "Kraków": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 14,
+        "Uzupełniono": false
+    },
+    "Nowy Sącz": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 10,
+        "Uzupełniono": false
+    },
+    "Tarnów": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 9,
+        "Uzupełniono": false
+    },
+    "Płock": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 10,
+        "Uzupełniono": false
+    },
+    "Radom": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 9,
+        "Uzupełniono": false
+    },
+    "Siedlce": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 12,
+        "Uzupełniono": false
+    },
+    "Warszawa": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 20,
+        "Uzupełniono": false
+    },
+    "Warszawa 2": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 12,
+        "Uzupełniono": false
+    },
+    "Opole": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 12,
+        "Uzupełniono": false
+    },
+    "Krosno": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 11,
+        "Uzupełniono": false
+    },
+    "Rzeszów": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 15,
+        "Uzupełniono": false
+    },
+    "Białystok": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 14,
+        "Uzupełniono": false
+    },
+    "Gdańsk": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 12,
+        "Uzupełniono": false
+    },
+    "Słupsk": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 14,
+        "Uzupełniono": false
+    },
+    "Bielsko-Biała": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 9,
+        "Uzupełniono": false
+    },
+    "Częstochowa": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 7,
+        "Uzupełniono": false
+    },
+    "Gliwice": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 9,
+        "Uzupełniono": false
+    },
+    "Rybnik": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 9,
+        "Uzupełniono": false
+    },
+    "Katowice": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 12,
+        "Uzupełniono": false
+    },
+    "Sosnowiec": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 9,
+        "Uzupełniono": false
+    },
+    "Kielce": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 16,
+        "Uzupełniono": false
+    },
+    "Elbląg": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 8,
+        "Uzupełniono": false
+    },
+    "Olsztyn": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 10,
+        "Uzupełniono": false
+    },
+    "Kalisz": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 12,
+        "Uzupełniono": false
+    },
+    "Konin": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 9,
+        "Uzupełniono": false
+    },
+    "Piła": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 9,
+        "Uzupełniono": false
+    },
+    "Poznań": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 10,
+        "Uzupełniono": false
+    },
+    "Koszalin": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 8,
+        "Uzupełniono": false
+    },
+    "Szczecin": {
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
+        "Miejsca do zdobycia": 12,
+        "Uzupełniono": false
+    }
+}
