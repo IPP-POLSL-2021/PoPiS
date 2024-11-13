@@ -75,7 +75,7 @@ def loadView():
     else:
         club = "unikalne kluby"
     district = ""
-    if len(set(d['Województwo'] for d in data if d['Województwo'] is not None)) == 1:
+    if len(set(d['Okrąg'] for d in data if d['Okrąg'] is not None)) == 1:
         district = "unikalny okrąg"
     else:
         district = "unikalne okręgi"
