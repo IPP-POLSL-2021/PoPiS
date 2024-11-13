@@ -2,6 +2,7 @@ import streamlit as st
 from Controller import MPsStats
 import pandas as pd
 from View import _sharedViews
+import numpy as np
 
 
 def loadView():
@@ -33,13 +34,16 @@ def loadView():
         case "okrąg":
             MPDictionary = MPsStats.MoreMPsStats(
                 MpsList, MpGroupedList, term_number, stats)
+
             # _sharedViews.MoreStats(MPDictionary)
             reversedMPDict = {}
             # for key, value in MPDictionary.items():
             #     reversedMPDict[value] = key
 
             MPDataFrame = pd.DataFrame.from_dict(MPDictionary)
-
+            MPDataFrame = MPDataFrame.fillna(value=" ")
+            MPDataFrame = MPDataFrame.astype(str)
+            MPDataFrame = MPDataFrame.replace(r'\.0$', '', regex=True)
             st.dataframe(MPDataFrame)
         case "województwo":
             MPDictionary = MPsStats.MoreMPsStats(
