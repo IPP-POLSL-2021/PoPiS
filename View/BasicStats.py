@@ -57,23 +57,48 @@ def loadView():
         obj = HistoryOfMP[term]
         total_votes += obj.numberOfVotes
         data.append({
-            "Term": term,
-            "Club": obj.club,
-            "District": obj.districtName,
-            "Voivodeship": obj.voivodeship,
-            "Education": getattr(obj, "educationLevel", "N/A"),
-            "Votes": obj.numberOfVotes if obj.numberOfVotes > 0 else "N/A",
-            "Profession": obj.profession if obj.profession else "None"
+            "Kadencja": term,
+            "Klub": obj.club,
+            "Okrąg": obj.districtName,
+            "Województwo": obj.voivodeship,
+            "Edukacja": getattr(obj, "educationLevel", "Brak danych"),
+            "Uzyskane głosy": obj.numberOfVotes if obj.numberOfVotes > 0 else "Brak danych",
+            "Profesja": obj.profession if obj.profession else "Brak danych"
         })
+    club = ""
+    if len(set(d['Klub'] for d in data)) == 1:
+        club = "unikalny klub"
+    else:
+        club = "unikalne kluby"
+    district = ""
+    if len(set(d['Województwo'] for d in data if d['Województwo'] is not None)) == 1:
+        district = "unikalny okrąg"
+    else:
+        district = "unikalne okręgi"
+    voivodiship = ""
+    if len(set(d['Województwo'] for d in data if d['Województwo'] is not None)) == 1:
+        voivodiship = "unikalny poziom edukacji"
+    else:
+        voivodiship = "unikalne poziomy edukacji"
+    edu = ""
+    if {len(set(d['Edukacja'] for d in data if d['Edukacja'] != 'None'))} == 1:
+        edu = "unikalne województwo"
+    else:
+        edu = "unikalne województwa"
 
+    prof = ""
+    if len(set(d['Profesja'] for d in data if d['Profesja'] != 'None')) == 1:
+        prof = "unikalny zawód"
+    else:
+        prof = "unikalne zawody"
     data.append({
-        "Term": "Total",
-        "Club": f"{len(set(d['Club'] for d in data))} unique clubs",
-        "District": f"{len(set(d['District'] for d in data))} unique districts",
-        "Voivodeship": f"{len(set(d['Voivodeship'] for d in data if d['Voivodeship'] is not None))} unique voivodeships",
-        "Education": f"{len(set(d['Education'] for d in data if d['Education'] != 'None'))} unique education",
-        "Votes": total_votes,
-        "Profession": f"{len(set(d['Profession'] for d in data if d['Profession'] != 'None'))} unique professions"
+        "Kadencja": "Łącznie",
+        "Klub": f"{len(set(d['Klub'] for d in data))} {club} ",
+        "Okrąg": f"{len(set(d['Okrąg'] for d in data))} {district}",
+        "Województwo": f"{len(set(d['Województwo'] for d in data if d['Województwo'] is not None))} {voivodiship}",
+        "Edukacja": f"{len(set(d['Edukacja'] for d in data if d['Edukacja'] != 'None'))} {edu}",
+        "Uzyskane głosy": total_votes,
+        "Profesja": f"{len(set(d['Profesja'] for d in data if d['Profesja'] != 'None'))} {prof}"
     })
 
     summary_df = pd.DataFrame(data)
