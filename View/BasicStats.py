@@ -79,19 +79,19 @@ def loadView():
         district = "unikalny okrąg"
     else:
         district = "unikalne okręgi"
-    voivodiship = ""
-    if len(set(d['Województwo'] for d in data if d['Województwo'] is not None)) == 1:
-        voivodiship = "unikalny poziom edukacji"
+    eu = ""
+    if len(set(d['Województwo'] for d in data if d['Województwo'] != 'Brak danych')) == 1:
+        voivodiship = "unikalne województwo"
     else:
-        voivodiship = "unikalne poziomy edukacji"
+        voivodiship = "unikalne województwa"
     edu = ""
-    if {len(set(d['Edukacja'] for d in data if d['Edukacja'] != 'None'))} == 1:
-        edu = "unikalne województwo"
+    if {len(set(d['Edukacja'] for d in data if d['Edukacja'] != 'Brak danych'))} == 1:
+        edu = "unikalny poziom edukacji "
     else:
-        edu = "unikalne województwa"
+        edu = "unikalne poziomy edukacji "
 
     prof = ""
-    if len(set(d['Profesja'] for d in data if d['Profesja'] != 'None')) == 1:
+    if len(set(d['Profesja'] for d in data if d['Profesja'] != 'Brak danych')) == 1:
         prof = "unikalny zawód"
     else:
         prof = "unikalne zawody"
@@ -99,10 +99,10 @@ def loadView():
         "Kadencja": "Łącznie",
         "Klub": f"{len(set(d['Klub'] for d in data))} {club} ",
         "Okrąg": f"{len(set(d['Okrąg'] for d in data))} {district}",
-        "Województwo": f"{len(set(d['Województwo'] for d in data if d['Województwo'] is not None))} {voivodiship}",
-        "Edukacja": f"{len(set(d['Edukacja'] for d in data if d['Edukacja'] != 'None'))} {edu}",
+        "Województwo": f"{len(set(d['Województwo'] for d in data if d['Województwo']  != 'Brak danych'))} {voivodiship}",
+        "Edukacja": f"{len(set(d['Edukacja'] for d in data if d['Edukacja'] != 'Brak danych'))} {edu}",
         "Uzyskane głosy": total_votes if total_votes > 0 else "Brak danych",
-        "Profesja": f"{len(set(d['Profesja'] for d in data if d['Profesja'] != 'None'))} {prof}"
+        "Profesja": f"{len(set(d['Profesja'] for d in data if d['Profesja'] != 'Brak danych'))} {prof}"
     })
 
     summary_df = pd.DataFrame(data)
