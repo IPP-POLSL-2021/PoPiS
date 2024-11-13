@@ -64,7 +64,7 @@ def loadView():
             "Kadencja": term,
             "Klub": obj.club,
             "Okrąg": obj.districtName,
-            "Województwo": obj.voivodeship,
+            "Województwo": obj.voivodeship if len(str(obj.voivodeship)) > 4 else "Brak danych",
             "Edukacja": getattr(obj, "educationLevel", "Brak danych"),
             "Uzyskane głosy": obj.numberOfVotes if obj.numberOfVotes > 0 else "Brak danych",
             "Profesja": obj.profession if obj.profession else "Brak danych"
