@@ -101,7 +101,7 @@ def loadView():
         "Okrąg": f"{len(set(d['Okrąg'] for d in data))} {district}",
         "Województwo": f"{len(set(d['Województwo'] for d in data if d['Województwo'] is not None))} {voivodiship}",
         "Edukacja": f"{len(set(d['Edukacja'] for d in data if d['Edukacja'] != 'None'))} {edu}",
-        "Uzyskane głosy": total_votes,
+        "Uzyskane głosy": total_votes if total_votes > 0 else "Brak danych",
         "Profesja": f"{len(set(d['Profesja'] for d in data if d['Profesja'] != 'None'))} {prof}"
     })
 
