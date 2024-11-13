@@ -33,7 +33,14 @@ def loadView():
         case "okrąg":
             MPDictionary = MPsStats.MoreMPsStats(
                 MpsList, MpGroupedList, term_number, stats)
-            _sharedViews.MoreStats(MPDictionary)
+            # _sharedViews.MoreStats(MPDictionary)
+            reversedMPDict = {}
+            # for key, value in MPDictionary.items():
+            #     reversedMPDict[value] = key
+
+            MPDataFrame = pd.DataFrame.from_dict(MPDictionary)
+
+            st.dataframe(MPDataFrame)
         case "województwo":
             MPDictionary = MPsStats.MoreMPsStats(
                 MpsList, MpGroupedList, term_number, stats)

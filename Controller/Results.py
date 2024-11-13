@@ -86,6 +86,8 @@ def getResults(Correlation, electionSelections, type):
         'W tym liczba kart wyjętych z kopert na kartę do głosowania',
         'Liczba kart nieważnych',
         'Liczba kart ważnych',
+        'W tym z powodu niepostawienia znaku „X” obok nazwiska żadnego kandydata',
+        'W tym z powodu postawienia znaku „X” obok nazwiska dwóch lub większej liczby kandydatów z różnych list',
         'W tym z powodu postawienia znaku „X” wyłącznie obok nazwiska kandydata na liście, której rejestracja została unieważniona',
         'KOMITET WYBORCZY POLSKA JEST JEDNA',
         'KOMITET WYBORCZY WYBORCÓW RUCHU DOBROBYTU I POKOJU',
@@ -102,7 +104,7 @@ def getResults(Correlation, electionSelections, type):
     Corr_Matrix = Results.corr()
     Corr_Matrix_Larger_Than = Corr_Matrix > Correlation
     Corr_Matrix = Corr_Matrix[Corr_Matrix_Larger_Than]
-    Corr_Matrix=round(Corr_Matrix,2)
+    Corr_Matrix = round(Corr_Matrix, 2)
     # print(Corr_Matrix)
 
     return Corr_Matrix, Results
