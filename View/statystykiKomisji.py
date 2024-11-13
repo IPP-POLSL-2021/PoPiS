@@ -18,7 +18,8 @@ def loadView():
     selectedCommittee = st.selectbox(
         "komisja której statystyki cię interesują (niektóre dostępne tylko dla obecnej kadencji)", options=list(codes)
     )
-    selectedCommittee = selectedCommittee.split("-")[1][1:]
+    if selectedCommittee != "łącznie":
+        selectedCommittee = selectedCommittee.split("-")[-1][1:]
     committee_stats = get_committee_stats(term_number, selectedCommittee)
     clubs = pd.DataFrame.from_dict(committee_stats['clubs'], orient='index')
     MPs = pd.DataFrame.from_dict(committee_stats['members'], orient='index')
