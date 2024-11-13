@@ -11,12 +11,14 @@ def groupMpsByClub(term):
     MpIdByClub = {}
     MpNamesByClub = {}
     for Mp in MpsList:
-        if Mp.get("club","brak informacji") in MpIdByClub:
-            MpIdByClub[Mp.get("club","brak informacji")].append(Mp["id"])
-            MpNamesByClub[Mp.get("club","brak informacji")].append(Mp["lastFirstName"])
+        if Mp.get("club", "brak informacji") in MpIdByClub:
+            MpIdByClub[Mp.get("club", "brak informacji")].append(Mp["id"])
+            MpNamesByClub[Mp.get("club", "brak informacji")
+                          ].append(Mp["lastFirstName"])
         else:
-            MpIdByClub[Mp.get("club","brak informacji")] = [Mp["id"]]
-            MpNamesByClub[Mp.get("club","brak informacji")] = [Mp["lastFirstName"]]
+            MpIdByClub[Mp.get("club", "brak informacji")] = [Mp["id"]]
+            MpNamesByClub[Mp.get("club", "brak informacji")] = [
+                Mp["lastFirstName"]]
     return MpIdByClub, MpsList, MpNamesByClub
 
 
@@ -59,7 +61,7 @@ def ageStats(term, MpIdByClub, Mplist):
             # if ageOfMP > maxMPsAge:
             #     maxMPsAge = ageOfMP
             # MaxMinMP[0]=
-            ages.append(round(ageOfMP))
+            ages.append(int(ageOfMP))
 
         MPsAge[patry] = ages
         # MPsAge.append()
@@ -89,7 +91,7 @@ def MoreMPsStats(MPSimpleList, MPIdlist, term=10, searchedInfo='edukacja'):
                 match searchedInfo:
                     case 'edukacja':
                         educationOfMP = str([
-                            mp.get('educationLevel','Brak') for mp in filtered_MPs])
+                            mp.get('educationLevel', 'Brak') for mp in filtered_MPs])
                     case 'okrąg':
                         educationOfMP = str([
                             mp['districtName'] for mp in filtered_MPs])
