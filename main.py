@@ -22,7 +22,7 @@ def ViewSelection():
             statystykiKomisji.loadView()
         case "Posłowie - Statystyki":
             BasicStats.loadView()
-        case "kalkuator":
+        case "kalkulator":
             calculator.loadView()
         case "kalkulator wersja 2":
             kalkulator.loadView()
@@ -30,5 +30,6 @@ def ViewSelection():
             coalition_viewer.loadView()
         case "glosowania":
             view_vote.loadView()
+
 
 ViewSelection()
