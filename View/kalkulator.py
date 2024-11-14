@@ -33,7 +33,7 @@ class InputObserver(Observer):
         pass
 
 
-SHAPEFILE_PATH = r"C:\Users\piotr\Downloads\PoPiS-master\Data\ne_10m_admin_0_countries.shp"
+SHAPEFILE_PATH = ".\Data\ne_10m_admin_0_countries.shp"
 POLAND_NAME = "Poland"
 
 CITY_COORDS = {
