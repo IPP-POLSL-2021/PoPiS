@@ -13,7 +13,7 @@ def loadView():
         "Wybierz statystykę", ["brak", "wiek",
                                "edukacja", "okrąg", "profesja", "województwo"]
     )
-
+    MPsInfo = {}
     match stats:
         case "brak":
             st.write("")
@@ -23,6 +23,17 @@ def loadView():
             all_ages = ageDataframe.values.flatten()
             all_ages = pd.Series(all_ages).dropna()
             _sharedViews.ageGraphs(all_ages, ageDictionary, term_number)
+            MPsInfo, Clubs = MPsStats.MPsData(term_number)
+
+            # st.write(MPsInfo)
+            MPsInfoDataFrame = pd.DataFrame.from_dict(
+                MPsInfo)
+            # print(MPsInfoDataFrame.keys())
+            OldestMP = MPsInfoDataFrame.loc[
+                MPsInfoDataFrame.groupby('Club')['Age'].idxmax()]
+            YoungestsMP = MPsInfoDataFrame.loc[
+                MPsInfoDataFrame.groupby('Club')['Age'].idxmin()]
+            st.write(OldestMP, YoungestsMP)
         case "edukacja":
             MPDictionary = MPsStats.MoreMPsStats(
                 MpsList, MpGroupedList, term_number, stats)

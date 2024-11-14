@@ -22,6 +22,36 @@ def groupMpsByClub(term):
     return MpIdByClub, MpsList, MpNamesByClub
 
 
+def MPsData(term):
+    response = requests.get(f"https://api.sejm.gov.pl/sejm/term{term}/MP")
+    MpsList = response.json()
+    MpData = {"Name": [], "Age": [], "Club": []}
+    # current_time = datetime.now().replace(microsecond=0, second=0, minute=0, hour=0)
+    termResponse = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}')
+    termInfo = termResponse.json()
+    endOfTerm = termInfo['from']
+    endOfTerm_time = datetime.strptime(endOfTerm, "%Y-%m-%d")
+    clubRespnse = requests.get(
+        f'https://api.sejm.gov.pl/sejm/term{term}/clubs')
+    clubsInfo = clubRespnse.json()
+    clubList = []
+
+    for club in clubsInfo:
+        clubList.append(club['id'])
+
+    for MP in MpsList:
+        MpData["Name"].append(MP["lastFirstName"])
+        MpData["Club"].append(MP["club"])
+        dateOfBirth = str(MP["birthDate"]).strip("[]'")
+        ageOfMP = endOfTerm_time.date() - \
+            datetime.strptime(dateOfBirth, "%Y-%m-%d").date()
+        ageOfMP = int(ageOfMP.days/365)
+
+        MpData["Age"].append(ageOfMP)
+    DataFRame = pd.DataFrame(MpData)
+    return DataFRame, clubList
+
+
 def ageStats(term, MpIdByClub, Mplist):
     # response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/MP')
     searchedData = 'birthDate'
