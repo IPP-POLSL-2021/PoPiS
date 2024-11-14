@@ -16,7 +16,7 @@ def ageGraphs(all_ages, AgesButDictionary, term=""):
         nbins=10,
         title=f'Ogólny rozkład wiekowy posłów {term} kadencji sejmu',
         labels={'x': 'Wiek', 'y': 'Liczba członków'},
-        color_discrete_sequence=['red']
+        color_discrete_sequence=['orange']
     )
     fig.update_layout(
         xaxis_title='Wiek',
@@ -47,15 +47,15 @@ def ageGraphs(all_ages, AgesButDictionary, term=""):
     st.write(f"Statystyki wieku dla klubów w {term} kadencji sejmu:")
     st.dataframe(df, use_container_width=True)
 
-    st.header("Wykresy rozkładu wieku klubów")
+    st.header("Wykresy rozkładu wieku klubów i kół w {term} kadencji sejmu:")
     for club, ages in AgesButDictionary.items():
         if len(ages) > 2:
             fig = px.histogram(
                 x=ages,
                 nbins=10,
-                title=f'Ogólny rozkład wiekowy klubu {club} dla {term} kadencji sejmu',
+                title=f'{club}',
                 labels={'x': 'Wiek', 'y': 'Liczba członków'},
-                color_discrete_sequence=['red']
+                color_discrete_sequence=['purple']
             )
             fig.update_layout(
                 xaxis_title='Wiek',
@@ -74,6 +74,9 @@ def MoreStats(ChosenDictionary):
                 data=[go.Pie(labels=labels, values=values)]
             )
             fig.update_layout(
-                title=f'Wykres dla klubu {club}',
+                title=f'{club}',
             )
             st.plotly_chart(fig)
+        else:
+            st.write(f"Klub {club}") 
+            st.write(f"{list(data.keys())[0]} - {list(data.values())[0]} czyli 100%")
