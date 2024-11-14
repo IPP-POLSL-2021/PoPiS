@@ -7,3 +7,7 @@ statistics
 numpy
 plotly
 streamlit-aggrid
+folium
+streamlit-folium
+geopandas
+shapely
