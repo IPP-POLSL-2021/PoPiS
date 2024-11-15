@@ -2,7 +2,28 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from .Results import getResults
+from scipy import stats
 
+def perform_ks_test(actual_dist, benford_dist):
+    """
+    Perform Kolmogorov-Smirnov test to compare actual distribution with Benford's Law.
+    
+    Args:
+    actual_dist (array-like): The observed distribution of first digits.
+    benford_dist (array-like): The expected Benford's Law distribution.
+    
+    Returns:
+    tuple: KS statistic and p-value
+    """
+    # Normalize distributions to create cumulative distribution functions
+    actual_cdf = np.cumsum(actual_dist) / np.sum(actual_dist)
+    benford_cdf = np.cumsum(benford_dist) / np.sum(benford_dist)
+    
+    # Perform Kolmogorov-Smirnov test
+    ks_statistic, p_value = stats.ks_2samp(actual_cdf, benford_cdf)
+    
+    return ks_statistic, p_value# In the analyze_benford_law function, after calculating chi_square:
+    
 def get_first_digit(number):
     """Extract the first digit of a number."""
     try:
@@ -65,7 +86,10 @@ def analyze_benford_law(election_level="województwa", type="procentowe"):
         observed = np.array(actual_dist) * len(all_values) / 100
         chi_square = np.sum((observed - expected) ** 2 / expected)
         
-        return plt, chi_square
+        # Calculate KS statistic and p-value
+        ks_statistic, p_value = perform_ks_test(actual_dist, benford_dist)
+        
+        return plt, chi_square, ks_statistic, p_value
         
     except Exception as e:
         plt.close()  # Clean up any open figures
