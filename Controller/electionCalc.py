@@ -29,12 +29,14 @@ def calculateVotes(VotesNeeded):
 
 def chooseMethod(selectedMethod, qulifiedDictionary, numberOfVotes):
     seatDict = {}
+    seatDictAll = {}
     voteDict = {}
     reversedVoteDict = {}
 
     for element in qulifiedDictionary:
         seatDict[element] = 0
         voteDict[element] = 0
+        seatDictAll[element] = 0
     csvFile = pd.read_csv(
         "./Data/wyniki_gl_na_listy_po_okregach_sejm_utf8.csv", sep=";",  decimal=",")
 
@@ -46,29 +48,26 @@ def chooseMethod(selectedMethod, qulifiedDictionary, numberOfVotes):
              8, 10, 12, 9, 9, 10, 8, 12]
     for _, row in csvFile.iterrows():
         for key in voteDict.keys():
-            # print(key)
+
             voteDict[key] = row[key]
             reversedVoteDict[row[key]] = key
-            # print("+++++++++++")
-            # print(voteDict[key])
-            # print(reversedVoteDict)
+
         match selectedMethod:
             case "d'Hondt":
+                for element in qulifiedDictionary:
+                    seatDict[element] = 0
 
-                # print(voteDict)
-                a, b, c = dhont(seatDict, reversedVoteDict,
-                                voteDict, seats[distict])
-                print(a)
-                print("=")
-                return dhont(seatDict, reversedVoteDict, voteDict, distict)
+                recivedSetats = dhont(seatDict, reversedVoteDict,
+                                      voteDict, seats[distict])
 
+                for element in qulifiedDictionary:
+                    seatDictAll[element] += recivedSetats[element]
+
+                print(seatDictAll)
             case "Sainte-Laguë":
                 return
             case "Kwota Hare’a (metoda największych reszt)":
-                # print(HareDrop(PiS, KO, TD, Lewica,
-                #       Konf, Freq, type, seatsNum)[:2])
-                # print(HareDrop(PiS, KO, TD, Lewica,
-                #       Konf, Freq, type, seatsNum+1)[1])
+
                 return
             case "Kwota Hare’a (metoda najmniejszych reszt)":
                 return
@@ -81,36 +80,16 @@ def dhont(SeatsDict, reversedSeatsDict, VoteDict, seatsNum):
     newMax = ""
     lastVoteNum = 0
     nextPotentialVoteNum = 0
-    print("<=========================================>")
+
     VoteDict2 = VoteDict.copy()
 
-    # print(VoteDict)
-    for seat in range(0, seatsNum, 1):
-        # VoteDict = VoteDict3.copy()
-        print(VoteDict[reversedSeatsDict.get(max(reversedSeatsDict))])
-        SeatsDict[reversedSeatsDict.get(max(reversedSeatsDict))] += 1
-        currentMax = reversedSeatsDict.get(max(reversedSeatsDict))
-        a = VoteDict[reversedSeatsDict.get(max(reversedSeatsDict))].copy()
-        VoteDict2[reversedSeatsDict.get(max(reversedSeatsDict))] = int(
-            VoteDict[reversedSeatsDict.get(max(reversedSeatsDict))]/i)
+    for _ in range(seatsNum):
 
-        reversedSeatsDict = {}
-        if i == 10 or i == 9:
-            print("==========")
+        max_party = max(VoteDict2, key=VoteDict2.get)
 
-            print(VoteDict)
-            print("==========")
+        SeatsDict[max_party] += 1
 
-            print(VoteDict2)
-            print("==========")
-            print(SeatsDict)
-        # reversedSeatsDict = {VoteDict['PiS']: "PiS", VoteDict['KO']: "KO", VoteDict['Trzecia Droga']: "Trzecia Droga",
-        #                     VoteDict["Lewica"]: "Lewica", VoteDict["Konfederacja"]: "Konfederacja"}
-        for key in VoteDict.keys():
-            # voteDict[key] = row[key]
-            reversedSeatsDict[VoteDict2[key]] = key
-        newMax = reversedSeatsDict.get(max(reversedSeatsDict))
-
+        VoteDict2[max_party] = VoteDict[max_party] / (SeatsDict[max_party] + 1)
         i += 1
-
-    return SeatsDict, currentMax, newMax
+    # print(SeatsDict)
+    return SeatsDict
