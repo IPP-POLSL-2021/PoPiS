@@ -40,8 +40,10 @@ def chooseMethod(selectedMethod, qulifiedDictionary, numberOfVotes):
 
     # ClubsWithSeats = []
     distict = 0
-    seats = [12, 8, 14, 12, 13, 15, 12, 12, 10, 9, 12, 8, 14, 10, 9, 10, 9, 12, 20,
-             12, 12, 11, 15, 14, 12, 14, 9, 7, 9, 9, 12, 9, 16, 8, 10, 12, 9, 9, 10, 8, 12]
+    seats = [12, 8, 14, 12, 13, 15, 12, 12, 10, 9, 12, 8, 14, 10, 9, 10,
+             9, 12, 20,
+             12, 12, 11, 15, 14, 12, 14, 9, 7, 9, 9, 12, 9, 16,
+             8, 10, 12, 9, 9, 10, 8, 12]
     for _, row in csvFile.iterrows():
         for key in voteDict.keys():
             # print(key)
@@ -52,12 +54,13 @@ def chooseMethod(selectedMethod, qulifiedDictionary, numberOfVotes):
             # print(reversedVoteDict)
         match selectedMethod:
             case "d'Hondt":
-                print("=====================")
+
                 # print(voteDict)
                 a, b, c = dhont(seatDict, reversedVoteDict,
                                 voteDict, seats[distict])
                 print(a)
-                # return dhont(seatDict, reversedVoteDict, voteDict, distict)
+                print("=")
+                return dhont(seatDict, reversedVoteDict, voteDict, distict)
 
             case "Sainte-Laguë":
                 return
@@ -69,7 +72,7 @@ def chooseMethod(selectedMethod, qulifiedDictionary, numberOfVotes):
                 return
             case "Kwota Hare’a (metoda najmniejszych reszt)":
                 return
-    distict += 1
+        distict += 1
 
 
 def dhont(SeatsDict, reversedSeatsDict, VoteDict, seatsNum):
@@ -78,20 +81,34 @@ def dhont(SeatsDict, reversedSeatsDict, VoteDict, seatsNum):
     newMax = ""
     lastVoteNum = 0
     nextPotentialVoteNum = 0
+    print("<=========================================>")
+    VoteDict2 = VoteDict.copy()
 
+    # print(VoteDict)
     for seat in range(0, seatsNum, 1):
+        # VoteDict = VoteDict3.copy()
+        print(VoteDict[reversedSeatsDict.get(max(reversedSeatsDict))])
         SeatsDict[reversedSeatsDict.get(max(reversedSeatsDict))] += 1
         currentMax = reversedSeatsDict.get(max(reversedSeatsDict))
-
-        VoteDict[reversedSeatsDict.get(max(reversedSeatsDict))] = int(
+        a = VoteDict[reversedSeatsDict.get(max(reversedSeatsDict))].copy()
+        VoteDict2[reversedSeatsDict.get(max(reversedSeatsDict))] = int(
             VoteDict[reversedSeatsDict.get(max(reversedSeatsDict))]/i)
 
         reversedSeatsDict = {}
+        if i == 10 or i == 9:
+            print("==========")
+
+            print(VoteDict)
+            print("==========")
+
+            print(VoteDict2)
+            print("==========")
+            print(SeatsDict)
         # reversedSeatsDict = {VoteDict['PiS']: "PiS", VoteDict['KO']: "KO", VoteDict['Trzecia Droga']: "Trzecia Droga",
         #                     VoteDict["Lewica"]: "Lewica", VoteDict["Konfederacja"]: "Konfederacja"}
         for key in VoteDict.keys():
             # voteDict[key] = row[key]
-            reversedSeatsDict[VoteDict[key]] = key
+            reversedSeatsDict[VoteDict2[key]] = key
         newMax = reversedSeatsDict.get(max(reversedSeatsDict))
 
         i += 1
