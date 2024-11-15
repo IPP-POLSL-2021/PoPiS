@@ -72,20 +72,21 @@ def create_event(id, text, platform, userEvent=True):
     committeesList = ""
     for committee in committees:
         committeesList += f":{committee['code']} "
-    
+
     if text in committeesList:
-        date = get_committee_future_sitting(10, text)
+        date = get_committee_future_sitting(10, text, 3)
         new_reminder = {
             'channelId': id, 'platform': platform, 'committee': text}
-        
+
         if date is None:
-            if not ((new_reminder['channelId'] in remindersList['channelId'].values) and 
-                    (new_reminder['platform'] in remindersList['platform'].values) and 
+            if not ((new_reminder['channelId'] in remindersList['channelId'].values) and
+                    (new_reminder['platform'] in remindersList['platform'].values) and
                     (new_reminder['committee'] in remindersList['committee'].values)):
                 df = pd.DataFrame([new_reminder])
-                df.to_csv("./Data/powiadomienia.csv", mode='a', index=False, header=False)
+                df.to_csv("./Data/powiadomienia.csv",
+                          mode='a', index=False, header=False)
             return "brak nowych posiedzeń"
-        
+
         elif userEvent is False:
             Auto_date = f"w ciągu ostatnich trzech dni komisja o kodzie {text} miała ostatnie spotkanie {date}"
             if platform == "discord":
@@ -97,12 +98,13 @@ def create_event(id, text, platform, userEvent=True):
                 # create_reminders("", True, id, Auto_date)
         # print(remindersList['platform'])
 
-        if not ((new_reminder['channelId'] in remindersList['channelId'].values) and 
-                (new_reminder['platform'] in remindersList['platform'].values) and 
+        if not ((new_reminder['channelId'] in remindersList['channelId'].values) and
+                (new_reminder['platform'] in remindersList['platform'].values) and
                 (new_reminder['committee'] in remindersList['committee'].values)):
             df = pd.DataFrame([new_reminder])
-            df.to_csv("./Data/powiadomienia.csv", mode='a', index=False, header=False)
-        
+            df.to_csv("./Data/powiadomienia.csv",
+                      mode='a', index=False, header=False)
+
         if date is not None:
             last = f"ostatnie o kodzie {text} spotkanie miało miejsce {date}"
         return f"dodano do obserwowanych {last}"
