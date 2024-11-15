@@ -11,3 +11,5 @@ folium
 streamlit-folium
 geopandas
 shapely
+scipy
+streamlit-notifications
