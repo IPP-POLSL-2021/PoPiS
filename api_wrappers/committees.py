@@ -11,7 +11,7 @@ def get_committees(term: int) -> List[Dict]:
     return response.json()
 
 
-def get_committee_future_sitting(term: int, code: str) -> Optional[datetime.date]:
+def get_committee_future_sitting(term: int, code: str, time: int) -> Optional[datetime.date]:
     """Find the next future sitting date for a specific committee."""
     response = requests.get(
         f'https://api.sejm.gov.pl/sejm/term{term}/committees/{code}/sittings')
@@ -23,7 +23,7 @@ def get_committee_future_sitting(term: int, code: str) -> Optional[datetime.date
     for setting in committee:
         date = datetime.strptime(setting['date'], '%Y-%m-%d').date()
         print(date)
-        today = datetime.today().date() - timedelta(4)
+        today = datetime.today().date() - timedelta(time)
         if date >= today:
             return date
 
