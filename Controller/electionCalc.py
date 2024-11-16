@@ -57,24 +57,54 @@ def chooseMethod(selectedMethod, qulifiedDictionary, numberOfVotes):
                 for element in qulifiedDictionary:
                     seatDict[element] = 0
 
-                recivedSetats = dhont(seatDict, reversedVoteDict,
+                recivedSetats = dhont(seatDict,
                                       voteDict, seats[distict])
 
                 for element in qulifiedDictionary:
                     seatDictAll[element] += recivedSetats[element]
 
-                print(seatDictAll)
+                # print(seatDictAll)
             case "Sainte-Laguë":
-                return
+                for element in qulifiedDictionary:
+                    seatDict[element] = 0
+
+                recivedSetats = SainteLaguë(seatDict,
+                                            voteDict, seats[distict])
+
+                for element in qulifiedDictionary:
+                    seatDictAll[element] += recivedSetats[element]
             case "Kwota Hare’a (metoda największych reszt)":
 
                 return
             case "Kwota Hare’a (metoda najmniejszych reszt)":
                 return
         distict += 1
+    return seatDictAll
 
 
-def dhont(SeatsDict, reversedSeatsDict, VoteDict, seatsNum):
+def SainteLaguë(SeatsDict,  VoteDict, seatsNum):
+    i = 2
+    currentMax = ""
+    newMax = ""
+    lastVoteNum = 0
+    nextPotentialVoteNum = 0
+
+    VoteDict2 = VoteDict.copy()
+
+    for _ in range(seatsNum):
+
+        max_party = max(VoteDict2, key=VoteDict2.get)
+
+        SeatsDict[max_party] += 1
+
+        VoteDict2[max_party] = VoteDict[max_party] / \
+            (2*SeatsDict[max_party] + 1)
+        i += 1
+    # print(SeatsDict)
+    return SeatsDict
+
+
+def dhont(SeatsDict,  VoteDict, seatsNum):
     i = 2
     currentMax = ""
     newMax = ""

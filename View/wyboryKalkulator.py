@@ -9,4 +9,5 @@ def loadView():
     st.write(electionCalc.calculateVotes(voteingThreshold))
     method = st.selectbox("metoda liczenia głosów", [
         "d'Hondt", "Sainte-Laguë", "Kwota Hare’a (metoda największych reszt)", "Kwota Hare’a (metoda najmniejszych reszt)"])
-    electionCalc.chooseMethod(method, qulifiedParties, votes)
+    results = electionCalc.chooseMethod(method, qulifiedParties, votes)
+    st.write(results)
