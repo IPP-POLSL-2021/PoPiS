@@ -75,9 +75,23 @@ def chooseMethod(selectedMethod, qulifiedDictionary, numberOfVotes):
                     seatDictAll[element] += recivedSetats[element]
             case "Kwota Hare’a (metoda największych reszt)":
 
-                return
+                for element in qulifiedDictionary:
+                    seatDict[element] = 0
+
+                recivedSetats = HareDrop(seatDict,
+                                         voteDict, seats[distict], numberOfVotes)
+
+                for element in qulifiedDictionary:
+                    seatDictAll[element] += recivedSetats[element]
             case "Kwota Hare’a (metoda najmniejszych reszt)":
-                return
+                for element in qulifiedDictionary:
+                    seatDict[element] = 0
+
+                recivedSetats = HareDrop(seatDict,
+                                         voteDict, seats[distict], numberOfVotes, False)
+
+                for element in qulifiedDictionary:
+                    seatDictAll[element] += recivedSetats[element]
         distict += 1
     return seatDictAll
 
@@ -122,4 +136,33 @@ def dhont(SeatsDict,  VoteDict, seatsNum):
         VoteDict2[max_party] = VoteDict[max_party] / (SeatsDict[max_party] + 1)
         i += 1
     # print(SeatsDict)
+    return SeatsDict
+
+
+def HareDrop(SeatsDict,  VoteDict, seatsNum, Freq, biggest=True):
+    VoteDict2 = VoteDict.copy()
+    remainingSeats = seatsNum
+    for key in VoteDict.keys():
+        VoteDict2[key] = (VoteDict[key]*seatsNum)/Freq
+        SeatsDict[key] = (int(VoteDict2[key]))
+        VoteDict2[key] = VoteDict2[key]-int(VoteDict2[key])
+        remainingSeats -= SeatsDict[key]
+
+    if remainingSeats == 0:
+        return SeatsDict
+
+    for a in range(0, remainingSeats, 1):
+        if biggest is True:
+            max_party = max(VoteDict2, key=VoteDict2.get)
+
+            SeatsDict[max_party] += 1
+
+            VoteDict2[max_party] = 0
+        else:
+            min_party = min(VoteDict2, key=VoteDict2.get)
+
+            SeatsDict[min_party] += 1
+
+            VoteDict2[min_party] = 0
+
     return SeatsDict
