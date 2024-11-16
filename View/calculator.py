@@ -144,9 +144,9 @@ def loadView():
     if st.session_state.get("last_clicked_city"):
         st.write(st.session_state["last_clicked_city"])
         districtcMap = st.session_state["last_clicked_city"]
-    elif st.session_state["selected_cities"]:
-        st.write(", ".join(st.session_state["selected_cities"]))
-        districtcMap = st.session_state["last_clicked_city"]
+    # elif st.session_state["selected_cities"]:
+    #     st.write(", ".join(st.session_state["selected_cities"]))
+    #     districtcMap = st.session_state["last_clicked_city"]
 
     else:
         st.write("Nie wybrano żadnych miast.")
