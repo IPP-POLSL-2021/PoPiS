@@ -146,8 +146,7 @@ def HareDrop(SeatsDict,  VoteDict, seatsNum, Freq, biggest=True):
     VoteDict2 = VoteDict.copy()
     remainingSeats = seatsNum
     for key in VoteDict.keys():
-        print(
-            f"================ilość głosów{VoteDict2[key]}, dla {key} z iloscią siedzeń {seatsNum} oraz frekwencją na poziomie {Freq}")
+
         VoteDict2[key] = (VoteDict[key]*seatsNum)/Freq
         SeatsDict[key] = (int(VoteDict2[key]))
         VoteDict2[key] = VoteDict2[key]-int(VoteDict2[key])
