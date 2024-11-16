@@ -7,6 +7,7 @@ def calculateVotes(VotesNeeded):
     votes = {"KOMITET WYBORCZY BEZPARTYJNI SAMORZĄDOWCY": 0, "KOALICYJNY KOMITET WYBORCZY KOALICJA OBYWATELSKA PO .N IPL ZIELONI": 0, "KOMITET WYBORCZY PRAWO I SPRAWIEDLIWOŚĆ": 0,
              "KOMITET WYBORCZY NOWA LEWICA": 0, "KOMITET WYBORCZY KONFEDERACJA WOLNOŚĆ I NIEPODLEGŁOŚĆ": 0, "KOALICYJNY KOMITET WYBORCZY TRZECIA DROGA POLSKA 2050 SZYMONA HOŁOWNI - POLSKIE STRONNICTWO LUDOWE": 0, "Frekwencja": 0}
     ClubsWithSeats = []
+    recivedVotes = []
     # csvFile.info()
     dataframe = pd.DataFrame(csvFile)
     for _, distric in dataframe.iterrows():
@@ -18,13 +19,15 @@ def calculateVotes(VotesNeeded):
         votes["KOMITET WYBORCZY PRAWO I SPRAWIEDLIWOŚĆ"] += distric["KOMITET WYBORCZY PRAWO I SPRAWIEDLIWOŚĆ"]
         votes["KOMITET WYBORCZY KONFEDERACJA WOLNOŚĆ I NIEPODLEGŁOŚĆ"] += distric["KOMITET WYBORCZY KONFEDERACJA WOLNOŚĆ I NIEPODLEGŁOŚĆ"]
         votes["KOALICYJNY KOMITET WYBORCZY KOALICJA OBYWATELSKA PO .N IPL ZIELONI"] += distric["KOALICYJNY KOMITET WYBORCZY KOALICJA OBYWATELSKA PO .N IPL ZIELONI"]
+        recivedVotes.append(
+            distric["Liczba głosów ważnych oddanych łącznie na wszystkie listy kandydatów"])
         votes["Frekwencja"] += distric["Liczba głosów ważnych oddanych łącznie na wszystkie listy kandydatów"]
     for key in votes.keys():
         result = votes[key]*100/votes["Frekwencja"]
         # print(votes)
         if result >= VotesNeeded and key != "Frekwencja":
             ClubsWithSeats.append(key)
-    return ClubsWithSeats, votes["Frekwencja"]
+    return ClubsWithSeats, votes["Frekwencja"], recivedVotes
 
 
 def chooseMethod(selectedMethod, qulifiedDictionary, numberOfVotes):
@@ -79,16 +82,16 @@ def chooseMethod(selectedMethod, qulifiedDictionary, numberOfVotes):
                     seatDict[element] = 0
 
                 recivedSetats = HareDrop(seatDict,
-                                         voteDict, seats[distict], numberOfVotes)
+                                         voteDict, seats[distict], numberOfVotes[distict])
 
                 for element in qulifiedDictionary:
                     seatDictAll[element] += recivedSetats[element]
             case "Kwota Hare’a (metoda najmniejszych reszt)":
                 for element in qulifiedDictionary:
                     seatDict[element] = 0
-
+                print(numberOfVotes[distict])
                 recivedSetats = HareDrop(seatDict,
-                                         voteDict, seats[distict], numberOfVotes, False)
+                                         voteDict, seats[distict], numberOfVotes[distict], False)
 
                 for element in qulifiedDictionary:
                     seatDictAll[element] += recivedSetats[element]
@@ -143,6 +146,8 @@ def HareDrop(SeatsDict,  VoteDict, seatsNum, Freq, biggest=True):
     VoteDict2 = VoteDict.copy()
     remainingSeats = seatsNum
     for key in VoteDict.keys():
+        print(
+            f"================ilość głosów{VoteDict2[key]}, dla {key} z iloscią siedzeń {seatsNum} oraz frekwencją na poziomie {Freq}")
         VoteDict2[key] = (VoteDict[key]*seatsNum)/Freq
         SeatsDict[key] = (int(VoteDict2[key]))
         VoteDict2[key] = VoteDict2[key]-int(VoteDict2[key])
