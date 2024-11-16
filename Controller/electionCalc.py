@@ -89,7 +89,7 @@ def chooseMethod(selectedMethod, qulifiedDictionary, numberOfVotes):
             case "Kwota Hare’a (metoda najmniejszych reszt)":
                 for element in qulifiedDictionary:
                     seatDict[element] = 0
-                print(numberOfVotes[distict])
+                # print(numberOfVotes[distict])
                 recivedSetats = HareDrop(seatDict,
                                          voteDict, seats[distict], numberOfVotes[distict], False)
 
