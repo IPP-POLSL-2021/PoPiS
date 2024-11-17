@@ -54,6 +54,8 @@ def chooseMethod(selectedMethod, qulifiedDictionary, numberOfVotes):
         seatDictAll[element] = 0
     csvFile = pd.read_csv(
         "./Data/wyniki_gl_na_listy_po_okregach_sejm_utf8.csv", sep=";",  decimal=",")
+    csvFile = csvFile.fillna(0.0)
+    csvFile = csvFile.replace("nan", 0.0)
 
     # ClubsWithSeats = []
     distict = 0
