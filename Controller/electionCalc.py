@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-def calculateVotes(VotesNeeded):
+def calculateVotes(VotesNeeded, VotesNeededForCoalition):
     csvFile = pd.read_csv(
         "./Data/wyniki_gl_na_listy_po_okregach_sejm_utf8.csv", sep=";",  decimal=",")
     votes = {"KOMITET WYBORCZY BEZPARTYJNI SAMORZĄDOWCY": 0, "KOALICYJNY KOMITET WYBORCZY KOALICJA OBYWATELSKA PO .N IPL ZIELONI": 0, "KOMITET WYBORCZY PRAWO I SPRAWIEDLIWOŚĆ": 0,
@@ -16,7 +16,7 @@ def calculateVotes(VotesNeeded):
     for element in dataframe.keys():
         if "KOMITET" in element:
             votes[element] = 0
-    print(parties)
+
     for _, distric in dataframe.iterrows():
         for element in dataframe.keys():
             if "KOMITET" in element:
@@ -35,8 +35,11 @@ def calculateVotes(VotesNeeded):
         result = votes[key]*100/votes["Frekwencja"]
         # print(votes)
         if result >= VotesNeeded and key != "Frekwencja":
-            ClubsWithSeats.append(key)
-    print(votes)
+            if "KOALICYJNY" in key and result >= VotesNeededForCoalition:
+                ClubsWithSeats.append(key)
+            elif "KOALICYJNY" not in key:
+                ClubsWithSeats.append(key)
+
     return ClubsWithSeats, votes["Frekwencja"], recivedVotes
 
 

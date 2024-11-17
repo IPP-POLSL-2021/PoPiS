@@ -3,11 +3,13 @@ from Controller import electionCalc
 
 
 def loadView():
-    st.write("narzie nic")
+
     voteingThreshold = st.number_input("próg wyborczy", 0, 100)
+    voteingThresholdForCoaliton = st.number_input(
+        "próg wyborczy dla kolalicji", 0, 100)
     # st.write(electionCalc.calculateVotes(voteingThreshold))
     qulifiedParties, votes, voteForDistrict = electionCalc.calculateVotes(
-        voteingThreshold)
+        voteingThreshold, voteingThresholdForCoaliton)
     # st.write(electionCalc.calculateVotes(voteingThreshold))
     method = st.selectbox("metoda liczenia głosów", [
         "d'Hondt", "Sainte-Laguë", "Kwota Hare’a (metoda największych reszt)", "Kwota Hare’a (metoda najmniejszych reszt)"])
