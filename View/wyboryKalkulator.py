@@ -25,6 +25,9 @@ def loadView():
     with methodSelect:
         method = st.selectbox("metoda liczenia głosów", [
             "d'Hondt", "Sainte-Laguë", "Kwota Hare’a (metoda największych reszt)", "Kwota Hare’a (metoda najmniejszych reszt)"])
+    # for key in allParitesDict:
+    #     if key != "Frekwencja" and allParitesDict[key] is True and key not in qulifiedParties.keys():
+    #         qulifiedParties[key]= ilość głosów tylko jej narzie nigdzie nie zwracam
     results = electionCalc.chooseMethod(
         method, qulifiedParties, voteForDistrict)
     for key in results.keys():
