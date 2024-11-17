@@ -40,7 +40,7 @@ def calculateVotes(VotesNeeded, VotesNeededForCoalition):
             elif "KOALICYJNY" not in key:
                 ClubsWithSeats.append(key)
 
-    return ClubsWithSeats, votes["Frekwencja"], recivedVotes
+    return ClubsWithSeats, votes, recivedVotes
 
 
 def chooseMethod(selectedMethod, qulifiedDictionary, numberOfVotes):
