@@ -13,4 +13,6 @@ def loadView():
         "d'Hondt", "Sainte-Laguë", "Kwota Hare’a (metoda największych reszt)", "Kwota Hare’a (metoda najmniejszych reszt)"])
     results = electionCalc.chooseMethod(
         method, qulifiedParties, voteForDistrict)
-    st.write(results)
+    for key in results.keys():
+        if results[key] > 0:
+            st.write(f"{key}: {results[key]}")
