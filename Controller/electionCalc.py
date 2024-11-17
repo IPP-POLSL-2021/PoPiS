@@ -9,7 +9,12 @@ def calculateVotes(VotesNeeded):
     ClubsWithSeats = []
     recivedVotes = []
     # csvFile.info()
+    parties = {}
     dataframe = pd.DataFrame(csvFile)
+    for element in dataframe.keys():
+        if "KOMITET" in element or "głosów ważnych" in element:
+            parties[element] = 0
+    print(parties)
     for _, distric in dataframe.iterrows():
 
         votes["KOMITET WYBORCZY BEZPARTYJNI SAMORZĄDOWCY"] += distric["KOMITET WYBORCZY BEZPARTYJNI SAMORZĄDOWCY"]
