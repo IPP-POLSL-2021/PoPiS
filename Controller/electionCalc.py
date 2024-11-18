@@ -1,9 +1,16 @@
 import pandas as pd
+import math
 
 
-def calculateVotes(VotesNeeded, VotesNeededForCoalition):
+def calculateVotes(VotesNeeded, VotesNeededForCoalition, year):
+    sep = ";"
+    if year == "2011":
+        sep = ","
+    year = "_"+year
+    if year == "_2023":
+        year = ""
     csvFile = pd.read_csv(
-        "./Data/wyniki_gl_na_listy_po_okregach_sejm_utf8.csv", sep=";",  decimal=",")
+        f"./Data/wyniki_gl_na_listy_po_okregach_sejm_utf8{year}.csv", sep=sep,  decimal=",")
     votes = {"Frekwencja": 0}
     ClubsWithSeats = []
     recivedVotes = []
@@ -13,12 +20,12 @@ def calculateVotes(VotesNeeded, VotesNeededForCoalition):
     dataframe = dataframe.fillna(0.0)
     dataframe = dataframe.replace("nan", 0.0)
     for element in dataframe.keys():
-        if "KOMITET" in element:
+        if "KOMITET" in element.upper():
             votes[element] = 0
 
     for _, distric in dataframe.iterrows():
         for element in dataframe.keys():
-            if "KOMITET" in element:
+            if "KOMITET" in element.upper():
                 votes[element] += distric[element]
         # votes["KOMITET WYBORCZY BEZPARTYJNI SAMORZĄDOWCY"] += distric["KOMITET WYBORCZY BEZPARTYJNI SAMORZĄDOWCY"]
         # votes["KOALICYJNY KOMITET WYBORCZY TRZECIA DROGA POLSKA 2050 SZYMONA HOŁOWNI - POLSKIE STRONNICTWO LUDOWE"] += distric[
@@ -34,26 +41,32 @@ def calculateVotes(VotesNeeded, VotesNeededForCoalition):
         result = votes[key]*100/votes["Frekwencja"]
         # print(votes)
         if result >= VotesNeeded and key != "Frekwencja":
-            if "KOALICYJNY" in key and result >= VotesNeededForCoalition:
+            if "KOALICYJNY" in key.upper() and result >= VotesNeededForCoalition:
                 ClubsWithSeats.append(key)
-            elif "KOALICYJNY" not in key:
+            elif "KOALICYJNY" not in key.upper():
                 ClubsWithSeats.append(key)
 
     return ClubsWithSeats, votes, recivedVotes
 
 
-def chooseMethod(selectedMethod, qulifiedDictionary, numberOfVotes):
+def chooseMethod(selectedMethod, qulifiedDictionary, numberOfVotes, year):
     seatDict = {}
     seatDictAll = {}
     voteDict = {}
     reversedVoteDict = {}
-
+    sep = ";"
+    if year == "2011":
+        sep = ","
+    year = "_"+year
+    if year == "_2023":
+        year = ""
+    csvFile = pd.read_csv(
+        f"./Data/wyniki_gl_na_listy_po_okregach_sejm_utf8{year}.csv", sep=sep,  decimal=",")
     for element in qulifiedDictionary:
         seatDict[element] = 0
         voteDict[element] = 0
         seatDictAll[element] = 0
-    csvFile = pd.read_csv(
-        "./Data/wyniki_gl_na_listy_po_okregach_sejm_utf8.csv", sep=";",  decimal=",")
+
     csvFile = csvFile.fillna(0.0)
     csvFile = csvFile.replace("nan", 0.0)
 
@@ -181,6 +194,6 @@ def HareDrop(SeatsDict,  VoteDict, seatsNum, Freq, biggest=True):
 
             SeatsDict[min_party] += 1
 
-            VoteDict2[min_party] = 0
+            VoteDict2[min_party] = math.inf
 
     return SeatsDict
