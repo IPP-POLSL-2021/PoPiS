@@ -1,5 +1,5 @@
 import requests
-from streamlit_push_notifications import send_push
+#from streamlit_notifications import send_push
 from datetime import datetime, date
 import streamlit as st
 #from sentimentpl.models import SentimentPLModel
@@ -134,15 +134,17 @@ def loadView():
 
     if st.button("Był dziś nowy akt prawny?"):
         if did_today_new_ustawa_obowiazuje():
-            send_push(
-                    title="Tak!",
-                    body=f"Dodano dzisiaj nowy akt prawny"
-                )
+            st.write("Tak")
+            #send_push(
+            #        title="Tak!",
+            #        body=f"Dodano dzisiaj nowy akt prawny"
+            #    )
         else:
-            send_push(
-                    title="Nie...",
-                    body=f"Nie dodano dzisiaj żadnego aktu prawnego"
-                )
+            st.write("Nie")
+            #send_push(
+            #        title="Nie...",
+            #        body=f"Nie dodano dzisiaj żadnego aktu prawnego"
+            #    )
 
 
     acts=get_all_acts_this_year()
