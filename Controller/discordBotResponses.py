@@ -48,7 +48,7 @@ def readDate(file):
         return lastCheckDate
 
 
-def get_respone(User_Input):
+def get_response(User_Input):
     lowered = User_Input.lower()
     if lowered == '':
         return ""
