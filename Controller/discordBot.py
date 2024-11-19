@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 from discord import Intents, Client, Message
 import threading
-from Controller.discordBotResponses import get_respone, create_event, check_24_hours
+from Controller.discordBotResponses import get_response, create_event, check_24_hours
 load_dotenv()
 # aby wysłąć przypomnienie w  gdzieś musiałbym przetrzymywać cały obiekt message albo przynajmniej podobiekt author
 TOKEN = os.getenv('TOKEN')
@@ -15,7 +15,7 @@ intents.message_content = True
 client = Client(intents=intents)
 
 
-def discordCheck():
+async def discordCheck():
     while True:
         list = check_24_hours("./Data/time.txt", "discord")
         if list is not False:
@@ -29,12 +29,14 @@ def discordCheck():
                 print("działa?")
                 print(date)
                 channel = client.get_channel(row.channelId)
+                print(f"szukam{row.channelId}iałych znaków")
+                print(channel)
                 if date == "brak":
-                    channel.send("nie znaleziono komisji")
+                    await channel.send("nie znaleziono komisji")
                 elif date == "brak posiedzeń":
-                    channel.send(date)
+                    await channel.send(date)
                 else:
-                    channel.send(f" {date}")
+                    await channel.send(f" {date}")
 
 
 async def send_message(message, user_message):
@@ -44,7 +46,7 @@ async def send_message(message, user_message):
     if is_private := user_message[0] == '?':
         user_message = user_message[1:]
     try:
-        response = get_respone(user_message)
+        response = get_response(user_message)
         responseArray = response.split('\n')
         for response in responseArray:
             # print(response)
@@ -64,13 +66,9 @@ async def on_message(message,  auto=False):
         return
     username = str(message.author)
     user_message = message.content
-
-    # print(user_message)
     channel = str(message.channel)
-    # print(f'[{channel}] {username} "{user_message}"')
     id = message.channel.id
     channel = client.get_channel(id)
-    # print(message.content[0])
     if message.content[0] == '!':
 
         date = create_event(id, user_message[1:], "discord")
@@ -87,6 +85,9 @@ async def on_message(message,  auto=False):
 
 
 def start_discord_bot():
-    checkingThread = threading.Thread(target=discordCheck)
+    def run_discord_check():
+        asyncio.run(discordCheck())
+    checkingThread = threading.Thread(
+        target=run_discord_check)
     checkingThread.start()
     client.run(token=TOKEN)

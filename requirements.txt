@@ -5,3 +5,11 @@ telebot
 matplotlib
 statistics
 numpy
+plotly
+streamlit-aggrid
+folium
+streamlit-folium
+geopandas
+shapely
+scipy
+streamlit-notifications

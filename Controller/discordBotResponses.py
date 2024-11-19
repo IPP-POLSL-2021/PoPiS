@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 import requests
-from Controller.Commitees import CommiteesList, CommiteeFutureSetting
+from api_wrappers.committees import get_committees, get_committee_future_sitting
 from datetime import datetime, timedelta
 import sys
 # from Controller.telegrambot import create_reminders
@@ -37,7 +37,6 @@ def check_24_hours(file, platform=""):
 
 
 def write(file, lastCheckDate):
-
     with open(file, mode="w") as writingFile:
         writingFile.write(str(lastCheckDate))
 
@@ -49,19 +48,18 @@ def readDate(file):
         return lastCheckDate
 
 
-def get_respone(User_Input):
+def get_response(User_Input):
     lowered = User_Input.lower()
     if lowered == '':
         return ""
     elif lowered == "komisje":
-        commitees = CommiteesList(10)
-        commiteesList = ""
-        for commitee in commitees:
-
-            commiteesList += f"{commitee['name']} o kodzie: {commitee['code']}\n"
+        committees = get_committees(10)
+        committeesList = ""
+        for committee in committees:
+            committeesList += f"{committee['name']} o kodzie: {committee['code']}\n"
 
         # print(commiteesList)
-        return f"oto lista komisji\n{commiteesList}"
+        return f"oto lista komisji\n{committeesList}"
     else:
         return ""
 
@@ -70,23 +68,27 @@ def create_event(id, text, platform, userEvent=True):
     # print(id)
     remindersList = pd.read_csv("./Data/powiadomienia.csv")
     last = ""
-    commitees = CommiteesList(10)
-    commiteesList = ""
-    for commitee in commitees:
+    committees = get_committees(10)
+    committeesList = ""
+    for committee in committees:
+        committeesList += f":{committee['code']} "
 
-        commiteesList += f":{commitee['code']} "
-    if text in commiteesList:
-        date = CommiteeFutureSetting(10, text)
+    if text in committeesList:
+        date = get_committee_future_sitting(10, text, 3)
         new_reminder = {
             'channelId': id, 'platform': platform, 'committee': text}
+
         if date is None:
-            if not ((new_reminder['channelId'] in remindersList['channelId'].values) and (new_reminder['platform'] in remindersList['platform'].values) and (new_reminder['committee'] in remindersList['committee'].values)):
+            if not ((new_reminder['channelId'] in remindersList['channelId'].values) and
+                    (new_reminder['platform'] in remindersList['platform'].values) and
+                    (new_reminder['committee'] in remindersList['committee'].values)):
                 df = pd.DataFrame([new_reminder])
                 df.to_csv("./Data/powiadomienia.csv",
                           mode='a', index=False, header=False)
             return "brak nowych posiedzeń"
+
         elif userEvent is False:
-            Auto_date = f"w ciągu ostanich trzech dni komisja o kodzie {text} miała ostatnie spotkanie {date}"
+            Auto_date = f"w ciągu ostatnich trzech dni komisja o kodzie {text} miała ostatnie spotkanie {date}"
             if platform == "discord":
                 # id.send(
                 #     f"w ciągu ostatnich trzech dni komisja o kodzie {text} miała ostanie spotkanie {date}"
@@ -96,15 +98,15 @@ def create_event(id, text, platform, userEvent=True):
                 # create_reminders("", True, id, Auto_date)
         # print(remindersList['platform'])
 
-        if not ((new_reminder['channelId'] in remindersList['channelId'].values) and (new_reminder['platform'] in remindersList['platform'].values) and (new_reminder['committee'] in remindersList['committee'].values)):
-
+        if not ((new_reminder['channelId'] in remindersList['channelId'].values) and
+                (new_reminder['platform'] in remindersList['platform'].values) and
+                (new_reminder['committee'] in remindersList['committee'].values)):
             df = pd.DataFrame([new_reminder])
             df.to_csv("./Data/powiadomienia.csv",
                       mode='a', index=False, header=False)
+
         if date is not None:
             last = f"ostatnie o kodzie {text} spotkanie miało miejsce {date}"
         return f"dodano do obserwowanych {last}"
-        # print(response)
-    # print(response)
     else:
         return "brak"

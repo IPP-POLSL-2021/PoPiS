@@ -1,110 +1,89 @@
-from Controller.Commitees import ComitteStats, CommiteesList, CommitteeAge, ComitteEducation
+from api_wrappers.committees import get_committee_stats, get_committees, get_committee_member_ages, get_committee_member_details
 import streamlit as st
-import matplotlib.pyplot as plt
+import plotly.express as px
 import pandas as pd
 import numpy as np
 from statistics import mean, median, stdev
-
-
-def ageStats(all_ages, AgesButDictionary):
-    print("a")
-    fig, ax = plt.subplots(figsize=(10, 6))
-    ax.hist(all_ages, bins=10, color='red', edgecolor='black')
-    ax.set_title('Ogólny rozkład wiekowy członków komisji', fontsize=16)
-    ax.set_xlabel('Wiek', fontsize=14)
-    ax.set_ylabel('Liczba członków', fontsize=14)
-    st.pyplot(fig)
-    for club in AgesButDictionary:
-        if len(AgesButDictionary[club]) > 1:
-            avgAge = mean(AgesButDictionary[club])
-            st.write(
-                f"Dla klubu {club} w wybrnej komisji najstarszy członek ma {max(AgesButDictionary[club])} lat, najmłodszy ma {min(AgesButDictionary[club]) } lat, średnia wieku wynosi {round(avgAge)} lat, mediana wynosi {median(AgesButDictionary[club])} lat, odchylenie standardowe wynosi około {round(stdev(AgesButDictionary[club]))} lat")
-    st.header(
-        "Wykresy rozkłądu wieku klubów dla wybranej komisji jeśli dany klub ma więcej niż2 członków")
-    for club in AgesButDictionary:
-        fig, ax = plt.subplots(figsize=(10, 6))
-        if len(AgesButDictionary[club]) > 2:
-            ax.hist(AgesButDictionary[club], bins=10,
-                    color='red', edgecolor='black')
-            ax.set_title(
-                f'Ogólny rozkład wiekowy członków komisji dla klubu {club}', fontsize=16)
-            ax.set_xlabel('Wiek', fontsize=14)
-            ax.set_ylabel('Liczba członków', fontsize=14)
-            st.pyplot(fig)
-
-
-def MoreStats(ChosenDictionary):
-    st.write(
-        "wykresy dla klubów w komijsch gdzie cczłonkiwe mają rózne wykształcenie")
-    for club in ChosenDictionary:
-        if len(list(ChosenDictionary[club].keys())) > 1:
-            fig, ax = plt.subplots(figsize=(10, 5))
-            labels = list(ChosenDictionary[club].keys())
-            values = list(ChosenDictionary[club].values())
-            ax.pie(values, labels=labels)
-            ax.set_title(
-                f'Ogólny rozkład edukacji członków komisji dla klubu {club}', fontsize=16)
-
-            st.pyplot(fig)
-
+from View import _sharedViews
+from st_aggrid import AgGrid
 
 def loadView():
     term_number = st.number_input(
-        "kadencja sejmu", min_value=1, value=10)
-    # print("puki co psuto")
+        "Kadencja sejmu", min_value=1, value=10, key='term_input_stats')
 
-    codes = [committee['code'] for committee in CommiteesList(term_number)]
+    codes = [
+        f"{committee['name']} - {committee['code']}" for committee in get_committees(term_number)]
     codes.append("łącznie")
     selectedCommittee = st.selectbox(
-        "komijsja której statyski cię intersują (niektóre dostępne tylko dla obecnej kadecji)", options=list(codes)
+        "Komisja, której statystyki cię interesują", 
+        options=list(codes),
+        key='committee_select_stats'
     )
+    
+    if selectedCommittee != "łącznie":
+        selectedCommittee = selectedCommittee.split("-")[-1][1:]
+    
+    committee_stats = get_committee_stats(term_number, selectedCommittee)
+    clubs = pd.DataFrame.from_dict(committee_stats['clubs'], orient='index')
+    MPs = pd.DataFrame.from_dict(committee_stats['members'], orient='index')
+    clubsButBetter = committee_stats['clubs']
 
-    clubs, MPs, clubsButBetter = ComitteStats(term_number, selectedCommittee)
-    # with st.container(height=400):
-    #     for MP in MPs:
-    #         st.markdown(MP)
-    # wyświetlanie informacji o ilości członkó i ilości komijsi
+    # Prepare data for plotting
     ClubsCount = clubs.apply(lambda x: x.count(), axis=1)
+    ClubsCountDF = pd.DataFrame({
+        'Partie': ClubsCount.index, 
+        'Liczba członków': ClubsCount.values
+    })
 
-    fig, ax = plt.subplots(figsize=(10, 6))
-    ClubsCount.plot(kind='bar', ax=ax)
-    ax.set_title('Liczba członków w komisjach', fontsize=16)
+    # Plotly bar chart for ClubsCount
+    fig = px.bar(
+        ClubsCountDF, 
+        x='Partie', 
+        y='Liczba członków',
+        title='Liczba członków w komisjach',
+        labels={'Partie': 'Partie', 'Liczba członków': 'Liczba członków'}
+    )
+    fig.update_layout(
+        xaxis_title='Partie',
+        yaxis_title='Liczba członków',
+        title_font_size=16,
+        xaxis_tickangle=45
+    )
+    st.plotly_chart(fig)
 
-    ax.set_xlabel('Partie', fontsize=14)
-    ax.set_ylabel('Liczba członków', fontsize=14)
-    plt.xticks(rotation=45, ha='right')
-    st.pyplot(fig)
-    st.dataframe(clubs)
+    # Clean column names
+    clubs.columns = [str(col).replace('.', '_') for col in clubs.columns]
+
+    # Display clubs data
+    AgGrid(clubs)
+
+    # Display MPs data if "łącznie" is selected
     if selectedCommittee == "łącznie":
-        st.dataframe(MPs)
-    # wykresy wieku
+        st.dataframe(MPs, use_container_width=True)
 
-    DataframeAges, AgesButDictionary = CommitteeAge(
+    # Age and other statistics
+    DataframeAges, AgesButDictionary = get_committee_member_ages(
         clubsButBetter, term_number)
     all_ages = DataframeAges.values.flatten()
     all_ages = pd.Series(all_ages).dropna()
+
+    # Statistics selection
     stats = st.selectbox(
-        "Wybierz stytystykę", ["brak", "wiek", "edukacja", "okrąg", "profesja",  "województwo"])
+        "Wybierz statystykę", 
+        ["brak", "wiek", "edukacja", "profesja"],
+        key='stats_select'
+    )
+    
     match stats:
         case "wiek":
-            ageStats(all_ages, AgesButDictionary)
+            _sharedViews.ageGraphs(all_ages, AgesButDictionary, term_number)
         case "edukacja":
-            EducationDictionary = ComitteEducation(
-                clubsButBetter, term_number, stats)
-            MoreStats(EducationDictionary)
+            EducationDictionary = get_committee_member_details(
+                clubsButBetter, term_number, 'edukacja')
+            _sharedViews.MoreStats(EducationDictionary)
         case "profesja":
-            EducationDictionary = ComitteEducation(
-                clubsButBetter, term_number, stats)
-            MoreStats(EducationDictionary)
-        case "okrąg":
-            EducationDictionary = ComitteEducation(
-                clubsButBetter, term_number, stats)
-            MoreStats(EducationDictionary)
-        case "województwo":
-            EducationDictionary = ComitteEducation(
-                clubsButBetter, term_number, stats)
-            MoreStats(EducationDictionary)
-
-            MoreStats(EducationDictionary)
+            ProfessionDictionary = get_committee_member_details(
+                clubsButBetter, term_number, 'profesja')
+            _sharedViews.MoreStats(ProfessionDictionary)
         case "brak":
             st.write("")

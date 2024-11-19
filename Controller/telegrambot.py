@@ -1,6 +1,6 @@
 import os
 import telebot
-from Controller.discordBotResponses import get_respone, create_event, check_24_hours
+from Controller.discordBotResponses import get_response, create_event, check_24_hours
 from dotenv import load_dotenv
 import threading
 load_dotenv()
@@ -14,7 +14,7 @@ bot = telebot.TeleBot(TELEGRAMTOKEN)
 def send_welcome(message):
     print(message.text)
     # w przypadku telegramu wystarczy w bazie przechować id czatu i date
-    response = get_respone(message.text[1:])
+    response = get_response(message.text[1:])
     # for response in responseArray:
 
     # print(response)
