@@ -9,7 +9,7 @@ from st_aggrid import AgGrid
 from statistics import mean, median, stdev
 
 
-def ageGraphs(all_ages, AgesButDictionary, term=""):
+def ageGraphs(all_ages, AgesButDictionary, term="", MPsInfoDataFrame=""):
     # General age distribution histogram
     fig = px.histogram(
         x=all_ages,
@@ -45,8 +45,17 @@ def ageGraphs(all_ages, AgesButDictionary, term=""):
     # Create and display the DataFrame inline
     df = pd.DataFrame(data)
     st.write(f"Statystyki wieku dla klubów w {term} kadencji sejmu:")
-    st.dataframe(df, use_container_width=True)
+    youngest, oldest = st.columns(2)
 
+    st.dataframe(df, use_container_width=True)
+    with oldest:
+        OldestMP = MPsInfoDataFrame.loc[
+            MPsInfoDataFrame.groupby('Club')['Age'].idxmax()]
+        st.write(OldestMP)
+    with youngest:
+        youngestsMP = MPsInfoDataFrame.loc[
+            MPsInfoDataFrame.groupby('Club')['Age'].idxmin()]
+        st.write(youngestsMP)
     st.header("Wykresy rozkładu wieku klubów i kół w {term} kadencji sejmu:")
     for club, ages in AgesButDictionary.items():
         if len(ages) > 2:
@@ -78,5 +87,6 @@ def MoreStats(ChosenDictionary):
             )
             st.plotly_chart(fig)
         else:
-            st.write(f"Klub {club}") 
-            st.write(f"{list(data.keys())[0]} - {list(data.values())[0]} czyli 100%")
+            st.write(f"Klub {club}")
+            st.write(
+                f"{list(data.keys())[0]} - {list(data.values())[0]} czyli 100%")
