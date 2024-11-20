@@ -3,6 +3,7 @@ import telebot
 from Controller.discordBotResponses import get_response, create_event, check_24_hours
 from dotenv import load_dotenv
 import threading
+import requests
 load_dotenv()
 
 
@@ -51,12 +52,17 @@ def telegramCheck():
                 # to bardzo istotna część kodu z jakiegoś powodu bez tego nie dizłało
                 print("działa?")
                 print(date)
-
+                request = requests.get(
+                    f"https://api.sejm.gov.pl/sejm/term10/committees/{row.committee}")
+                response = request.json()
+                print(response["name"])
                 if date == "brak":
                     bot.send_message(row.channelId, "Nie znaleziono komisji")
-                elif date == f"brak posiedzeń komisji {row.committee}":
+                elif date == f"brak nowych posiedzeń":
+                    date += f" {response['name']}"
                     bot.send_message(row.channelId, date)
                 else:
+                    date = date.split("%")[1]
                     bot.send_message(row.channelId, f" {date}")
 
 

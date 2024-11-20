@@ -97,7 +97,9 @@ def create_event(id, text, platform, userEvent=True):
             # else:
                 # create_reminders("", True, id, Auto_date)
         # print(remindersList['platform'])
-
+        request = requests.get(
+            f"https://api.sejm.gov.pl/sejm/term10/committees/{text}")
+        response = request.json()
         if not ((new_reminder['channelId'] in remindersList['channelId'].values) and
                 (new_reminder['platform'] in remindersList['platform'].values) and
                 (new_reminder['committee'] in remindersList['committee'].values)):
@@ -106,7 +108,7 @@ def create_event(id, text, platform, userEvent=True):
                       mode='a', index=False, header=False)
 
         if date is not None:
-            last = f"ostatnie o kodzie {text} spotkanie miało miejsce {date}"
+            last = f" %ostatnie spotkanie  {response['name']}  miało miejsce {date}"
         return f"dodano do obserwowanych {last}"
     else:
         return "brak"
