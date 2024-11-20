@@ -45,17 +45,17 @@ def telegramCheck():
         if list is not False:
             # firstSplit=list.split("\n")
             for row in list.itertuples(index=False):
-                print(row)
+                # print(row)
                 # create_reminders("",True)
                 date = create_event(
                     row.channelId, row.committee, row.platform)
                 # to bardzo istotna część kodu z jakiegoś powodu bez tego nie dizłało
                 print("działa?")
-                print(date)
+                # print(date)
                 request = requests.get(
                     f"https://api.sejm.gov.pl/sejm/term10/committees/{row.committee}")
                 response = request.json()
-                print(response["name"])
+                # print(response["name"])
                 if date == "brak":
                     bot.send_message(row.channelId, "Nie znaleziono komisji")
                 elif date == f"brak nowych posiedzeń":

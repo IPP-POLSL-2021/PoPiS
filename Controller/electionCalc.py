@@ -54,6 +54,8 @@ def chooseMethod(selectedMethod, qulifiedDictionary, numberOfVotes, year):
     seatDictAll = {}
     voteDict = {}
     reversedVoteDict = {}
+    if len(qulifiedDictionary) == 0:
+        return seatDictAll
     sep = ";"
     if year == "2011":
         sep = ","
