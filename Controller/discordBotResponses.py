@@ -11,6 +11,15 @@ import pandas as pd
 lastCheckDate = ""
 
 
+def delete(commite_code, id):
+    remindersList = pd.read_csv("./Data/powiadomienia.csv")
+    if ((id in remindersList['channelId'].values) and
+            (commite_code in remindersList['committee'].values)):
+        foundCommittee = remindersList.loc[~((remindersList['channelId'] ==
+                                              id) & (remindersList['committee'] == commite_code))]
+        foundCommittee.to_csv("./Data/powiadomienia.csv", index=False)
+
+
 def check_24_hours(file, platform=""):
     # Odczytaj datę z pliku
     last_check_str = readDate(file)

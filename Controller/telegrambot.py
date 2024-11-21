@@ -2,6 +2,7 @@ import os
 import telebot
 from Controller.discordBotResponses import get_response, create_event, check_24_hours
 from dotenv import load_dotenv
+from Controller import discordBotResponses
 import threading
 import requests
 load_dotenv()
@@ -9,6 +10,14 @@ load_dotenv()
 
 TELEGRAMTOKEN = os.getenv('TELEGRAMTOKEN')
 bot = telebot.TeleBot(TELEGRAMTOKEN)
+
+
+@bot.message_handler(commands="usuń")
+def delete_reminer(message):
+    if len(message.text[5:]) == 0:
+        bot.send_message(message.chat.id, "Nie podano komisji")
+    else:
+        discordBotResponses.delete(message.text[6:], message.chat.id)
 
 
 @bot.message_handler(commands=['komisje', ''])
