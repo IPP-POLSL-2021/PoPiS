@@ -73,69 +73,59 @@ def chooseMethod(selectedMethod, qulifiedDictionary, numberOfVotes, year):
     csvFile = csvFile.replace("nan", 0.0)
 
     # ClubsWithSeats = []
-
+    methodDict = {"dhont": {}, "Zmodyfikowany Sainte-Laguë": {},
+                  "Sainte-Laguë": {}, "Kwota Kwota Hare’a (metoda największych reszt)": {}, "Kwota Hare’a (metoda najmniejszych reszt)": {}}
     distict = 0
     seats = [12, 8, 14, 12, 13, 15, 12, 12, 10, 9, 12, 8, 14, 10, 9, 10,
              9, 12, 20,
              12, 12, 11, 15, 14, 12, 14, 9, 7, 9, 9, 12, 9, 16,
              8, 10, 12, 9, 9, 10, 8, 12]
+
     for _, row in csvFile.iterrows():
         for key in voteDict.keys():
-
             voteDict[key] = row[key]
             reversedVoteDict[row[key]] = key
 
-        match selectedMethod:
-            case "d'Hondt":
-                for element in qulifiedDictionary:
-                    seatDict[element] = 0
+        # Metoda d'Hondta
+        tempDict = seatDict.copy()
+        recivedSetats = dhont(tempDict, voteDict, seats[distict])
+        for element in qulifiedDictionary:
+            methodDict["dhont"][element] = methodDict["dhont"].get(
+                element, 0) + recivedSetats[element]
 
-                recivedSetats = dhont(seatDict,
-                                      voteDict, seats[distict])
+        # Metoda Sainte-Laguë
+        tempDict = seatDict.copy()
+        recivedSetats = SainteLaguë(tempDict, voteDict, seats[distict])
+        for element in qulifiedDictionary:
+            methodDict["Sainte-Laguë"][element] = methodDict["Sainte-Laguë"].get(
+                element, 0) + recivedSetats[element]
 
-                for element in qulifiedDictionary:
-                    seatDictAll[element] += recivedSetats[element]
+        # Kwota Hare’a (metoda największych reszt)
+        tempDict = seatDict.copy()
+        recivedSetats = HareDrop(
+            tempDict, voteDict, seats[distict], numberOfVotes[distict])
+        for element in qulifiedDictionary:
+            methodDict["Kwota Kwota Hare’a (metoda największych reszt)"][element] = methodDict["Kwota Kwota Hare’a (metoda największych reszt)"].get(
+                element, 0) + recivedSetats[element]
 
-                # print(seatDictAll)
-            case "Sainte-Laguë":
-                for element in qulifiedDictionary:
-                    seatDict[element] = 0
+        # Kwota Hare’a (metoda najmniejszych reszt)
+        tempDict = seatDict.copy()
+        recivedSetats = HareDrop(
+            tempDict, voteDict, seats[distict], numberOfVotes[distict], False)
+        for element in qulifiedDictionary:
+            methodDict["Kwota Hare’a (metoda najmniejszych reszt)"][element] = methodDict["Kwota Hare’a (metoda najmniejszych reszt)"].get(
+                element, 0) + recivedSetats[element]
 
-                recivedSetats = SainteLaguë(seatDict,
-                                            voteDict, seats[distict])
+        # Zmodyfikowany Sainte-Laguë
+        tempDict = seatDict.copy()
+        recivedSetats = ModifiedSainteLaguë(tempDict, voteDict, seats[distict])
+        for element in qulifiedDictionary:
+            methodDict["Zmodyfikowany Sainte-Laguë"][element] = methodDict["Zmodyfikowany Sainte-Laguë"].get(
+                element, 0) + recivedSetats[element]
 
-                for element in qulifiedDictionary:
-                    seatDictAll[element] += recivedSetats[element]
-            case "Kwota Hare’a (metoda największych reszt)":
-                for element in qulifiedDictionary:
-                    seatDict[element] = 0
-
-                recivedSetats = HareDrop(seatDict,
-                                         voteDict, seats[distict], numberOfVotes[distict])
-
-                for element in qulifiedDictionary:
-                    seatDictAll[element] += recivedSetats[element]
-            case "Kwota Hare’a (metoda najmniejszych reszt)":
-                for element in qulifiedDictionary:
-                    seatDict[element] = 0
-                # print(numberOfVotes[distict])
-                recivedSetats = HareDrop(seatDict,
-                                         voteDict, seats[distict], numberOfVotes[distict], False)
-
-                for element in qulifiedDictionary:
-                    seatDictAll[element] += recivedSetats[element]
-            case "Zmodyfikowany Sainte-Laguë":
-
-                for element in qulifiedDictionary:
-                    seatDict[element] = 0
-
-                recivedSetats = ModifiedSainteLaguë(seatDict,
-                                                    voteDict, seats[distict])
-
-                for element in qulifiedDictionary:
-                    seatDictAll[element] += recivedSetats[element]
         distict += 1
-    return seatDictAll
+
+    return methodDict
 
 
 def ModifiedSainteLaguë(SeatsDict,  VoteDict, seatsNum):

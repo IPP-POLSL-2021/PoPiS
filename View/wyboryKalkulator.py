@@ -36,5 +36,7 @@ def loadView():
     results = electionCalc.chooseMethod(
         method, qulifiedParties, voteForDistrict, year)
     for key in results.keys():
-        if results[key] > 0:
-            st.write(f"{key}: {results[key]}")
+        st.write(f"{key}:")
+        for party in results[key]:
+            if results[key][party] > 0:
+                st.write(f" {party}: {results[key][party]}")
