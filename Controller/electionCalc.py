@@ -73,6 +73,7 @@ def chooseMethod(selectedMethod, qulifiedDictionary, numberOfVotes, year):
     csvFile = csvFile.replace("nan", 0.0)
 
     # ClubsWithSeats = []
+
     distict = 0
     seats = [12, 8, 14, 12, 13, 15, 12, 12, 10, 9, 12, 8, 14, 10, 9, 10,
              9, 12, 20,
@@ -106,7 +107,6 @@ def chooseMethod(selectedMethod, qulifiedDictionary, numberOfVotes, year):
                 for element in qulifiedDictionary:
                     seatDictAll[element] += recivedSetats[element]
             case "Kwota Hare’a (metoda największych reszt)":
-
                 for element in qulifiedDictionary:
                     seatDict[element] = 0
 
@@ -124,8 +124,41 @@ def chooseMethod(selectedMethod, qulifiedDictionary, numberOfVotes, year):
 
                 for element in qulifiedDictionary:
                     seatDictAll[element] += recivedSetats[element]
+            case "Zmodyfikowany Sainte-Laguë":
+
+                for element in qulifiedDictionary:
+                    seatDict[element] = 0
+
+                recivedSetats = ModifiedSainteLaguë(seatDict,
+                                                    voteDict, seats[distict])
+
+                for element in qulifiedDictionary:
+                    seatDictAll[element] += recivedSetats[element]
         distict += 1
     return seatDictAll
+
+
+def ModifiedSainteLaguë(SeatsDict,  VoteDict, seatsNum):
+    i = 2
+    currentMax = ""
+    newMax = ""
+    lastVoteNum = 0
+    nextPotentialVoteNum = 0
+    for key in VoteDict.keys():
+        VoteDict[key] /= 1.4
+    VoteDict2 = VoteDict.copy()
+
+    for _ in range(seatsNum):
+
+        max_party = max(VoteDict2, key=VoteDict2.get)
+
+        SeatsDict[max_party] += 1
+
+        VoteDict2[max_party] = VoteDict[max_party] / \
+            (2*SeatsDict[max_party] + 1)
+        i += 1
+    # print(SeatsDict)
+    return SeatsDict
 
 
 def SainteLaguë(SeatsDict,  VoteDict, seatsNum):
