@@ -3,26 +3,10 @@ import pandas as pd
 from typing import List, Dict, Any, Optional
 from itertools import combinations
 
-def get_clubs(term: int) -> List[Dict[str, Any]]:
-    """
-    Retrieve the list of parliamentary clubs for a given term.
-    
-    Args:
-        term (int): The parliamentary term to retrieve clubs for
-    
-    Returns:
-        List[Dict[str, Any]]: A list of club dictionaries with their details
-    
-    Raises:
-        requests.RequestException: If there's an error fetching club data
-    """
-    try:
-        response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/clubs')
-        response.raise_for_status()  # Raise an exception for bad responses
-        return response.json()
-    except requests.RequestException as e:
-        print(f"Error fetching clubs data: {e}")
-        return []
+def get_clubs(term):
+    response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/clubs')
+    return response
+
 
 def get_club(term: int, id: str) -> Dict[str, Any]:
     """
