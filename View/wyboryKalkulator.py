@@ -53,7 +53,7 @@ def loadView():
     FiltredResultsDF = FiltredResultsDF.astype(str)
     FiltredResultsDF = FiltredResultsDF.replace(r'\.0$', ' ', regex=True)
 
-    st.table(FiltredResultsDF)
+    # st.table(FiltredResultsDF)
 
     FiltredResultsDF = FiltredResultsDF.transpose()
     st.table(FiltredResultsDF)
