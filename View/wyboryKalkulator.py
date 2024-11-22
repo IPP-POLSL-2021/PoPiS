@@ -2,6 +2,9 @@ import streamlit as st
 from Controller import electionCalc
 import pandas as pd
 import numpy as np
+from st_aggrid import AgGrid
+
+st.set_page_config(layout="wide")
 
 
 def loadView():

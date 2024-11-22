@@ -7,6 +7,7 @@ from statistics import mean, median, stdev
 from View import _sharedViews
 from st_aggrid import AgGrid
 
+
 def loadView():
     term_number = st.number_input(
         "Kadencja sejmu", min_value=1, value=10, key='term_input_stats')
@@ -15,14 +16,14 @@ def loadView():
         f"{committee['name']} - {committee['code']}" for committee in get_committees(term_number)]
     codes.append("łącznie")
     selectedCommittee = st.selectbox(
-        "Komisja, której statystyki cię interesują", 
+        "Komisja, której statystyki cię interesują",
         options=list(codes),
         key='committee_select_stats'
     )
-    
+
     if selectedCommittee != "łącznie":
         selectedCommittee = selectedCommittee.split("-")[-1][1:]
-    
+
     committee_stats = get_committee_stats(term_number, selectedCommittee)
     clubs = pd.DataFrame.from_dict(committee_stats['clubs'], orient='index')
     MPs = pd.DataFrame.from_dict(committee_stats['members'], orient='index')
@@ -31,14 +32,14 @@ def loadView():
     # Prepare data for plotting
     ClubsCount = clubs.apply(lambda x: x.count(), axis=1)
     ClubsCountDF = pd.DataFrame({
-        'Partie': ClubsCount.index, 
+        'Partie': ClubsCount.index,
         'Liczba członków': ClubsCount.values
     })
 
     # Plotly bar chart for ClubsCount
     fig = px.bar(
-        ClubsCountDF, 
-        x='Partie', 
+        ClubsCountDF,
+        x='Partie',
         y='Liczba członków',
         title='Liczba członków w komisjach',
         labels={'Partie': 'Partie', 'Liczba członków': 'Liczba członków'}
@@ -69,11 +70,11 @@ def loadView():
 
     # Statistics selection
     stats = st.selectbox(
-        "Wybierz statystykę", 
+        "Wybierz statystykę",
         ["brak", "wiek", "edukacja", "profesja"],
         key='stats_select'
     )
-    
+
     match stats:
         case "wiek":
             _sharedViews.ageGraphs(all_ages, AgesButDictionary, term_number)

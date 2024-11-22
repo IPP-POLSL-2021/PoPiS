@@ -48,29 +48,33 @@ def ageGraphs(all_ages, AgesButDictionary, term="", MPsInfoDataFrame=""):
     youngest, oldest = st.columns(2)
 
     st.dataframe(df, use_container_width=True)
-    with oldest:
-        OldestMP = MPsInfoDataFrame.loc[
-            MPsInfoDataFrame.groupby('Club')['Age'].idxmax()]
-        st.write(OldestMP)
-    with youngest:
-        youngestsMP = MPsInfoDataFrame.loc[
-            MPsInfoDataFrame.groupby('Club')['Age'].idxmin()]
-        st.write(youngestsMP)
-    st.header("Wykresy rozkładu wieku klubów i kół w {term} kadencji sejmu:")
-    for club, ages in AgesButDictionary.items():
-        if len(ages) > 2:
-            fig = px.histogram(
-                x=ages,
-                nbins=10,
-                title=f'{club}',
-                labels={'x': 'Wiek', 'y': 'Liczba członków'},
-                color_discrete_sequence=['purple']
-            )
-            fig.update_layout(
-                xaxis_title='Wiek',
-                yaxis_title='Liczba członków'
-            )
-            st.plotly_chart(fig)
+    if MPsInfoDataFrame != "":
+        with oldest:
+            # MPsInfoDataFrame = MPsInfoDataFrame.astype(int)
+
+            OldestMP = MPsInfoDataFrame.loc[
+                MPsInfoDataFrame.groupby('Club')['Age'].idxmax()]
+            st.write(OldestMP)
+        with youngest:
+            youngestsMP = MPsInfoDataFrame.loc[
+                MPsInfoDataFrame.groupby('Club')['Age'].idxmin()]
+            st.write(youngestsMP)
+        st.header(
+            "Wykresy rozkładu wieku klubów i kół w {term} kadencji sejmu:")
+        for club, ages in AgesButDictionary.items():
+            if len(ages) > 2:
+                fig = px.histogram(
+                    x=ages,
+                    nbins=10,
+                    title=f'{club}',
+                    labels={'x': 'Wiek', 'y': 'Liczba członków'},
+                    color_discrete_sequence=['purple']
+                )
+                fig.update_layout(
+                    xaxis_title='Wiek',
+                    yaxis_title='Liczba członków'
+                )
+                st.plotly_chart(fig)
 
 
 def MoreStats(ChosenDictionary):
