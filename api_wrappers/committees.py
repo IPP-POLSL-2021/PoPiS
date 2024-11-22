@@ -10,6 +10,11 @@ def get_committees(term: int) -> List[Dict]:
         f'https://api.sejm.gov.pl/sejm/term{term}/committees')
     return response.json()
 
+def get_sittings(term: int, committeeCode: str) -> List[Dict]:
+    response = requests.get(
+        f'https://api.sejm.gov.pl/sejm/term{term}/committees/{committeeCode}/sittings')
+    return response.json()
+
 
 def get_committee_future_sitting(term: int, code: str, time: int) -> Optional[datetime.date]:
     """Find the next future sitting date for a specific committee."""

@@ -48,42 +48,46 @@ def loadView():
                 with st.expander("Pokaż zakres działania komisji"):
                     st.write(scope)
             with st.expander("Pokaż prezydium komisji"):
+                members = list()
                 for member in committee['members']:
                     if member.get("function", False):
-                        st.write(f"{member['function']}: {member['lastFirstName']} z klubu {member['club']}")
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-    # Days input
-        if term_number == 10:
-            days = st.number_input(
-            "Z ilu ostatnich dni chcesz zobaczyć posiedzenia", 
-            min_value=1, 
-            value=3
-        )   
+                        members.append(tuple((member['function'], member['lastFirstName'], member['club'])))
+                st.write(sorted(members))    
 
-        # Future sittings
-            future_sittings = get_committee_future_sitting(term_number, committeeCode, days)
-            if future_sittings:
-                st.markdown(f"Posiedzenia wybranej komisji w ciągu ostatnich {days} dni:")
-                st.write(future_sittings)
+    if get_last_n_committee_sitting_dates(committeeCode, 1, term_number):
+        col1, col2 = st.columns(2)
+        
+        with col1:
+        # Days input
+            if term_number == 10:
+                days = st.number_input(
+                "Z ilu ostatnich dni chcesz zobaczyć posiedzenia", 
+                min_value=1, 
+                value=3
+            )   
+
+            # Future sittings
+                future_sittings = get_committee_future_sitting(term_number, committeeCode, days)
+                if future_sittings:
+                    st.markdown(f"Posiedzenia wybranej komisji w ciągu ostatnich {days} dni:")
+                    st.write(future_sittings)
+                else:
+                    st.write(f"W ciągu ostatnich {days} dni nie było posiedzenia")
             else:
-                st.write(f"W ciągu ostatnich {days} dni nie było posiedzenia")
-        else:
-            st.write(f"Komisja zakończyła działalność {get_last_n_committee_sitting_dates(committeeCode, 1,term_number)[0]}")
-    
-    with col2:
-    # Number of past sittings
-        numberOfSettings = st.number_input(
-            "Ilość ostatnich posiedzeń komisji, które chcesz zobaczyć", 
-            min_value=1, 
-            value=1
-        )
+                st.write(f"Komisja zakończyła działalność {get_last_n_committee_sitting_dates(committeeCode, 1,term_number)[0]}")
+        with col2:
+        # Number of past sittings
+            numberOfSettings = st.number_input(
+                "Ilość ostatnich posiedzeń komisji, które chcesz zobaczyć", 
+                min_value=1, 
+                value=1
+            )
 
-        # Past sittings
-        settingsList = get_last_n_committee_sitting_dates(
-            committeeCode, numberOfSettings, term_number
-        )
-        st.markdown(f"Ostatnie {numberOfSettings} posiedzeń komisji:")
-        st.write(settingsList)
+            # Past sittings
+            settingsList = get_last_n_committee_sitting_dates(
+                committeeCode, numberOfSettings, term_number
+            )
+            st.markdown(f"Ostatnie {numberOfSettings} posiedzeń komisji:")
+            st.write(settingsList)
+    else:
+        st.write("Brak danych o posiedzeniach komisji")
