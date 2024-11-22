@@ -1,7 +1,5 @@
 import streamlit as st
 import matplotlib.pyplot as plt
-
-from api_wrappers.committees import get_committees, get_committee_future_sitting, get_last_n_committee_sitting_dates
 import json
 from Controller.Results import getResults
 
