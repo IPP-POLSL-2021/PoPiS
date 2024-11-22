@@ -10,13 +10,14 @@ def get_committees(term: int) -> List[Dict]:
         f'https://api.sejm.gov.pl/sejm/term{term}/committees')
     return response.json()
 
+
 def get_sittings(term: int, committeeCode: str) -> List[Dict]:
     response = requests.get(
         f'https://api.sejm.gov.pl/sejm/term{term}/committees/{committeeCode}/sittings')
     return response.json()
 
 
-def get_committee_future_sitting(term: int, code: str, time: int) -> Optional[datetime.date]:
+def get_committee_future_sitting(term: int, code: str, time: int, returnList: bool = False) -> Optional[datetime.date]:
     """Find the next future sitting date for a specific committee."""
     response = requests.get(
         f'https://api.sejm.gov.pl/sejm/term{term}/committees/{code}/sittings')
@@ -25,13 +26,17 @@ def get_committee_future_sitting(term: int, code: str, time: int) -> Optional[da
         return " wystąpił bład"
 
     committee = response.json()
-    for setting in committee:
+    dates = []
+    for setting in reversed(committee):
         date = datetime.strptime(setting['date'], '%Y-%m-%d').date()
-        print(date)
+        # print(date)
         today = datetime.today().date() - timedelta(time)
         if date >= today:
-            return date
-
+            if returnList is False:
+                return date
+            dates.append(str(date))
+    if len(dates) > 0:
+        return dates
     return None
 
 
@@ -48,7 +53,8 @@ def get_last_n_committee_sitting_dates(committeeCode: str, numberOfSitting: int,
     datesList = []
 
     for setting in reversed(committee):
-        datesList.append(setting['date'])
+        datesList.append(
+            f"{setting['date']}. Numer spotkanina komisji {setting['num']}")
         settingsCounter += 1
         if settingsCounter >= numberOfSitting:
             return datesList
