@@ -1,5 +1,7 @@
 import streamlit as st
 from Controller import electionCalc
+import pandas as pd
+import numpy as np
 
 
 def loadView():
@@ -35,8 +37,23 @@ def loadView():
             # ilość głosów tylko jej narzie nigdzie nie zwracam
     results = electionCalc.chooseMethod(
         method, qulifiedParties, voteForDistrict, year)
+
+    # for party in results[key]:
+    # if results[key][party] > 0:
+    #     st.write(f" {party}: {results[key][party]}")
+
+    filtered_results = {}
     for key in results.keys():
-        st.write(f"{key}:")
-        for party in results[key]:
-            if results[key][party] > 0:
-                st.write(f" {party}: {results[key][party]}")
+        filtered_results[key] = {party: votes for party,
+                                 votes in results[key].items() if votes != 0}
+        # st.write(f"{key}: ")
+
+    FiltredResultsDF = pd.DataFrame.from_dict(filtered_results)
+    FiltredResultsDF = FiltredResultsDF.fillna(value=" ")
+    FiltredResultsDF = FiltredResultsDF.astype(str)
+    FiltredResultsDF = FiltredResultsDF.replace(r'\.0$', ' ', regex=True)
+
+    st.table(FiltredResultsDF)
+
+    FiltredResultsDF = FiltredResultsDF.transpose()
+    st.table(FiltredResultsDF)
