@@ -96,6 +96,10 @@ def loadView():
                 committeeCode, numberOfSettings, term_number
             )
             st.markdown(f"Ostatnie {numberOfSettings} posiedzeń komisji:")
-            st.write(settingsList)
+            for setting in settingsList:
+                st.write(setting)
+                nthSetting = setting.split(":")
+                nthSetting = nthSetting[1:]
+
     else:
         st.write("Brak danych o posiedzeniach komisji")

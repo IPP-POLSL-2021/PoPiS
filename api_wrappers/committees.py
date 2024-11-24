@@ -54,7 +54,7 @@ def get_last_n_committee_sitting_dates(committeeCode: str, numberOfSitting: int,
 
     for setting in reversed(committee):
         datesList.append(
-            f"{setting['date']}. Numer spotkanina komisji {setting['num']}")
+            f"{setting['date']}. Numer spotkanina komisji: {setting['num']}")
         settingsCounter += 1
         if settingsCounter >= numberOfSitting:
             return datesList
