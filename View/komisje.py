@@ -1,5 +1,6 @@
 import streamlit as st
 from api_wrappers.committees import get_committees, get_committee_future_sitting, get_last_n_committee_sitting_dates
+import requests
 
 
 def loadView():
@@ -96,10 +97,20 @@ def loadView():
                 committeeCode, numberOfSettings, term_number
             )
             st.markdown(f"Ostatnie {numberOfSettings} posiedzeń komisji:")
-            for setting in settingsList:
-                st.write(setting)
-                nthSetting = setting.split(":")
-                nthSetting = nthSetting[1:]
 
+            # selectedSetting = st.selectbox(
+            #     f"Ostatnie {numberOfSettings} posiedzeń komisji:", settingsList)
+            for setting in settingsList:
+                # st.write(setting)
+                nthSetting = setting.split(":")
+                nthSetting = nthSetting[-1][1:]
+            # if selectedSetting != "brak" or selectedSetting != "":
+                with st.expander(f"Posiedzenie nr {nthSetting} - {selectedCommittee}"):
+                    print("e")
+                    request = requests.get(
+                        f"https://api.sejm.gov.pl/sejm/term{term_number}/committees/{committeeCode}/sittings/{nthSetting}")
+                    response = request.json()
+                    st.html(response["agenda"])
+                # print(nthSetting)
     else:
         st.write("Brak danych o posiedzeniach komisji")
