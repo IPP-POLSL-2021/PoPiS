@@ -1,21 +1,23 @@
 import streamlit as st
-import asyncio
-from View import correlation, statystykiKomisji, BasicStats, calculator, coalition_viewer, wyboryKalkulator, view_vote, watch_interpelation, komisje, test3, benford_view
-
+from View import correlation, statystykiKomisji, BasicStats, calculator, coalition_viewer, wyboryKalkulator, view_vote, watch_interpelation, komisje, test3, benford_view, view_interpelation, main_page
 st.sidebar.title("Nawigacja")
 
 
 def ViewSelection():
 
     page = st.sidebar.selectbox(
-        "Wybierz stronę", ["Obserwuj Interpelacje", "Komisje - Posiedzenia", "Korelacje",
+        "Wybierz stronę", ["Strona Główna","Obserwuj Interpelacje", "Interpelacje Statystyki","Komisje - Posiedzenia", "Korelacje",
                            "Komisje - Statystyki", "Posłowie - Statystyki", "kalkulator", "ustawy",
                            "koalicje", "glosowania", "kalkulator wyników wyborów", "Rozkład Benforda"])
 
     # t1 = threading.Thread(target=discordBotStart, name='t1')
     match page:
+        case "Strona Główna":
+            main_page.loadView()
         case "Obserwuj Interpelacje":
             watch_interpelation.loadView()
+        case "Interpelacje Statystyki":
+            view_interpelation.loadView()
         case "Komisje - Posiedzenia":
             komisje.loadView()
         case "Korelacje":

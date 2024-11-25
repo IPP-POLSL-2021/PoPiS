@@ -100,6 +100,8 @@ def get_district(term=None, id=None, mode=None, response=False):
 @handle_response
 def get_photo(term, id, response=False):
     response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/MP/{id}/photo')
+    return response.content
+
 
 #birth_date (str --> datetime.date): a date of birth Example: 1985-04-14.
 #birth_location (str): a place of birth Example: Gliwice.
@@ -128,9 +130,9 @@ def get_mp_votings(term, id, sitting, date):
     return response.json()
 
 # New functions to get MP photos
-def get_mp_photo(term, id):
-    response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/MP/{id}/photo')
-    return response.content
+#def get_mp_photo(term, id):
+#    response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/MP/{id}/photo')
+#    return response.content
 
 def get_mp_photo_mini(term, id):
     response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/MP/{id}/photo-mini')

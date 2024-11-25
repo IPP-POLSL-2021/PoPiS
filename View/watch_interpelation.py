@@ -38,7 +38,7 @@ def check_interpellation_replies(term, num):
     return False
 
 def loadView():
-    st.title("System Powiadomień Sejmowych")
+    #st.title("System Powiadomień Sejmowych")
     st.header("Obserwowane Interpelacje")
     
     # Inicjalizacja stanu sesji dla obserwowanych interpelacji
