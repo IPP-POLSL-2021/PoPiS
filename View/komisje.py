@@ -115,9 +115,11 @@ def loadView():
                     # if st.button(f"Pokaż transkrypt posiedzenia nr {nthSetting}"):
                     #     committeeTranscript.loadView(
                     #         term_number, committeeCode, nthSetting)
-                    st.markdown(
-                        f"[Trnskrypcja posiedzenia](https://api.sejm.gov.pl/sejm/term{term_number}/committees/{committeeCode}/sittings/{nthSetting}/html)", unsafe_allow_html=True)
-
+                    if requests.get(f"https://api.sejm.gov.pl/sejm/term{term_number}/committees/{committeeCode}/sittings/{nthSetting}/html"):
+                        st.markdown(
+                            f"[Trnskrypcja posiedzenia](https://api.sejm.gov.pl/sejm/term{term_number}/committees/{committeeCode}/sittings/{nthSetting}/html)", unsafe_allow_html=True)
+                    else:
+                        st.write("brak dostępnego teankryptu")
                 # print(nthSetting)
     else:
         st.write("Brak danych o posiedzeniach komisji")
