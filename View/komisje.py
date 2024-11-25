@@ -1,6 +1,7 @@
 import streamlit as st
 from api_wrappers.committees import get_committees, get_committee_future_sitting, get_last_n_committee_sitting_dates
 import requests
+# from View import committeeTranscript
 
 
 def loadView():
@@ -106,11 +107,17 @@ def loadView():
                 nthSetting = nthSetting[-1][1:]
             # if selectedSetting != "brak" or selectedSetting != "":
                 with st.expander(f"Posiedzenie nr {nthSetting} - {selectedCommittee}"):
-                    print("e")
+                    # print("e")
                     request = requests.get(
                         f"https://api.sejm.gov.pl/sejm/term{term_number}/committees/{committeeCode}/sittings/{nthSetting}")
                     response = request.json()
                     st.html(response["agenda"])
+                    # if st.button(f"Pokaż transkrypt posiedzenia nr {nthSetting}"):
+                    #     committeeTranscript.loadView(
+                    #         term_number, committeeCode, nthSetting)
+                    st.markdown(
+                        f"[Trnskrypcja posiedzenia](https://api.sejm.gov.pl/sejm/term{term_number}/committees/{committeeCode}/sittings/{nthSetting}/html)", unsafe_allow_html=True)
+
                 # print(nthSetting)
     else:
         st.write("Brak danych o posiedzeniach komisji")
