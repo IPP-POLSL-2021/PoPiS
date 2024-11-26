@@ -6,6 +6,7 @@ import pandas as pd
 import folium
 from streamlit_folium import st_folium
 import geopandas as gpd
+import os
 from shapely.geometry import Point
 from math import radians, cos, sin, asin, sqrt
 
@@ -35,8 +36,8 @@ class InputObserver(Observer):
     def update(self, observable, value):
         pass
 
-
-SHAPEFILE_PATH = ".\Data\ne_10m_admin_0_countries.shp"
+print(os.getcwd())
+SHAPEFILE_PATH = os.path.join("Data","ne_10m_admin_0_countries.shp")
 POLAND_NAME = "Poland"
 
 CITY_COORDS = {
@@ -69,7 +70,9 @@ def load_shapefile(path):
         world = gpd.read_file(path)
         return world
     except Exception as e:
-        st.error(f"Error loading shapefile: {e}")
+        # Nie pokazuj użytkownikom swoim błędów
+        print(f"Error loading shapefile: {e}")
+        #st.error(f"Error loading shapefile: {e}")
         return None
 
 
@@ -176,8 +179,8 @@ def loadView():
     votesNumber = seatsDistricstsDict
     loaded_data = {}
     loaded_votes = seatsDistricstsDict
-
-    print(loaded_votes)
+    # Don't bloat the terminal
+    #print(loaded_votes)
     pis = 0
     ko = 0
     td = 0

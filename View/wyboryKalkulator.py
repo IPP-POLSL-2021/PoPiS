@@ -1,8 +1,7 @@
 import streamlit as st
 from Controller import electionCalc
 import pandas as pd
-import numpy as np
-from st_aggrid import AgGrid
+#import numpy as np
 
 st.set_page_config(layout="wide")
 
@@ -30,7 +29,8 @@ def loadView():
             for key in allParitesDict:
                 if key != "Frekwencja":
                     allParitesDict[key] = st.checkbox(f"{key}", False)
-            print(allParitesDict)
+            # Don't bloat terminal 
+            #print(allParitesDict)
             # w przyszłości jak zrobię lub ktoś zorobi słownik z wszysttkimi nazwami koitetów i ich krótami to się zastąpi
 
     # st.write(electionCalc.calculateVotes(voteingThreshold))

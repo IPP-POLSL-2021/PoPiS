@@ -57,7 +57,7 @@ def find_minimal_coalitions(
         where each coalition is a list of club dictionaries
     """
     # Retrieve clubs data
-    clubs = get_clubs(term)
+    clubs = get_clubs(term).json()
     
     # Sort clubs by member count in descending order
     clubs.sort(key=lambda x: x['membersCount'], reverse=True)

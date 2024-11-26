@@ -16,7 +16,7 @@ def loadView():
     st.title("🏛️ Polskie Potencjalne Koalicje Sejmowe")
     
     # Find minimal coalitions
-    term_number = st.number_input("kadencja sejmu", min_value=4, value=10)
+    term_number = st.number_input("kadencja sejmu", min_value=7, value=10)
     
     coalitions = find_minimal_coalitions(term_number)
     
