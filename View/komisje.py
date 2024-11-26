@@ -58,7 +58,7 @@ def loadView():
                     if member.get("function", False):
                         members.append(
                             tuple((member['function'], member['lastFirstName'], member['club'])))
-                st.write(sorted(members))
+                st.dataframe(sorted(members))
 
     if get_last_n_committee_sitting_dates(committeeCode, 1, term_number):
         col1, col2 = st.columns(2)
