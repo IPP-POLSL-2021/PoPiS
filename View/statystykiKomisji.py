@@ -6,13 +6,13 @@ import numpy as np
 from statistics import mean, median, stdev
 from View import _sharedViews
 from st_aggrid import AgGrid
-st.set_page_config(page_title="DataFrame Demo", page_icon="📊")
 
 
 def loadView():
     term_number = st.number_input(
         "Kadencja sejmu", min_value=1, value=10, key='term_input_stats')
-
+    tab1, tab2 = st.tabs(
+        ["Wyniki wyborów z popreddnich lat", "Wyniki własne"])
     codes = [
         f"{committee['name']} - {committee['code']}" for committee in get_committees(term_number)]
     codes.append("łącznie")

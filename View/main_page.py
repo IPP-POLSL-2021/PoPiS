@@ -1,6 +1,8 @@
 import streamlit as st
 
-# TODO: Show information from Reports folder about avalibility of information 
+# TODO: Show information from Reports folder about avalibility of information
+st.set_page_config(layout="wide")
+
 
 def loadView():
     st.title("🇵🇱 Internetowa Analiza Polskiej Polityki (IAPP) 🇵🇱")
@@ -8,9 +10,9 @@ def loadView():
         **Aktualna Kadencja Sejmu**: 10 \n
         • Rozpoczęta: 13 listopada
         """)
-    
+
     st.header("Obecny Stan Projektu")
-    
+
     st.markdown("""
     IAPP to platforma analizy danych parlamentarnych, obecnie w fazie aktywnego rozwoju.
     Jej nadrzędnym celem jest popularyzacja informacji na temat organu ustawodawczego naszego kraju.
@@ -75,5 +77,6 @@ def loadView():
 
     st.info("Projekt jest aktywnie rozwijany. Niektóre funkcje mogą być niekompletne lub podlegać zmianom.")
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     loadView()
