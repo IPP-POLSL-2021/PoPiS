@@ -1,11 +1,11 @@
 {
     "Legnica": {
-        "PiS": 3,
-        "KO": 3,
-        "Trzecia Droga": 2,
-        "Lewica": 2,
+        "PiS": 5,
+        "KO": 1,
+        "Trzecia Droga": 1,
+        "Lewica": 3,
         "Konfederacja": 2,
-        "Frekwencja": 287341,
+        "Frekwencja": 1731839,
         "Miejsca do zdobycia": 12,
         "Uzupełniono": true
     },
@@ -60,14 +60,14 @@
         "Uzupełniono": false
     },
     "Chełm": {
-        "PiS": 3,
-        "KO": 3,
-        "Trzecia Droga": 2,
-        "Lewica": 2,
-        "Konfederacja": 2,
-        "Frekwencja": 287341,
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
         "Miejsca do zdobycia": 12,
-        "Uzupełniono": true
+        "Uzupełniono": false
     },
     "Zielona Góra": {
         "PiS": 0,
@@ -400,13 +400,13 @@
         "Uzupełniono": false
     },
     "Szczecin": {
-        "PiS": 3,
-        "KO": 3,
-        "Trzecia Droga": 2,
-        "Lewica": 2,
-        "Konfederacja": 2,
-        "Frekwencja": 287341,
+        "PiS": 0,
+        "KO": 0,
+        "Trzecia Droga": 0,
+        "Lewica": 0,
+        "Konfederacja": 0,
+        "Frekwencja": 0,
         "Miejsca do zdobycia": 12,
-        "Uzupełniono": true
+        "Uzupełniono": false
     }
 }

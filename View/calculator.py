@@ -36,8 +36,9 @@ class InputObserver(Observer):
     def update(self, observable, value):
         pass
 
+
 print(os.getcwd())
-SHAPEFILE_PATH = os.path.join("Data","ne_10m_admin_0_countries.shp")
+SHAPEFILE_PATH = os.path.join("Data", "ne_10m_admin_0_countries.shp")
 POLAND_NAME = "Poland"
 
 CITY_COORDS = {
@@ -72,7 +73,7 @@ def load_shapefile(path):
     except Exception as e:
         # Nie pokazuj użytkownikom swoim błędów
         print(f"Error loading shapefile: {e}")
-        #st.error(f"Error loading shapefile: {e}")
+        # st.error(f"Error loading shapefile: {e}")
         return None
 
 
@@ -180,7 +181,7 @@ def loadView():
     loaded_data = {}
     loaded_votes = seatsDistricstsDict
     # Don't bloat the terminal
-    #print(loaded_votes)
+    # print(loaded_votes)
     pis = 0
     ko = 0
     td = 0
@@ -285,17 +286,23 @@ def loadView():
                         loaded_data = json.load(json_file)
                     with open("votes.json", "r", encoding="utf-8") as json_file:
                         loaded_votes = json.load(json_file)
-                    loaded_data[district]['PiS'] = newSeats['PiS']
-                    loaded_data[district]['KO'] = newSeats['KO']
-                    loaded_data[district]['Trzecia Droga'] = newSeats['Trzecia Droga']
-                    loaded_data[district]['Lewica'] = newSeats['Lewica']
-                    loaded_data[district]['Konfederacja'] = newSeats['Konfederacja']
+                    for element in political_parties:
+                        if element != 'Frekwencja':
+                            loaded_data[district][element] = newSeats[element]
+
+                            loaded_votes[district][element] = votesNumber[district][element]
+
+                    # loaded_data[district]['PiS'] = newSeats['PiS']
+                    # loaded_data[district]['KO'] = newSeats['KO']
+                    # loaded_data[district]['Trzecia Droga'] = newSeats['Trzecia Droga']
+                    # loaded_data[district]['Lewica'] = newSeats['Lewica']
+                    # loaded_data[district]['Konfederacja'] = newSeats['Konfederacja']
                     loaded_data[district]['Frekwencja'] = frequency
-                    loaded_votes[district]['PiS'] = votesNumber[district]['PiS']
-                    loaded_votes[district]['KO'] = votesNumber[district]['KO']
-                    loaded_votes[district]['Trzecia Droga'] = votesNumber[district]['Trzecia Droga']
-                    loaded_votes[district]['Lewica'] = votesNumber[district]['Lewica']
-                    loaded_votes[district]['Konfederacja'] = votesNumber[district]['Konfederacja']
+                    # loaded_votes[district]['PiS'] = votesNumber[district]['PiS']
+                    # loaded_votes[district]['KO'] = votesNumber[district]['KO']
+                    # loaded_votes[district]['Trzecia Droga'] = votesNumber[district]['Trzecia Droga']
+                    # loaded_votes[district]['Lewica'] = votesNumber[district]['Lewica']
+                    # loaded_votes[district]['Konfederacja'] = votesNumber[district]['Konfederacja']
 
                     # print(frequency)
                     loaded_data[district]['Uzupełniono'] = True
@@ -354,41 +361,50 @@ def loadView():
                         'Konfederacja': 0}
     emptyDistrictDict = {}
     for region in loaded_data:
+        for element in political_parties:
+            if element != 'Frekwencja':
+                votesDict[element] += loaded_data[region][element]
 
-        votesDict['KO'] += loaded_data[region]['KO']
-        votesDict['PiS'] += loaded_data[region]['PiS']
-        votesDict['Trzecia Droga'] += loaded_data[region]['Trzecia Droga']
-        votesDict['Lewica'] += loaded_data[region]['Lewica']
-        votesDict['Konfederacja'] += loaded_data[region]['Konfederacja']
+                votesDictProcent[element] += loaded_votes[region][element]
+
+        # votesDict['KO'] += loaded_data[region]['KO']
+        # votesDict['PiS'] += loaded_data[region]['PiS']
+        # votesDict['Trzecia Droga'] += loaded_data[region]['Trzecia Droga']
+        # votesDict['Lewica'] += loaded_data[region]['Lewica']
+        # votesDict['Konfederacja'] += loaded_data[region]['Konfederacja']
         votesDict['Frekwencja'] += loaded_data[region]['Frekwencja']
-        votesDictProcent['KO'] += loaded_votes[region]['KO']
-        votesDictProcent['PiS'] += loaded_votes[region]['PiS']
-        votesDictProcent['Trzecia Droga'] += loaded_votes[region]['Trzecia Droga']
-        votesDictProcent['Lewica'] += loaded_votes[region]['Lewica']
-        votesDictProcent['Konfederacja'] += loaded_votes[region]['Konfederacja']
+        # votesDictProcent['KO'] += loaded_votes[region]['KO']
+        # votesDictProcent['PiS'] += loaded_votes[region]['PiS']
+        # votesDictProcent['Trzecia Droga'] += loaded_votes[region]['Trzecia Droga']
+        # votesDictProcent['Lewica'] += loaded_votes[region]['Lewica']
+        # votesDictProcent['Konfederacja'] += loaded_votes[region]['Konfederacja']
         if loaded_data[region]['Uzupełniono'] is False:
             emptyDistrictDict[region] = 1
             # print(region)
     st.write(votesDict)
-    if votesDictProcent['KO'] > 0:
-        votesDictProcent['KO'] /= votesDict['Frekwencja']/100
-        votesDictProcent['KO'] = round(votesDictProcent['KO'], 2)
-    if votesDictProcent['PiS'] > 0:
-        votesDictProcent['PiS'] /= votesDict['Frekwencja']/100
-        votesDictProcent['PiS'] = round(votesDictProcent['PiS'], 2)
-    if votesDictProcent['Trzecia Droga'] > 0:
-        votesDictProcent['Trzecia Droga'] /= votesDict['Frekwencja']/100
-        votesDictProcent['Trzecia Droga'] = round(
-            votesDictProcent['Trzecia Droga'], 2)
+    for element in political_parties:
+        if votesDictProcent[element] > 0:
+            votesDictProcent[element] /= votesDict['Frekwencja']/100
+            votesDictProcent[element] = round(votesDictProcent[element], 2)
+    # if votesDictProcent['KO'] > 0:
+    #     votesDictProcent['KO'] /= votesDict['Frekwencja']/100
+    #     votesDictProcent['KO'] = round(votesDictProcent['KO'], 2)
+    # if votesDictProcent['PiS'] > 0:
+    #     votesDictProcent['PiS'] /= votesDict['Frekwencja']/100
+    #     votesDictProcent['PiS'] = round(votesDictProcent['PiS'], 2)
+    # if votesDictProcent['Trzecia Droga'] > 0:
+    #     votesDictProcent['Trzecia Droga'] /= votesDict['Frekwencja']/100
+    #     votesDictProcent['Trzecia Droga'] = round(
+    #         votesDictProcent['Trzecia Droga'], 2)
 
-    if votesDictProcent['Lewica'] > 0:
-        votesDictProcent['Lewica'] /= votesDict['Frekwencja']/100
-        votesDictProcent['Lewica'] = round(votesDictProcent['Lewica'], 2)
+    # if votesDictProcent['Lewica'] > 0:
+    #     votesDictProcent['Lewica'] /= votesDict['Frekwencja']/100
+    #     votesDictProcent['Lewica'] = round(votesDictProcent['Lewica'], 2)
 
-    if votesDictProcent['Konfederacja'] > 0:
-        votesDictProcent['Konfederacja'] /= votesDict['Frekwencja']/100
-        votesDictProcent['Konfederacja'] = round(
-            votesDictProcent['Konfederacja'], 2)
+    # if votesDictProcent['Konfederacja'] > 0:
+    #     votesDictProcent['Konfederacja'] /= votesDict['Frekwencja']/100
+    #     votesDictProcent['Konfederacja'] = round(
+    #         votesDictProcent['Konfederacja'], 2)
     for key in votesDictProcent.keys():
         st.write(
             f"Na podstawie wprowadzonych wyników partia: {key} uzyskała wynik na poziomie: {votesDictProcent[key]}%")
