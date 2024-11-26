@@ -1,7 +1,7 @@
 import streamlit as st
 from Controller import electionCalc
 import pandas as pd
-#import numpy as np
+# import numpy as np
 
 st.set_page_config(layout="wide")
 
@@ -18,7 +18,7 @@ def loadView():
         # method = st.selectbox("metoda liczenia głosów", [
         #     "d'Hondt", "Sainte-Laguë", "Zmodyfikowany Sainte-Laguë", "Kwota Hare’a (metoda największych reszt)", "Kwota Hare’a (metoda najmniejszych reszt)"])
         year = st.selectbox("wybierz instersujce cię wybory", [
-                            "2023", "2019", "2015", "2011"])
+                            "2023", "2019", "2015", "2011", "2007", "2005", "2001"])
 
     qulifiedParties, allParitesDict, voteForDistrict = electionCalc.calculateVotes(
         voteingThreshold, voteingThresholdForCoaliton, year)
@@ -29,8 +29,8 @@ def loadView():
             for key in allParitesDict:
                 if key != "Frekwencja":
                     allParitesDict[key] = st.checkbox(f"{key}", False)
-            # Don't bloat terminal 
-            #print(allParitesDict)
+            # Don't bloat terminal
+            # print(allParitesDict)
             # w przyszłości jak zrobię lub ktoś zorobi słownik z wszysttkimi nazwami koitetów i ich krótami to się zastąpi
 
     # st.write(electionCalc.calculateVotes(voteingThreshold))

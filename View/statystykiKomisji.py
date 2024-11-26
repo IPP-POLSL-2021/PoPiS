@@ -6,6 +6,7 @@ import numpy as np
 from statistics import mean, median, stdev
 from View import _sharedViews
 from st_aggrid import AgGrid
+st.set_page_config(page_title="DataFrame Demo", page_icon="📊")
 
 
 def loadView():

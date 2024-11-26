@@ -4,7 +4,7 @@ import math
 
 def calculateVotes(VotesNeeded, VotesNeededForCoalition, year):
     sep = ";"
-    if year == "2011":
+    if year == "2011" or year == "2007" or year == "2005" or year == "2001":
         sep = ","
     year = "_"+year
     if year == "_2023":
@@ -57,7 +57,7 @@ def chooseMethod(qulifiedDictionary, numberOfVotes, year):
     if len(qulifiedDictionary) == 0:
         return seatDictAll
     sep = ";"
-    if year == "2011":
+    if year == "2011" or year == "2007" or year == "2005" or year == "2001":
         sep = ","
     year = "_"+year
     if year == "_2023":
