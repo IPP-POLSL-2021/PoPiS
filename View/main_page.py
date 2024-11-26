@@ -1,18 +1,6 @@
 import streamlit as st
-import os
 
 # TODO: Show information from Reports folder about avalibility of information 
-# Przetwarza surowe dane z API i wyświetla ich wizualizacje w formie strony internetowej.
-# Integruje wiele strumieni danych API za pomocą abstrakcyjnych wrapperów.
-# Interpelacje
-# Komisje
-# Rozpiska członków komisji względem klubu, profesji, wykształcenia i województwa.
-# Śledzenie Procesu Legislacyjnego
-# Pokazuje nowe akty prawne z podziałem na ich typ
-# Analiza wyników wyborów względem różnych metod podziału mandatów
-# Koalicje
-#     Kompleksowa platforma analizy danych parlamentarnych, 
-#     dostarczająca wglądu w procesy wyborcze, działalność parlamentarną i dynamikę polityczną.
 
 def loadView():
     st.title("🇵🇱 Internetowa Analiza Polskiej Polityki (IAPP) 🇵🇱")
@@ -24,70 +12,68 @@ def loadView():
     st.header("Obecny Stan Projektu")
     
     st.markdown("""
-    IAPP to platforma analizy danych parlamentarnych, obecnie w fazie aktywnego rozwoju. 
+    IAPP to platforma analizy danych parlamentarnych, obecnie w fazie aktywnego rozwoju.
+    Jej nadrzędnym celem jest popularyzacja informacji na temat organu ustawodawczego naszego kraju.
+    Dzięki nowoczesnym technologiom integruje ona strumienie API i przetwarza w sposób kompleksowy by dostarczyć wgląd w dynamikę polityczną.
     Oto przegląd aktualnych funkcjonalności i komponentów:
     """)
     col1, col2 = st.columns(2)
     with col1:
         st.subheader("🔍 Aktualne Funkcjonalności")
-
-        st.markdown(f"""
-        - **Analiza Komisji Sejmowych**: 
-            - Wyświetlanie informacji o komisjach dla wybranej kadencji
-            - Prezentacja przyszłych i przeszłych posiedzeń komisji
-            - Dostęp do transkrypcji posiedzeń (jeśli dostępne)
-        """)
-
-        st.markdown(f"""
-        - **Analiza Ustaw i Rozporządzeń**: 
-            - Prezentacja najnowszych aktów prawnych
-            """)
-
         st.markdown("""
-        - **Statystyki Komisji**: 
-            - Analiza składu komisji według klubów parlamentarnych
-            - Wizualizacja danych o złonkach komisji
-        - **Interpelacje Poselskie**: 
-            - Wyświetlanie szczegółów interpelacji, w tym autorów i odpowiedzi
+        - **Komisje Sejmowe**: 
+            - Analiza składu komisji według klubów parlamentarnych i nie tylko
+            - Kompaktowe podsumowanie zakresu działania jak i władz komisji
+            - Szczegóły na temat ostatnich posiedzień danej komisji
+        - **Interpelacje Poselskie**:
+            - Prezentacja informacji o autorach w tym ich klubu i profesji.
+            - Wyświetlanie w sposób przystępny odpowiedzi nadesłane.
         - **Procesy Legislacyjne**: 
             - Śledzenie etapów procesu legislacyjnego
-            - Informacje o nowych aktach prawnych
-        - **Analiza Ustaw i Rozporządzeń**: 
-            - Prezentacja list ustaw i rozporządzeń z bieżącego roku
+            - Prezentacja najnowszych aktów prawnych z podziałem na ich typ
+        - **Posłowie**:
+            - Historia posła na przestrzeni kadencji
+            - Statystyki dot. wykształcenia i profesji z podziałem na klub parlamentarny.
+            - Prezentacja głosów danego posła wg dnia
+        - **Political Fiction**:
+            - Znajdywanie alternatywnych koalicji rządowych w poszczególnych kadencjach Sejmu
+            - Sprawdzanie jak inna metoda dzielenia mandatów wpłynęłaby na wyniki wyborów
         """)
     with col2:
         # Sekcja technologii
         st.subheader("🛠 Technologie i Biblioteki")
         st.markdown("""
         - **Framework Web**: Streamlit
-        - **Analiza Danych**: Pandas, NumPy
-        - **Wizualizacja**: Plotly, Matplotlib
+        - **Analiza Danych**: Pandas, NumPy, Statistics
+        - **Wizualizacja**: Plotly, Matplotlib, Streamlit-aggrid
         - **Zapytania HTTP**: Requests
-        - **Boty**: Telegram
+        - **Boty**: Telebot
         """)
 
         # Sekcja integracji
         st.subheader("🔗 Integracje Zewnętrzne")
         st.markdown("""
         - **API Sejmu RP**: Pobieranie danych o komisjach, posłach, posiedzeniach i procesach legislacyjnych
+        - **Dane z Państwowej Komisji Wyborczej**: Surowe dane o wynikach wyborów do Sejmu RP w latach 2011-2024
         """)
 
         # Sekcja struktury projektu
         st.subheader("📂 Struktura Projektu")
         st.markdown("""
-        - **View**: Interfejs użytkownika Streamlit (główne komponenty: komisje, statystyki komisji, interpelacje, procesy legislacyjne)
-        - **api_wrappers**: Moduły do komunikacji z API Sejmu
-        - **Controller**: Logika biznesowa (w trakcie rozwoju)
-        - **Model**: Definicje modeli danych (w trakcie rozwoju)
+        - **View**: Interfejs użytkownika
+        - **api_wrappers**: Komunikacja z API Sejmu
+        - **Controller**: 
+        - **Model**: Definicje modeli danych 
         """)
 
     # Sekcja w trakcie rozwoju
     st.subheader("🚧 Funkcje w Trakcie Rozwoju")
     st.markdown("""
-    - Rozbudowa analizy statystycznej
-    - Udoskonalenie wizualizacji danych
-    - Implementacja funkcjonalności botów Discord i Telegram
-    - Rozszerzenie analizy procesów legislacyjnych
+    - Implementacja powiadomień na temat nowych ustaw, głosowań etc poprzez komunikator Telegram
+    - Porównanie głosowań posła z głosowaniem ogółu klubu
     """)
 
     st.info("Projekt jest aktywnie rozwijany. Niektóre funkcje mogą być niekompletne lub podlegać zmianom.")
+
+if __name__=="__main__":
+    loadView()

@@ -116,7 +116,7 @@ def loadView():
                                                     col1, col2, col3, col4 = st.columns(
                                                         4)
                                                     with col1:
-                                                        st.write(
+                                                        st.metric(
                                                             "Za", full_voting.get('yes', 0))
                                                     with col2:
                                                         st.metric(

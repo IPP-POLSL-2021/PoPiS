@@ -117,9 +117,9 @@ def loadView():
                     #         term_number, committeeCode, nthSetting)
                     if requests.get(f"https://api.sejm.gov.pl/sejm/term{term_number}/committees/{committeeCode}/sittings/{nthSetting}/html"):
                         st.markdown(
-                            f"[Trnskrypcja posiedzenia](https://api.sejm.gov.pl/sejm/term{term_number}/committees/{committeeCode}/sittings/{nthSetting}/html)", unsafe_allow_html=True)
+                            f"[Transkrypcja posiedzenia](https://api.sejm.gov.pl/sejm/term{term_number}/committees/{committeeCode}/sittings/{nthSetting}/html)", unsafe_allow_html=True)
                     else:
-                        st.write("brak dostępnego teankryptu")
+                        st.write("Brak dostępnego transkryptu.")
                 # print(nthSetting)
     else:
         st.write("Brak danych o posiedzeniach komisji")
