@@ -49,7 +49,7 @@ def calculateVotes(VotesNeeded, VotesNeededForCoalition, year):
     return ClubsWithSeats, votes, recivedVotes
 
 
-def chooseMethod(selectedMethod, qulifiedDictionary, numberOfVotes, year):
+def chooseMethod(qulifiedDictionary, numberOfVotes, year):
     seatDict = {}
     seatDictAll = {}
     voteDict = {}
@@ -80,7 +80,25 @@ def chooseMethod(selectedMethod, qulifiedDictionary, numberOfVotes, year):
              9, 12, 20,
              12, 12, 11, 15, 14, 12, 14, 9, 7, 9, 9, 12, 9, 16,
              8, 10, 12, 9, 9, 10, 8, 12]
-
+    yearInt = year[1:]
+    if int(yearInt) <= 2007:
+        seats[12] -= 1
+        seats[13] -= 1
+        seats[18] -= 1
+        seats[19] -= 1
+        seats[20] += 1
+        seats[23] += 1
+        seats[28] += 1
+        seats[40] += 1
+        if int(yearInt) <= 2001:
+            seats[1] += 1
+            seats[8] += 1
+            seats[11] -= 1
+            seats[12] -= 1
+            seats[14] += 1
+            seats[19] -= 1
+            seats[30] += 1
+            seats[34] -= 1
     for _, row in csvFile.iterrows():
         for key in voteDict.keys():
             voteDict[key] = row[key]

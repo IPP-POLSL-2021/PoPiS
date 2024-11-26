@@ -16,8 +16,8 @@ def loadView():
             "próg wyborczy dla kolalicji", 0, 100)
     # st.write(electionCalc.calculateVotes(voteingThreshold))
     with methodSelect:
-        method = st.selectbox("metoda liczenia głosów", [
-            "d'Hondt", "Sainte-Laguë", "Zmodyfikowany Sainte-Laguë", "Kwota Hare’a (metoda największych reszt)", "Kwota Hare’a (metoda najmniejszych reszt)"])
+        # method = st.selectbox("metoda liczenia głosów", [
+        #     "d'Hondt", "Sainte-Laguë", "Zmodyfikowany Sainte-Laguë", "Kwota Hare’a (metoda największych reszt)", "Kwota Hare’a (metoda najmniejszych reszt)"])
         year = st.selectbox("wybierz instersujce cię wybory", [
                             "2023", "2019", "2015", "2011"])
 
@@ -39,7 +39,7 @@ def loadView():
             qulifiedParties.append(key)
             # ilość głosów tylko jej narzie nigdzie nie zwracam
     results = electionCalc.chooseMethod(
-        method, qulifiedParties, voteForDistrict, year)
+        qulifiedParties, voteForDistrict, year)
 
     # for party in results[key]:
     # if results[key][party] > 0:
