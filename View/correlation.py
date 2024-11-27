@@ -4,6 +4,7 @@ import json
 from Controller.Results import getResults
 import plotly.express as px
 import plotly.graph_objects as go
+import numpy as np
 
 
 def loadView():
@@ -15,6 +16,7 @@ def loadView():
     electionSelections = st.selectbox("wybierz poziom administracyjny do analizy ", (
         "województwa", "okręgi", "powiaty", "gminy", "obwody"))
     matrix, Results = getResults(correlationValue, electionSelections, type)
+    matrix = matrix.fillna(0.0)
     # datafreame_col, polot_col = st.columns([0.6, 0.4])
     datafreame_col, polot_col = st.tabs(["dataframe", "wykres"])
     with datafreame_col:
