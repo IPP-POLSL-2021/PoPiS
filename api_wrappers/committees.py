@@ -125,7 +125,7 @@ def get_committee_member_details(committee: Dict[str, List[str]], term: int = 10
                     case 'edukacja':
                         educationOfMP = str([mp['educationLevel']
                                             for mp in filtered_MPs])
-                    case 'okrąg':
+                    case 'okręg':
                         educationOfMP = str([mp['districtName']
                                             for mp in filtered_MPs])
                     case 'profesja':

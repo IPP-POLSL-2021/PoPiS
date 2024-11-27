@@ -208,10 +208,11 @@ def loadView():
                              "Trzecia Droga", "Konfederacja", "Lewica"]
 
         main_col1, main_col2 = st.columns([3, 4])
-        type = st.selectbox("rodzaj głosów", ["ilościowy", "procentowy"])
         with main_col1:
             with st.form("kalkulator mandatów w sejmie"):
-                st.write("wybierz okrąg który chcesz uzupełnić")
+                type = st.selectbox(
+                    "rodzaj głosów", ["ilościowy", "procentowy"])
+                st.write("wybierz okręg który chcesz uzupełnić")
                 method = st.selectbox("metoda liczenia głosów", [
                     "d'Hondt", "Sainte-Laguë", "Kwota Hare’a (metoda największych reszt)", "Kwota Hare’a (metoda najmniejszych reszt)"])
                 # if resestAll:
@@ -219,7 +220,7 @@ def loadView():
                 district = st.selectbox("wybierz okręg który chcesz uzupełnić",
                                         districtsDict.keys())
                 selection = st.selectbox(
-                    "Wybrałeś okrąg z listy czy z mapy", ["mapy", "listy"])
+                    "Wybrałeś okręg z listy czy z mapy", ["mapy", "listy"])
                 if selection == "mapy":
                     val = districtsDict[districtcMap]
                     district = districtcMap
@@ -318,7 +319,7 @@ def loadView():
                         with open("votes.json", "w", encoding="utf-8") as json_file:
                             json.dump(loaded_votes, json_file,
                                       ensure_ascii=False, indent=4)
-                        st.write(newSeats)
+                        st.dataframe(newSeats)
                         st.write(
                             f"Partia która zdobyła ostatni mandat w okręgu to {lastParty} a kolejny zdobyła by partia {nextParty}")
         with main_col2:
@@ -387,7 +388,6 @@ def loadView():
             if loaded_data[region]['Uzupełniono'] is False:
                 emptyDistrictDict[region] = 1
                 # print(region)
-        st.write(votesDict)
         for element in political_parties:
             if votesDictProcent[element] > 0:
                 votesDictProcent[element] /= votesDict['Frekwencja']/100
@@ -411,9 +411,14 @@ def loadView():
         #     votesDictProcent['Konfederacja'] /= votesDict['Frekwencja']/100
         #     votesDictProcent['Konfederacja'] = round(
         #         votesDictProcent['Konfederacja'], 2)
-        for key in votesDictProcent.keys():
-            st.write(
-                f"Na podstawie wprowadzonych wyników partia: {key} uzyskała wynik na poziomie: {votesDictProcent[key]}%")
+        col1, col2 = st.columns(2)
+        with col1:
+
+            st.dataframe(votesDict)
+        with col2:
+            for key in votesDictProcent.keys():
+                st.write(
+                    f"Na podstawie wprowadzonych wyników partia: {key} uzyskała wynik na poziomie: {votesDictProcent[key]}%")
         # st.write(f"wyniki w skali kraju: {votesDictProcent}")
         keys = str(list(emptyDistrictDict.keys())).removeprefix(
             "[").removesuffix("]").replace("'", "")

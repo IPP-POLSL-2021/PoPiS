@@ -11,7 +11,7 @@ def loadView():
         term_number)
     stats = st.selectbox(
         "Wybierz statystykę", ["brak", "wiek",
-                               "edukacja", "okrąg", "profesja", "województwo"]
+                               "edukacja", "okręg", "profesja", "województwo"]
     )
     MPsInfo = {}
     match stats:
@@ -43,7 +43,7 @@ def loadView():
             MPDictionary = MPsStats.MoreMPsStats(
                 MpsList, MpGroupedList, term_number, stats)
             _sharedViews.MoreStats(MPDictionary)
-        case "okrąg":
+        case "okręg":
             MPDictionary = MPsStats.MoreMPsStats(
                 MpsList, MpGroupedList, term_number, stats)
 
@@ -88,7 +88,7 @@ def loadView():
         club = "unikalne kluby"
     district = ""
     if len(set(d['Okrąg'] for d in data if d['Okrąg'] is not None)) == 1:
-        district = "unikalny okrąg"
+        district = "unikalny okręg"
     else:
         district = "unikalne okręgi"
     eu = ""
