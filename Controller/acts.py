@@ -3,7 +3,6 @@ from datetime import datetime, date
 
 # Ustawienia API
 BASE_URL = "https://api.sejm.gov.pl"
-TERM = 10  # Przykładowy termin Sejmu
 
 def get_legislative_processes(term):
     response = requests.get(f"{BASE_URL}/sejm/term{term}/processes")
@@ -21,16 +20,19 @@ def get_process_details(term, process_number):
         st.error(f"Nie udało się pobrać szczegółów procesu. Kod błędu: {response.status_code}")
         return {}
 
-def get_all_acts_this_year():
-    thisYear = datetime.now().year
-    while (True):
-        response = requests.get(f"http://api.sejm.gov.pl/eli/acts/DU/{thisYear}")
-        if response.status_code == 200:
-            return response.json()
-        else:
-            print(f"Błąd: {response.status_code}")
-            return None
-
+def get_all_acts_this_year(year=0):
+    if year == 0:
+        thisYear = datetime.now().year
+    try:
+        while (True):
+            response = requests.get(f"http://api.sejm.gov.pl/eli/acts/DU/{year}")
+            if response.status_code == 200:
+                return response.json()
+            else:
+                print(f"Błąd: {response.status_code}")
+                return None
+    except e:
+        print("błąd" + e)
 def did_today_new_ustawa_obowiazuje():
     thisYear = datetime.now().year
     today = datetime.date(datetime.now())

@@ -11,7 +11,6 @@ from Controller.acts import get_all_acts_this_year, get_titles_of_record,did_tod
 #import pandas as pd
 
 BASE_URL = "https://api.sejm.gov.pl"
-TERM = 10  # Przykładowy termin Sejmu
 
 #sentiment_analyzer_pl = SentimentPLModel(from_pretrained='latest')
 #
@@ -85,12 +84,13 @@ def loadView():
 #    st.write("Tabela wyników analizy sentymentu dla posłów:")
 #    st.dataframe(df_results)
 
-
+    TERM = st.number_input(
+        "Kadencja sejmu", min_value=1, value=10, key='term_input_stats')
 
 
 
     st.title("Śledzenie Procesu Legislacyjnego")
-
+    
     processes = get_legislative_processes(TERM)
 
     if processes:
@@ -147,7 +147,11 @@ def loadView():
             #    )
 
 
-    acts=get_all_acts_this_year()
+    st.subheader("Ostatnie 10 ustaw danego roku")
+    year = st.number_input(
+        "Rok", min_value=1, value=2024, key='wanted_year')
+
+    acts=get_all_acts_this_year(year)
     if acts:
         result=get_titles_of_record(acts)
         
