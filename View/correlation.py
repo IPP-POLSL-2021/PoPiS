@@ -15,7 +15,8 @@ def loadView():
     electionSelections = st.selectbox("wybierz poziom administracyjny do analizy ", (
         "województwa", "okręgi", "powiaty", "gminy", "obwody"))
     matrix, Results = getResults(correlationValue, electionSelections, type)
-    datafreame_col, polot_col = st.columns([0.6, 0.4])
+    # datafreame_col, polot_col = st.columns([0.6, 0.4])
+    datafreame_col, polot_col = st.tabs(["dataframe", "wykres"])
     with datafreame_col:
         st.dataframe(matrix)
     with polot_col:
@@ -25,17 +26,17 @@ def loadView():
         columns_2 = columns_2.drop(axisX)
         axisY = st.selectbox("wybierz drugi element korelacji", columns_2)
 
-        # fig, ax = plt.subplots()
-        # # st.write(f"korelacja między {axisX}, {axisY}")
-        # ax.scatter(Results[axisX], Results[axisY], color='blue', marker='o')
-        # # Oznaczenie osi i tytuł wykresu
-        # ax.set_xlabel(axisX)
-        # ax.set_ylabel(axisY)
+        fig, ax = plt.subplots()
+        # st.write(f"korelacja między {axisX}, {axisY}")
+        ax.scatter(Results[axisX], Results[axisY], color='blue', marker='o')
+        # Oznaczenie osi i tytuł wykresu
+        ax.set_xlabel(axisX)
+        ax.set_ylabel(axisY)
 
-        # ax.legend()
+        ax.legend()
 
         # Wyświetlenie wykresu w aplikacji
-        st.pyplot(fig)
+        # st.pyplot(fig)
         values = Results[axisX]
         fig = px.scatter(Results, x=axisX, y=axisY)
         # fig.update_layout(
