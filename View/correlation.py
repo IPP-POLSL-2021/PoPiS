@@ -18,10 +18,11 @@ def loadView():
     matrix, Results = getResults(correlationValue, electionSelections, type)
     matrix = matrix.fillna(0.0)
     # datafreame_col, polot_col = st.columns([0.6, 0.4])
-    datafreame_col, polot_col = st.tabs(["dataframe", "wykres"])
+    datafreame_col, plot_col = st.tabs(
+        ["dataframe", "wykres"])
     with datafreame_col:
         st.dataframe(matrix)
-    with polot_col:
+    with plot_col:
         axisX = st.selectbox(
             "wybierz pierwszy element korelacji", Results.columns)
         columns_2 = Results.columns.copy()
@@ -30,7 +31,7 @@ def loadView():
 
         fig, ax = plt.subplots()
         # st.write(f"korelacja między {axisX}, {axisY}")
-        ax.scatter(Results[axisX], Results[axisY], color='blue', marker='o')
+        # ax.scatter(Results[axisX], Results[axisY], color='blue', marker='o')
         # Oznaczenie osi i tytuł wykresu
         ax.set_xlabel(axisX)
         ax.set_ylabel(axisY)
