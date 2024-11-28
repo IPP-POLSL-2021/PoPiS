@@ -41,7 +41,17 @@ def loadView():
         # Wyświetlenie wykresu w aplikacji
         # st.pyplot(fig)
         values = Results[axisX]
-        fig = px.scatter(Results, x=axisX, y=axisY)
+        reggresionLine = st.checkbox("Czy pokzać linie regresji")
+        Results = Results[Results[axisX] > 0]
+        if reggresionLine is False:
+            fig = px.scatter(Results, x=axisX, y=axisY)
+        elif reggresionLine is True and electionSelections == "obwody":
+            fig = px.scatter(Results, x=axisX, y=axisY,
+                             trendline="ols", trendline_color_override="green")
+        else:
+
+            fig = px.scatter(Results, x=axisX, y=axisY,
+                             trendline="ols", trendline_options=dict(log_x=True), trendline_color_override="green")
         # fig.update_layout(
         #     title=f"korelacja między {axisX}, {axisY}",
         # )
