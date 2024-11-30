@@ -1,8 +1,8 @@
 import streamlit as st
 from View import view_interpelation, ustawy, komisje, view_vote
 
-st.title("🗳️ Procesy Parlamentarne")
-
+#st.title("🗳️ Procesy Parlamentarne")
+st.set_page_config(page_title="Działania Sejmu", page_icon="🗳️", layout="wide")
 tab1, tab2, tab3, tab4 = st.tabs(["Interpelacje", "Ustawy", "Komisje", "Głosowania Posłów"])
 
 with tab1:

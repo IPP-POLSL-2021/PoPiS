@@ -9,7 +9,7 @@ from View import calculator
 from View import statystykiPoslow, view_vote
 
 #st.set_page_config(page_title="IAPP - Internetowa Analiza Polskiej Polityki", page_icon="🇵🇱", layout="wide")
-st.sidebar.title("🏛️ IAPP Nawigacja")
+#st.sidebar.title("🏛️ IAPP Nawigacja")
 
 def ViewSelection():
     # Define base navigation categories
@@ -37,7 +37,6 @@ def ViewSelection():
             "Rozkład Benforda": benford_view.loadView
         }
     }
-
     # Dynamically generate "Wszystkie" category
     wszystkie_pages = {}
     for category_pages in navigation_categories.values():
@@ -49,15 +48,15 @@ def ViewSelection():
     # Create sidebar navigation with categories
     #selected_category = st.sidebar.radio(" ","📋 Wszystkie")
     # Wystarczy zamienić zakomentowane linie by zmienić widzialną wersję
-    selected_category = st.sidebar.radio("Kategorie", list(navigation_categories.keys()))
+    #selected_category = st.sidebar.radio("Kategorie", list(navigation_categories.keys()))
     
     # Create subnavigation for the selected category
-    selected_page = st.sidebar.selectbox(
-        "Wybierz stronę", 
-        list(navigation_categories[selected_category].keys())
-    )
-
+    #selected_page = st.sidebar.selectbox(
+    #    "Wybierz stronę", 
+    #    list(navigation_categories["📋 Wszystkie"].keys())
+    #)
+    selected_page = st.sidebar.selectbox("Wybierz stronę", wszystkie_pages)
     # Load the corresponding view
-    navigation_categories[selected_category][selected_page]()
+    navigation_categories["📋 Wszystkie"][selected_page]()
 
 ViewSelection()

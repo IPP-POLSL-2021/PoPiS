@@ -87,80 +87,72 @@ def loadView():
     TERM = st.number_input(
         "Kadencja sejmu", min_value=1, value=10, key='term_input_stats')
 
+    # Create two columns for the layout
+    col1, col2 = st.columns([3, 2])
 
-
-    st.title("Śledzenie Procesu Legislacyjnego")
-    
-    processes = get_legislative_processes(TERM)
-
-    if processes:
-        process_titles = [f"{p['number']} - {p['title']}" for p in processes]
-        selected_process = st.selectbox("Wybierz proces legislacyjny", process_titles)
+    with col1:
+        st.title("Śledzenie Procesu Legislacyjnego")
         
-        selected_process_number = selected_process.split(" - ")[0]
+        processes = get_legislative_processes(TERM)
 
-        process_details = get_process_details(TERM, selected_process_number)
-        
-        if process_details:
-            st.subheader("Szczegóły procesu legislacyjnego")
-            st.write(f"**Tytuł:** {process_details.get('title', 'Brak tytułu')}")
-            st.write(f"**Opis:** {process_details.get('description', 'Brak opisu')}")
-            st.write(f"**Data rozpoczęcia:** {process_details.get('processStartDate', 'Brak daty')}")
+        if processes:
+            process_titles = ["Wybierz proces"]  # Add default option
+            process_titles.extend([f"{p['number']} - {p['title']}" for p in processes])
+            selected_process = st.selectbox("Wybierz proces legislacyjny", process_titles)
             
-
-            stages = process_details.get('stages', [])
-            if stages:
-                st.subheader("Etapy procesu")
-                for stage in stages:
-                    
-                    st.write(f"**Etap:** {stage['stageName']}")
-                    
-                    try:
-                        st.write(f"**Data:** {stage['dates']}")
-                    except:
-                        print("no date")
-                    try:
-                        st.write(f"**Decyzja:** {stage['decision']}")
-                    except:
-                        print("no decision")
-                    st.write("---")
-                    temp = stage
-
+            if selected_process == "Wybierz proces":
+                st.info("Wybierz proces legislacyjny aby zobaczyć szczegóły")
             else:
-                st.write("Brak dostępnych etapów.")
-    else:
-        st.write("Brak dostępnych procesów legislacyjnych.")
-
-
-    if st.button("Był dziś nowy akt prawny?"):
-        if did_today_new_ustawa_obowiazuje():
-            st.write("Tak")
-            #send_push(
-            #        title="Tak!",
-            #        body=f"Dodano dzisiaj nowy akt prawny"
-            #    )
+                selected_process_number = selected_process.split(" - ")[0]
+                process_details = get_process_details(TERM, selected_process_number)
+                
+                if process_details:
+                    st.subheader("Szczegóły procesu legislacyjnego")
+                    st.write(f"**Tytuł:** {process_details.get('title', 'Brak tytułu')}")
+                    st.write(f"**Opis:** {process_details.get('description', 'Brak opisu')}")
+                    st.write(f"**Data rozpoczęcia:** {process_details.get('processStartDate', 'Brak daty')}")
+                    
+                    stages = process_details.get('stages', [])
+                    if stages:
+                        st.subheader("Etapy procesu")
+                        for stage in stages:
+                            st.write(f"**Etap:** {stage['stageName']}")
+                            try:
+                                st.write(f"**Data:** {stage['dates']}")
+                            except:
+                                print("no date")
+                            try:
+                                st.write(f"**Decyzja:** {stage['decision']}")
+                            except:
+                                print("no decision")
+                            st.write("---")
+                            temp = stage
+                    else:
+                        st.write("Brak dostępnych etapów.")
         else:
-            st.write("Nie")
-            #send_push(
-            #        title="Nie...",
-            #        body=f"Nie dodano dzisiaj żadnego aktu prawnego"
-            #    )
+            st.write("Brak dostępnych procesów legislacyjnych.")
 
-
-    st.subheader("Ostatnie 10 ustaw danego roku")
-    year = st.number_input(
-        "Rok", min_value=1, value=2024, key='wanted_year')
-
-    acts=get_all_acts_this_year(year)
-    if acts:
-        result=get_titles_of_record(acts)
+    with col2:
+        st.title("Akty Prawne")
         
+        if st.button("Był dziś nowy akt prawny?"):
+            if did_today_new_ustawa_obowiazuje():
+                st.write("Tak")
+            else:
+                st.write("Nie")
 
-        st.subheader("Ustawy")
-        st.table([{"Tytuł ustawy": title} for title in result['ustawy']]) 
+        st.subheader("Ostatnie 10 ustaw danego roku")
+        year = st.number_input(
+            "Rok", min_value=1, value=2024, key='wanted_year')
 
-        st.subheader("Rozporządzenia")
-        st.table([{"Tytuł rozporządzenia": title} for title in result['rozporzadzenia']])
+        acts=get_all_acts_this_year(year)
+        if acts:
+            result=get_titles_of_record(acts)
+            
+            st.subheader("Ustawy")
+            st.table([{"Tytuł ustawy": title} for title in result['ustawy']]) 
 
-    else:
-        st.error("Nie udało się pobrać danych.")
+            st.subheader("Rozporządzenia")
+            st.table([{"Tytuł rozporządzenia": title} for title in result['rozporzadzenia']])
+        else:
+            st.error("Nie udało się pobrać danych.")

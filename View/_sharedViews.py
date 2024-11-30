@@ -1,8 +1,8 @@
 import streamlit as st
-from Controller import MPsStats
-import matplotlib.pyplot as plt
+#from Controller import MPsStats
+#import matplotlib.pyplot as plt
 import pandas as pd
-import numpy as np
+#import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 from statistics import mean, median, stdev
@@ -77,7 +77,8 @@ def ageGraphs(all_ages, AgesButDictionary, term="", MPsInfoDataFrame=""):
 
 
 def MoreStats(ChosenDictionary):
-    st.write("Wykresy dla klubów jeśli członkowie mają różne atrybuty")
+    st.write("Statystyki dla posłów w poszczególnych klubach:")
+    #st.write("Wykresy dla klubów jeśli członkowie mają różne atrybuty")
     for club, data in ChosenDictionary.items():
         if len(data) > 1:
             labels = list(data.keys())
@@ -90,6 +91,15 @@ def MoreStats(ChosenDictionary):
             )
             st.plotly_chart(fig)
         else:
-            st.write(f"Klub {club}")
-            st.write(
-                f"{list(data.keys())[0]} - {list(data.values())[0]} czyli 100%")
+            labels = list(data.keys())
+            values = list(data.values())
+            fig = go.Figure(
+                data=[go.Pie(labels=labels, values=values)]
+            )
+            fig.update_layout(
+                title=f'{club}',
+            )
+            st.plotly_chart(fig)
+            #st.write(f"Klub {club}")
+            #st.write(
+            #    f"{list(data.keys())[0]} - {list(data.values())[0]} czyli 100%")

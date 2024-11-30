@@ -49,10 +49,20 @@ def loadView():
     
     # Coalition selection
     st.header("Szczegóły")
-    selected_coalition = st.selectbox(
+    
+    # Add default option for coalition selection
+    coalition_options = ["Wybierz koalicję"] + [str(i) for i in range(len(coalitions))]
+    selected_coalition_str = st.selectbox(
         "Wybierz koalicję", 
-        options=range(0, len(coalitions))
+        options=coalition_options
     )
+    
+    if selected_coalition_str == "Wybierz koalicję":
+        st.info("Wybierz koalicję aby zobaczyć szczegóły")
+        return
+        
+    # Convert selection back to integer for indexing
+    selected_coalition = int(selected_coalition_str)
     
     # Display selected coalition details
     coalition = coalitions[selected_coalition]
@@ -73,7 +83,6 @@ def loadView():
         )
         st.plotly_chart(fig, use_container_width=True)
 
-    
     with col4:
         st.subheader("Wykres Kołowy")
         fig = px.pie(

@@ -1,7 +1,7 @@
 import streamlit as st
 from View import correlation, watch_interpelation, benford_view
-
-st.title("🚧 W budowie")
+st.set_page_config(page_title="W budowie", page_icon="🚧", layout="wide")
+#st.title("🚧 W budowie")
 
 tab1, tab2, tab3 = st.tabs(["Korelacje", "Obserwuj Interpelacje", "Rozkład Benforda"])
 

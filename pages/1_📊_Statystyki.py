@@ -1,7 +1,8 @@
 import streamlit as st
 from View import statystykiKomisji, statystykiPoslow
 
-st.title("📊 Statystyki")
+st.set_page_config(page_title="Statystyki", page_icon="📊", layout="wide")
+#st.title("📊 Statystyki")
 
 tab1, tab2 = st.tabs(["Komisje", "Posłowie"])
 

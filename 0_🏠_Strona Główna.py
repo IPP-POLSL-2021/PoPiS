@@ -1,8 +1,7 @@
 import streamlit as st
 
 # TODO: Show information from Reports folder about avalibility of information
-st.set_page_config(page_title="IAPP - Internetowa Analiza Polskiej Polityki", page_icon="🇵🇱", layout="wide")
-
+st.set_page_config(page_title="IAPP", page_icon="🇵🇱", layout="wide")
 def loadView():
     st.title("🇵🇱 Internetowa Analiza Polskiej Polityki (IAPP) 🇵🇱")
     st.markdown(f"""
@@ -56,15 +55,6 @@ def loadView():
         st.markdown("""
         - **API Sejmu RP**: Pobieranie danych o komisjach, posłach, posiedzeniach i procesach legislacyjnych
         - **Dane z Państwowej Komisji Wyborczej**: Surowe dane o wynikach wyborów do Sejmu RP w latach 2011-2024
-        """)
-
-        # Sekcja struktury projektu
-        st.subheader("📂 Struktura Projektu")
-        st.markdown("""
-        - **View**: Interfejs użytkownika
-        - **api_wrappers**: Komunikacja z API Sejmu
-        - **Controller**: 
-        - **Model**: Definicje modeli danych 
         """)
 
     # Sekcja w trakcie rozwoju
