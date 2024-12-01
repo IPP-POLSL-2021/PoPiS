@@ -105,7 +105,7 @@ def create_map(selected_cities, poland):
     if poland is not None:
         poland_geojson = poland.to_crs("EPSG:4326").__geo_interface__
         folium.GeoJson(poland_geojson, style_function=lambda x: {
-                    'fillColor': 'skyblue', 'color': 'black'}).add_to(m)
+            'fillColor': 'skyblue', 'color': 'black'}).add_to(m)
 
     buffer_radius = 5000
 
@@ -136,7 +136,7 @@ def create_map(selected_cities, poland):
 def clearJSON(clearDict):
     with open("data.json", "w", encoding="utf-8") as json_file:
         json.dump(clearDict, json_file,
-                ensure_ascii=False, indent=4)
+                  ensure_ascii=False, indent=4)
 
 
 def loadView():
@@ -164,17 +164,17 @@ def loadView():
         # val = ""
         clublist = []
         votesDict = {'PiS': 0, 'KO': 0, 'Trzecia Droga': 0, 'Lewica': 0,
-                    'Konfederacja': 0, 'Frekwencja': 0, 'Miejsca do zdobycia': 0, 'Uzupełniono': False}
+                     'Konfederacja': 0, 'Frekwencja': 0, 'Miejsca do zdobycia': 0, 'Uzupełniono': False}
         districtsDict = {'Legnica': {}, 'Wałbrzych': {},
-                        'Wrocław': {}, 'Bydgoszcz': {}, 'Toruń': {}, 'Lublin': {}, 'Chełm': {}, 'Zielona Góra': {}, 'Łódź': {},
-                        'Piotrków Trybunalski': {}, 'Sieradz': {}, 'Chrzanów': {}, 'Kraków': {}, 'Nowy Sącz': {},
-                        'Tarnów': {}, 'Płock': {}, 'Radom': {}, 'Siedlce': {}, 'Warszawa': {}, 'Warszawa 2': {}, 'Opole': {},
-                        'Krosno': {}, 'Rzeszów': {}, 'Białystok': {}, 'Gdańsk': {},
-                        'Słupsk': {}, 'Bielsko-Biała': {}, 'Częstochowa': {},
-                        'Gliwice': {}, 'Rybnik': {}, 'Katowice': {}, 'Sosnowiec': {}, 'Kielce': {}, 'Elbląg': {}, 'Olsztyn': {},
-                        'Kalisz': {}, 'Konin': {}, 'Piła': {}, 'Poznań': {}, 'Koszalin': {}, 'Szczecin': {}}
+                         'Wrocław': {}, 'Bydgoszcz': {}, 'Toruń': {}, 'Lublin': {}, 'Chełm': {}, 'Zielona Góra': {}, 'Łódź': {},
+                         'Piotrków Trybunalski': {}, 'Sieradz': {}, 'Chrzanów': {}, 'Kraków': {}, 'Nowy Sącz': {},
+                         'Tarnów': {}, 'Płock': {}, 'Radom': {}, 'Siedlce': {}, 'Warszawa': {}, 'Warszawa 2': {}, 'Opole': {},
+                         'Krosno': {}, 'Rzeszów': {}, 'Białystok': {}, 'Gdańsk': {},
+                         'Słupsk': {}, 'Bielsko-Biała': {}, 'Częstochowa': {},
+                         'Gliwice': {}, 'Rybnik': {}, 'Katowice': {}, 'Sosnowiec': {}, 'Kielce': {}, 'Elbląg': {}, 'Olsztyn': {},
+                         'Kalisz': {}, 'Konin': {}, 'Piła': {}, 'Poznań': {}, 'Koszalin': {}, 'Szczecin': {}}
         seats = [12, 8, 14, 12, 13, 15, 12, 12, 10, 9, 12, 8, 14, 10, 9, 10, 9, 12, 20,
-                12, 12, 11, 15, 14, 12, 14, 9, 7, 9, 9, 12, 9, 16, 8, 10, 12, 9, 9, 10, 8, 12]
+                 12, 12, 11, 15, 14, 12, 14, 9, 7, 9, 9, 12, 9, 16, 8, 10, 12, 9, 9, 10, 8, 12]
 
         i = 0
         val = ""
@@ -205,7 +205,7 @@ def loadView():
             st.session_state["last_clicked_city"] = None
 
         political_parties = ["PiS", "KO",
-                            "Trzecia Droga", "Konfederacja", "Lewica"]
+                             "Trzecia Droga", "Konfederacja", "Lewica"]
 
         main_col1, main_col2 = st.columns([3, 4])
         with main_col1:
@@ -278,10 +278,10 @@ def loadView():
 
                             with open("data.json", "w", encoding="utf-8") as json_file:
                                 json.dump(loaded_data, json_file,
-                                        ensure_ascii=False, indent=4)
+                                          ensure_ascii=False, indent=4)
                             with open("votes.json", "w", encoding="utf-8") as json_file:
                                 json.dump(loaded_votes, json_file,
-                                        ensure_ascii=False, indent=4)
+                                          ensure_ascii=False, indent=4)
                             st.write(newSeats)
 
                     else:
@@ -315,7 +315,7 @@ def loadView():
                         loaded_data[district]['Uzupełniono'] = True
                         with open("data.json", "w", encoding="utf-8") as json_file:
                             json.dump(loaded_data, json_file,
-                                    ensure_ascii=False, indent=4)
+                                      ensure_ascii=False, indent=4)
                         with open("votes.json", "w", encoding="utf-8") as json_file:
                             json.dump(loaded_votes, json_file,
                                       ensure_ascii=False, indent=4)
@@ -355,15 +355,15 @@ def loadView():
         if resestAll:
             with open("data.json", "w", encoding="utf-8") as json_file:
                 json.dump(seatsDistricstsDict, json_file,
-                        ensure_ascii=False, indent=4)
+                          ensure_ascii=False, indent=4)
             with open("votes.json", "w", encoding="utf-8") as json_file:
                 json.dump(loaded_votes, json_file,
-                        ensure_ascii=False, indent=4)
+                          ensure_ascii=False, indent=4)
         # print(seatsDistricstsDict['Gliwice'])
 
         # print(districtsDict)
         votesDict = {'PiS': 0, 'KO': 0, 'Trzecia Droga': 0, 'Lewica': 0,
-                    'Konfederacja': 0, 'Frekwencja': 0}
+                     'Konfederacja': 0, 'Frekwencja': 0}
         votesDictProcent = {'PiS': 0, 'KO': 0, 'Trzecia Droga': 0, 'Lewica': 0,
                             'Konfederacja': 0}
         emptyDistrictDict = {}
@@ -466,7 +466,7 @@ def loadView():
     filtered_results = {}
     for key in results.keys():
         filtered_results[key] = {party: votes for party,
-                                votes in results[key].items() if votes != 0}
+                                 votes in results[key].items() if votes != 0}
         # st.write(f"{key}: ")
 
     FiltredResultsDF = pd.DataFrame.from_dict(filtered_results)
@@ -477,4 +477,5 @@ def loadView():
     # st.table(FiltredResultsDF)
 
     FiltredResultsDF = FiltredResultsDF.transpose()
+    FiltredResultsDF = FiltredResultsDF.rename(index={'dhont': "D'hondt"})
     st.table(FiltredResultsDF)
