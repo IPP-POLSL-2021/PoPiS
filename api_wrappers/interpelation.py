@@ -1,9 +1,9 @@
 import requests
 import datetime
 try:
-    from api_wrappers.MP import get_name  # Importing get_name from MP module
+    from api_wrappers.MP import get_name, get_club, get_photo, get_other  # Importing get_name from MP module
 except ModuleNotFoundError:
-    from MP import get_name
+    from MP import get_name, get_club, get_photo, get_other
 from functools import wraps
 
 
@@ -25,6 +25,18 @@ def get_reply_body(term, num, key):
 
 # Enable supplying just response or full parameters
 def handle_response(func):
+    """
+    Decorator to handle the response for interpellation-related functions.
+
+    This decorator allows functions to either receive a pre-fetched response
+    or fetch the response internally using provided term and num parameters.
+
+    Parameters:
+    func (function): The function to be wrapped by the decorator.
+
+    Returns:
+    function: The wrapped function that ensures a response is available for processing.
+    """
     @wraps(func)
     def wrapper(*args, **kwargs):
         response = kwargs.get('response')
@@ -36,18 +48,18 @@ def handle_response(func):
             else:
                 term = kwargs.get('term')
                 num = kwargs.get('num')
-            
+
             # Ensure term, num are provided
             if term is None or num is None:
                 raise ValueError("Provide term and num when response is not given")
-            
+
             # Fetch the response
             response = get_interpelation(term,num)
             kwargs['response'] = response
 
         # Call the wrapped function with response
         return func(*args, **kwargs)
-    
+
     return wrapper
 
 @handle_response
@@ -71,37 +83,57 @@ def get_date(term=None, num=None, mode=None, response=False):
 
 @handle_response
 def get_authors(term=None, num=None, response=False):
-    """Get the authors of an interpellation."""
+    """
+    Get the authors of an interpellation.
+
+    Parameters:
+    term (int, optional): The term of the parliament. Defaults to None.
+    num (str, optional): The number of the interpellation. Defaults to None.
+    response (requests.Response, optional): The response object containing interpellation data. Defaults to False.
+
+    Returns:
+    list: A list of tuples, each containing the name, club, photo URL, and other details of an author.
+    """
     IDs = response.json()['from']
-    return [get_name(term, id) for id in IDs]
+    if term==None:
+        term = response.json()['term']
+    return [(get_name(term, id), get_club(term,id), get_photo(term,id), get_other(term,id,mode=2)) for id in IDs]
 
 @handle_response
 def get_receipent(term=None, num=None, response=False):
     """Get the recipients of an interpellation."""
     return response.json()['to']
 
+@handle_response
 def get_replies(term, num, response=False):
-    """Get replies to an interpellation."""
-    if not response:
-        response = get_interpelation(term, num)
-    
+    """
+    Retrieve replies to a specific interpellation.
+
+    Parameters:
+    term (int): The term of the parliament.
+    num (str): The number of the interpellation.
+    response (requests.Response, optional): The response object containing interpellation data. Defaults to False.
+
+    Returns:
+    tuple: A tuple containing two lists:
+        - file_urls (list): A list of URLs for any attachments in the replies.
+        - htmls (list): A list of HTML links for the replies.
+    """
     file_urls = []
     htmls = []
-    
+
     for reply in response.json()['replies']:
         # Handle attachments
         try:
             file_urls.extend([j['URL'] for j in reply.get('attachments', [])])
         except KeyError:
             file_urls.append(None)
-        
-        # Handle HTML body
-        if not reply.get('onlyAttachment', False):
-            html_response = requests.get(
-                f"https://api.sejm.gov.pl/sejm/term{term}/interpellations/{num}/reply/{reply['key']}/body"
-            )
-            htmls.append(html_response.text)
-    
+
+        try:
+            htmls.append(reply['links'][1]['href'])
+        except KeyError:
+            htmls.append(None)
+
     return (file_urls, htmls)
 
 @handle_response

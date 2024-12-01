@@ -1,15 +1,14 @@
 import streamlit as st
-from Controller import MPsStats
-import matplotlib.pyplot as plt
+#from Controller import MPsStats
+#import matplotlib.pyplot as plt
 import pandas as pd
-import numpy as np
+#import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
-from st_aggrid import AgGrid
 from statistics import mean, median, stdev
 
 
-def ageGraphs(all_ages, AgesButDictionary, term=""):
+def ageGraphs(all_ages, AgesButDictionary, term="", MPsInfoDataFrame=""):
     # General age distribution histogram
     fig = px.histogram(
         x=all_ages,
@@ -45,27 +44,41 @@ def ageGraphs(all_ages, AgesButDictionary, term=""):
     # Create and display the DataFrame inline
     df = pd.DataFrame(data)
     st.write(f"Statystyki wieku dla klubów w {term} kadencji sejmu:")
-    st.dataframe(df, use_container_width=True)
+    youngest, oldest = st.columns(2)
 
-    st.header("Wykresy rozkładu wieku klubów i kół w {term} kadencji sejmu:")
-    for club, ages in AgesButDictionary.items():
-        if len(ages) > 2:
-            fig = px.histogram(
-                x=ages,
-                nbins=10,
-                title=f'{club}',
-                labels={'x': 'Wiek', 'y': 'Liczba członków'},
-                color_discrete_sequence=['purple']
-            )
-            fig.update_layout(
-                xaxis_title='Wiek',
-                yaxis_title='Liczba członków'
-            )
-            st.plotly_chart(fig)
+    st.dataframe(df, use_container_width=True)
+    if MPsInfoDataFrame != "":
+        with oldest:
+            # MPsInfoDataFrame = MPsInfoDataFrame.astype(int)
+
+            OldestMP = MPsInfoDataFrame.loc[
+                MPsInfoDataFrame.groupby('Club')['Age'].idxmax()]
+            st.write(OldestMP)
+        with youngest:
+            youngestsMP = MPsInfoDataFrame.loc[
+                MPsInfoDataFrame.groupby('Club')['Age'].idxmin()]
+            st.write(youngestsMP)
+        st.header(
+            "Wykresy rozkładu wieku klubów i kół w {term} kadencji sejmu:")
+        for club, ages in AgesButDictionary.items():
+            if len(ages) > 2:
+                fig = px.histogram(
+                    x=ages,
+                    nbins=10,
+                    title=f'{club}',
+                    labels={'x': 'Wiek', 'y': 'Liczba członków'},
+                    color_discrete_sequence=['purple']
+                )
+                fig.update_layout(
+                    xaxis_title='Wiek',
+                    yaxis_title='Liczba członków'
+                )
+                st.plotly_chart(fig)
 
 
 def MoreStats(ChosenDictionary):
-    st.write("Wykresy dla klubów jeśli członkowie mają różne atrybuty")
+    st.write("Statystyki dla posłów w poszczególnych klubach:")
+    #st.write("Wykresy dla klubów jeśli członkowie mają różne atrybuty")
     for club, data in ChosenDictionary.items():
         if len(data) > 1:
             labels = list(data.keys())
@@ -78,5 +91,15 @@ def MoreStats(ChosenDictionary):
             )
             st.plotly_chart(fig)
         else:
-            st.write(f"Klub {club}") 
-            st.write(f"{list(data.keys())[0]} - {list(data.values())[0]} czyli 100%")
+            labels = list(data.keys())
+            values = list(data.values())
+            fig = go.Figure(
+                data=[go.Pie(labels=labels, values=values)]
+            )
+            fig.update_layout(
+                title=f'{club}',
+            )
+            st.plotly_chart(fig)
+            #st.write(f"Klub {club}")
+            #st.write(
+            #    f"{list(data.keys())[0]} - {list(data.values())[0]} czyli 100%")

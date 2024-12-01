@@ -2,12 +2,22 @@ import os
 import telebot
 from Controller.discordBotResponses import get_response, create_event, check_24_hours
 from dotenv import load_dotenv
+from Controller import discordBotResponses
 import threading
+import requests
 load_dotenv()
 
 
 TELEGRAMTOKEN = os.getenv('TELEGRAMTOKEN')
 bot = telebot.TeleBot(TELEGRAMTOKEN)
+
+
+@bot.message_handler(commands="usuń")
+def delete_reminer(message):
+    if len(message.text[5:]) == 0:
+        bot.send_message(message.chat.id, "Nie podano komisji")
+    else:
+        discordBotResponses.delete(message.text[6:], message.chat.id)
 
 
 @bot.message_handler(commands=['komisje', ''])
@@ -44,19 +54,24 @@ def telegramCheck():
         if list is not False:
             # firstSplit=list.split("\n")
             for row in list.itertuples(index=False):
-                print(row)
+                # print(row)
                 # create_reminders("",True)
                 date = create_event(
                     row.channelId, row.committee, row.platform)
                 # to bardzo istotna część kodu z jakiegoś powodu bez tego nie dizłało
                 print("działa?")
-                print(date)
-
+                # print(date)
+                request = requests.get(
+                    f"https://api.sejm.gov.pl/sejm/term10/committees/{row.committee}")
+                response = request.json()
+                # print(response["name"])
                 if date == "brak":
                     bot.send_message(row.channelId, "Nie znaleziono komisji")
-                elif date == f"brak posiedzeń komisji {row.committee}":
+                elif date == f"brak nowych posiedzeń":
+                    date += f" {response['name']}"
                     bot.send_message(row.channelId, date)
                 else:
+                    date = date.split("%")[1]
                     bot.send_message(row.channelId, f" {date}")
 
 

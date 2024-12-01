@@ -122,7 +122,7 @@ def MoreMPsStats(MPSimpleList, MPIdlist, term=10, searchedInfo='edukacja'):
                     case 'edukacja':
                         educationOfMP = str([
                             mp.get('educationLevel', 'Brak') for mp in filtered_MPs])
-                    case 'okrąg':
+                    case 'okręg':
                         educationOfMP = str([
                             mp['districtName'] for mp in filtered_MPs])
                     case 'profesja':

@@ -5,7 +5,31 @@ import requests
 import datetime
 from functools import wraps
 
+def get_MPs(term):
+    """
+    Fetches a list of Members of Parliament (MPs) for a given term.
+
+    Parameters:
+    term (int): The term number of the parliament.
+
+    Returns:
+    Response: The HTTP response object containing the MPs' data.
+    """
+    response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/MP')
+    return response
+
+
 def get_MP(term, id):
+    """
+    Fetches information about a Member of Parliament (MP) for a given term and ID.
+
+    Parameters:
+    term (int): The term number of the parliament.
+    id (str): The unique identifier of the MP.
+
+    Returns:
+    Response: The HTTP response object containing the MP's data.
+    """
     response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/MP/{id}')
     return response
 
@@ -76,6 +100,8 @@ def get_district(term=None, id=None, mode=None, response=False):
 @handle_response
 def get_photo(term, id, response=False):
     response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/MP/{id}/photo')
+    return response.content
+
 
 #birth_date (str --> datetime.date): a date of birth Example: 1985-04-14.
 #birth_location (str): a place of birth Example: Gliwice.
@@ -104,9 +130,9 @@ def get_mp_votings(term, id, sitting, date):
     return response.json()
 
 # New functions to get MP photos
-def get_mp_photo(term, id):
-    response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/MP/{id}/photo')
-    return response.content
+#def get_mp_photo(term, id):
+#    response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/MP/{id}/photo')
+#    return response.content
 
 def get_mp_photo_mini(term, id):
     response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/MP/{id}/photo-mini')

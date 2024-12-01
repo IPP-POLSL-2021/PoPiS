@@ -11,7 +11,7 @@ def loadView():
         term_number)
     stats = st.selectbox(
         "Wybierz statystykę", ["brak", "wiek",
-                               "edukacja", "okrąg", "profesja", "województwo"]
+                               "edukacja", "okręg", "profesja", "województwo"]
     )
     MPsInfo = {}
     match stats:
@@ -22,18 +22,19 @@ def loadView():
                 term_number, MpGroupedList, MpsList)
             all_ages = ageDataframe.values.flatten()
             all_ages = pd.Series(all_ages).dropna()
-            _sharedViews.ageGraphs(all_ages, ageDictionary, term_number)
             MPsInfo, Clubs = MPsStats.MPsData(term_number)
 
             # st.write(MPsInfo)
             MPsInfoDataFrame = pd.DataFrame.from_dict(
                 MPsInfo)
+            _sharedViews.ageGraphs(
+                all_ages, ageDictionary, term_number, MPsInfoDataFrame)
             # print(MPsInfoDataFrame.keys())
-            OldestMP = MPsInfoDataFrame.loc[
-                MPsInfoDataFrame.groupby('Club')['Age'].idxmax()]
-            YoungestsMP = MPsInfoDataFrame.loc[
-                MPsInfoDataFrame.groupby('Club')['Age'].idxmin()]
-            st.write(OldestMP, YoungestsMP)
+            # OldestMP = MPsInfoDataFrame.loc[
+            #     MPsInfoDataFrame.groupby('Club')['Age'].idxmax()]
+            # YoungestsMP = MPsInfoDataFrame.loc[
+            #     MPsInfoDataFrame.groupby('Club')['Age'].idxmin()]
+            # st.write(OldestMP, YoungestsMP)
         case "edukacja":
             MPDictionary = MPsStats.MoreMPsStats(
                 MpsList, MpGroupedList, term_number, stats)
@@ -42,7 +43,7 @@ def loadView():
             MPDictionary = MPsStats.MoreMPsStats(
                 MpsList, MpGroupedList, term_number, stats)
             _sharedViews.MoreStats(MPDictionary)
-        case "okrąg":
+        case "okręg":
             MPDictionary = MPsStats.MoreMPsStats(
                 MpsList, MpGroupedList, term_number, stats)
 
@@ -87,7 +88,7 @@ def loadView():
         club = "unikalne kluby"
     district = ""
     if len(set(d['Okrąg'] for d in data if d['Okrąg'] is not None)) == 1:
-        district = "unikalny okrąg"
+        district = "unikalny okręg"
     else:
         district = "unikalne okręgi"
     eu = ""

@@ -1,41 +1,62 @@
 import streamlit as st
-import asyncio
-from View import correlation, statystykiKomisji, BasicStats, calculator, coalition_viewer, wyboryKalkulator, view_vote, watch_interpelation, komisje, test3, benford_view
+from View import main_page, coalition_viewer, ustawy, view_interpelation
+# Ocenić przydatność, dopracować
+from View import correlation, watch_interpelation, benford_view
 
-st.sidebar.title("Nawigacja")
+# Do potencjalnego złączenia razem
+from View import statystykiKomisji, komisje
+from View import calculator
+from View import statystykiPoslow, view_vote
 
+#st.set_page_config(page_title="IAPP - Internetowa Analiza Polskiej Polityki", page_icon="🇵🇱", layout="wide")
+#st.sidebar.title("🏛️ IAPP Nawigacja")
 
 def ViewSelection():
+    # Define base navigation categories
+    navigation_categories = {
+        "🏠 Strona Główna": {
+            "Strona Główna": main_page.loadView
+        },
+        "📊 Statystyki": {
+            "Komisje - Statystyki": statystykiKomisji.loadView,
+            "Posłowie - Statystyki": statystykiPoslow.loadView
+        },
+        "🗳️ Procesy Parlamentarne": {
+            "Interpelacje": view_interpelation.loadView,
+            "Ustawy": ustawy.loadView,
+            "Komisje": komisje.loadView,
+            "Głosowania Posłów": view_vote.loadView
+        },
+        "🔮 Analiza Polityczna": {
+            "Potencjalne Koalicje": coalition_viewer.loadView,
+            "Kalkulator Wyborczy": calculator.loadView,
+        },
+        "🚧 W budowie": {
+            "Korelacje": correlation.loadView,
+            "Obserwuj Interpelacje": watch_interpelation.loadView,
+            "Rozkład Benforda": benford_view.loadView
+        }
+    }
+    # Dynamically generate "Wszystkie" category
+    wszystkie_pages = {}
+    for category_pages in navigation_categories.values():
+        wszystkie_pages.update(category_pages)
+    
+    # Add dynamically generated "Wszystkie" category
+    navigation_categories["📋 Wszystkie"] = wszystkie_pages
 
-    page = st.sidebar.selectbox(
-        "Wybierz stronę", ["Obserwuj Interpelacje", "Komisje - Posiedzenia", "Korelacje",
-                           "Komisje - Statystyki", "Posłowie - Statystyki", "kalkulator", "ustawy",
-                           "koalicje", "glosowania", "kalkulator wyników wyborów", "Rozkład Benforda"])
-
-    # t1 = threading.Thread(target=discordBotStart, name='t1')
-    match page:
-        case "Obserwuj Interpelacje":
-            watch_interpelation.loadView()
-        case "Komisje - Posiedzenia":
-            komisje.loadView()
-        case "Korelacje":
-            correlation.loadView()
-        case "Komisje - Statystyki":
-            statystykiKomisji.loadView()
-        case "Posłowie - Statystyki":
-            BasicStats.loadView()
-        case "kalkulator":
-            calculator.loadView()
-        case "ustawy":
-            test3.loadView()
-        case "koalicje":
-            coalition_viewer.loadView()
-        case "glosowania":
-            view_vote.loadView()
-        case "kalkulator wyników wyborów":
-            wyboryKalkulator.loadView()
-        case "Rozkład Benforda":
-            benford_view.loadView()
-
+    # Create sidebar navigation with categories
+    #selected_category = st.sidebar.radio(" ","📋 Wszystkie")
+    # Wystarczy zamienić zakomentowane linie by zmienić widzialną wersję
+    #selected_category = st.sidebar.radio("Kategorie", list(navigation_categories.keys()))
+    
+    # Create subnavigation for the selected category
+    #selected_page = st.sidebar.selectbox(
+    #    "Wybierz stronę", 
+    #    list(navigation_categories["📋 Wszystkie"].keys())
+    #)
+    selected_page = st.sidebar.selectbox("Wybierz stronę", wszystkie_pages)
+    # Load the corresponding view
+    navigation_categories["📋 Wszystkie"][selected_page]()
 
 ViewSelection()
