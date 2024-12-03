@@ -2,6 +2,7 @@ import streamlit as st
 from api_wrappers.committees import get_committees, get_committee_future_sitting, get_last_n_committee_sitting_dates
 import requests
 # from View import committeeTranscript
+import pandas as pd
 
 
 def loadView():
@@ -78,7 +79,9 @@ def loadView():
                 if future_sittings:
                     st.markdown(
                         f"Posiedzenia wybranej komisji w ciągu ostatnich {days} dni:")
-                    st.write(future_sittings)
+                    # future_sittings = pd.DataFrame(future_sittings)
+                    # future_sittings = future_sittings.values.tolist()
+                    st.table(future_sittings)
                 else:
                     st.write(
                         f"W ciągu ostatnich {days} dni nie było posiedzenia")
