@@ -1,62 +1,73 @@
 import streamlit as st
-from View import main_page, coalition_viewer, ustawy, view_interpelation
-# Ocenić przydatność, dopracować
-from View import correlation, watch_interpelation, benford_view
 
-# Do potencjalnego złączenia razem
-from View import statystykiKomisji, komisje
-from View import calculator
-from View import statystykiPoslow, view_vote
+# TODO: Show information from Reports folder about avalibility of information
+st.set_page_config(page_title="IAPP", page_icon="🇵🇱", layout="wide")
 
-#st.set_page_config(page_title="IAPP - Internetowa Analiza Polskiej Polityki", page_icon="🇵🇱", layout="wide")
-#st.sidebar.title("🏛️ IAPP Nawigacja")
 
-def ViewSelection():
-    # Define base navigation categories
-    navigation_categories = {
-        "🏠 Strona Główna": {
-            "Strona Główna": main_page.loadView
-        },
-        "📊 Statystyki": {
-            "Komisje - Statystyki": statystykiKomisji.loadView,
-            "Posłowie - Statystyki": statystykiPoslow.loadView
-        },
-        "🗳️ Procesy Parlamentarne": {
-            "Interpelacje": view_interpelation.loadView,
-            "Ustawy": ustawy.loadView,
-            "Komisje": komisje.loadView,
-            "Głosowania Posłów": view_vote.loadView
-        },
-        "🔮 Analiza Polityczna": {
-            "Potencjalne Koalicje": coalition_viewer.loadView,
-            "Kalkulator Wyborczy": calculator.loadView,
-        },
-        "🚧 W budowie": {
-            "Korelacje": correlation.loadView,
-            "Obserwuj Interpelacje": watch_interpelation.loadView,
-            "Rozkład Benforda": benford_view.loadView
-        }
-    }
-    # Dynamically generate "Wszystkie" category
-    wszystkie_pages = {}
-    for category_pages in navigation_categories.values():
-        wszystkie_pages.update(category_pages)
-    
-    # Add dynamically generated "Wszystkie" category
-    navigation_categories["📋 Wszystkie"] = wszystkie_pages
+def loadView():
+    st.title("🇵🇱 Internetowa Analiza Polskiej Polityki (IAPP) 🇵🇱")
+    st.markdown(f"""
+        **Aktualna Kadencja Sejmu**: 10 \n
+        • Rozpoczęta: 13 listopada
+        """)
 
-    # Create sidebar navigation with categories
-    #selected_category = st.sidebar.radio(" ","📋 Wszystkie")
-    # Wystarczy zamienić zakomentowane linie by zmienić widzialną wersję
-    #selected_category = st.sidebar.radio("Kategorie", list(navigation_categories.keys()))
-    
-    # Create subnavigation for the selected category
-    #selected_page = st.sidebar.selectbox(
-    #    "Wybierz stronę", 
-    #    list(navigation_categories["📋 Wszystkie"].keys())
-    #)
-    selected_page = st.sidebar.selectbox("Wybierz stronę", wszystkie_pages)
-    # Load the corresponding view
-    navigation_categories["📋 Wszystkie"][selected_page]()
+    st.header("Obecny Stan Projektu")
 
-ViewSelection()
+    st.markdown("""
+    IAPP to platforma analizy danych parlamentarnych, obecnie w fazie aktywnego rozwoju.
+    Jej nadrzędnym celem jest popularyzacja informacji na temat organu ustawodawczego naszego kraju.
+    Dzięki nowoczesnym technologiom integruje ona strumienie API i przetwarza w sposób kompleksowy by dostarczyć wgląd w dynamikę polityczną.
+    Oto przegląd aktualnych funkcjonalności i komponentów:
+    """)
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader("🔍 Aktualne Funkcjonalności")
+        st.markdown("""
+        - **Komisje Sejmowe**: 
+            - Analiza składu komisji według klubów parlamentarnych i nie tylko
+            - Kompaktowe podsumowanie zakresu działania jak i władz komisji
+            - Szczegóły na temat ostatnich posiedzień danej komisji
+        - **Interpelacje Poselskie**:
+            - Prezentacja informacji o autorach w tym ich klubu i profesji.
+            - Wyświetlanie w sposób przystępny odpowiedzi nadesłane.
+        - **Procesy Legislacyjne**: 
+            - Śledzenie etapów procesu legislacyjnego
+            - Prezentacja najnowszych aktów prawnych z podziałem na ich typ
+        - **Posłowie**:
+            - Historia posła na przestrzeni kadencji
+            - Statystyki dot. wykształcenia i profesji z podziałem na klub parlamentarny.
+            - Prezentacja głosów danego posła wg dnia
+        - **Political Fiction**:
+            - Znajdywanie alternatywnych koalicji rządowych w poszczególnych kadencjach Sejmu
+            - Sprawdzanie jak inna metoda dzielenia mandatów wpłynęłaby na wyniki wyborów
+        """)
+    with col2:
+        # Sekcja technologii
+        st.subheader("🛠 Technologie i Biblioteki")
+        st.markdown("""
+        - **Framework Web**: Streamlit
+        - **Analiza Danych**: Pandas, NumPy, Statistics
+        - **Wizualizacja**: Plotly, Matplotlib, Streamlit-aggrid
+        - **Zapytania HTTP**: Requests
+        - **Boty**: Telebot
+        """)
+
+        # Sekcja integracji
+        st.subheader("🔗 Integracje Zewnętrzne")
+        st.markdown("""
+        - **API Sejmu RP**: Pobieranie danych o komisjach, posłach, posiedzeniach i procesach legislacyjnych
+        - **Dane z Państwowej Komisji Wyborczej**: Surowe dane o wynikach wyborów do Sejmu RP w latach 2011-2024
+        """)
+
+    # Sekcja w trakcie rozwoju
+    st.subheader("🚧 Funkcje w Trakcie Rozwoju")
+    st.markdown("""
+    - Implementacja powiadomień na temat nowych ustaw, głosowań etc poprzez komunikator Telegram
+    - Porównanie głosowań posła z głosowaniem ogółu klubu
+    """)
+
+    st.info("Projekt jest aktywnie rozwijany. Niektóre funkcje mogą być niekompletne lub podlegać zmianom.")
+
+
+if __name__ == "__main__":
+    loadView()
