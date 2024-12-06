@@ -16,11 +16,17 @@ def loadView():
             "Numer Interpelacji", value=1, min_value=1, key='interpellation_input')
     response = get_interpelation(term, interpellation_num)
     st.write(get_title(response=response))
+    adresaci = get_receipent(response=response)
+    #  jest też taka opcja {', '.join(adresaci)} 
+    if len(adresaci) > 1:
+        st.write(f"Wysłana {get_date(mode=0,response=response)} i dnia {get_date(mode=1, response=response)} skierowana do")
+        #st.write("Adresaci interpelacji:")
+        for adr in adresaci:
+            st.write(adr)
+    else:
+        st.write(f"Wysłana {get_date(mode=0,response=response)} i dnia {get_date(mode=1, response=response)} skierowana do {adresaci[0]}")
     #st.write(
     #    f"Wysłana {get_date(mode=0,response=response)} i dnia {get_date(mode=1, response=response)} skierowana do {str(get_receipent(response=response))[2:-2]}")
-    for i in get_receipent(response=response):
-        s += i + ","
-    st.write(f"Wysłana {get_date(mode=0,response=response)} i dnia {get_date(mode=1, response=response)} skierowana do {s[:-1]}")
     st.write("Autorzy interpelacji:")
     col1, col2 = st.columns([1, 5])
     for author in get_authors(response=response):
