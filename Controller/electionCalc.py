@@ -153,8 +153,8 @@ def ModifiedSainteLaguë(SeatsDict,  VoteDict, seatsNum):
     newMax = ""
     lastVoteNum = 0
     nextPotentialVoteNum = 0
-    for key in VoteDict.keys():
-        VoteDict[key] /= 1.4
+    # for key in VoteDict.keys():
+    #     VoteDict[key] /= 1.4
     VoteDict2 = VoteDict.copy()
 
     for _ in range(seatsNum):
@@ -162,9 +162,11 @@ def ModifiedSainteLaguë(SeatsDict,  VoteDict, seatsNum):
         max_party = max(VoteDict2, key=VoteDict2.get)
 
         SeatsDict[max_party] += 1
-
-        VoteDict2[max_party] = VoteDict[max_party] / \
-            (2*SeatsDict[max_party] + 1)
+        if SeatsDict[max_party] == 1:
+            VoteDict2[max_party] = VoteDict[max_party] / 1.4
+        else:
+            VoteDict2[max_party] = VoteDict[max_party] / \
+                (2*(SeatsDict[max_party]-1) + 1)
         i += 1
     # print(SeatsDict)
     return SeatsDict
