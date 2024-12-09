@@ -78,14 +78,15 @@ def get_committee_stats(term: int, code: Optional[str] = None) -> Dict[str, Unio
         for committee in API_data:
             for member in committee['members']:
                 # Add to clubs (prevent duplicates in club list)
-                if member['club'] not in clubs:
-                    clubs[member['club']] = []
-                if member['lastFirstName'] not in clubs[member['club']]:
-                    clubs[member['club']].append(member['lastFirstName'])
+                if 'club' in member:
+                    if member['club'] not in clubs:
+                        clubs[member['club']] = []
+                    if member['lastFirstName'] not in clubs[member['club']]:
+                        clubs[member['club']].append(member['lastFirstName'])
 
-                # Count committees per MP (allow multiple counts)
-                peoples[member['lastFirstName']] = peoples.get(
-                    member['lastFirstName'], 0) + 1
+                    # Count committees per MP (allow multiple counts)
+                    peoples[member['lastFirstName']] = peoples.get(
+                        member['lastFirstName'], 0) + 1
     else:
         API = f'https://api.sejm.gov.pl/sejm/term{term}/committees/{code}'
         response = requests.get(API)
