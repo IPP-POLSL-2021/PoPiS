@@ -47,7 +47,7 @@ def ageGraphs(all_ages, AgesButDictionary, term="", MPsInfoDataFrame=""):
     youngest, oldest = st.columns(2)
 
     st.dataframe(df, use_container_width=True)
-    if MPsInfoDataFrame != "":
+    if True:
         with oldest:
             # MPsInfoDataFrame = MPsInfoDataFrame.astype(int)
 
@@ -59,7 +59,7 @@ def ageGraphs(all_ages, AgesButDictionary, term="", MPsInfoDataFrame=""):
                 MPsInfoDataFrame.groupby('Club')['Age'].idxmin()]
             st.write(youngestsMP)
         st.header(
-            "Wykresy rozkładu wieku klubów i kół w {term} kadencji sejmu:")
+            f"Wykresy rozkładu wieku klubów i kół w {term} kadencji sejmu:")
         for club, ages in AgesButDictionary.items():
             if len(ages) > 2:
                 fig = px.histogram(
