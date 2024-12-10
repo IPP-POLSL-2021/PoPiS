@@ -40,14 +40,16 @@ def MPsData(term):
         clubList.append(club['id'])
 
     for MP in MpsList:
-        MpData["Name"].append(MP["lastFirstName"])
-        MpData["Club"].append(MP["club"])
-        dateOfBirth = str(MP["birthDate"]).strip("[]'")
-        ageOfMP = endOfTerm_time.date() - \
-            datetime.strptime(dateOfBirth, "%Y-%m-%d").date()
-        ageOfMP = int(ageOfMP.days/365)
+        if "club" in MP:
+            MpData["Name"].append(MP["lastFirstName"])
 
-        MpData["Age"].append(ageOfMP)
+            MpData["Club"].append(MP["club"])
+            dateOfBirth = str(MP["birthDate"]).strip("[]'")
+            ageOfMP = endOfTerm_time.date() - \
+                datetime.strptime(dateOfBirth, "%Y-%m-%d").date()
+            ageOfMP = int(ageOfMP.days/365)
+
+            MpData["Age"].append(ageOfMP)
     DataFRame = pd.DataFrame(MpData)
     return DataFRame, clubList
 

@@ -12,10 +12,11 @@ def loadView():
     col1, col2 = st.columns(2)
     with col1:
         term_number = st.number_input(
-            "Kadencja sejmu", min_value=1, value=10, key='term_input_stats')
+            "Kadencja sejmu", min_value=3, value=10, key='term_input_stats')
     with col2:
         codes = ["Wybierz komisje"]
-        codes.extend([f"{committee['name']} - {committee['code']}" for committee in get_committees(term_number)])
+        codes.extend(
+            [f"{committee['name']} - {committee['code']}" for committee in get_committees(term_number)])
         codes.append("łącznie")
         selectedCommittee = st.selectbox(
             "Komisja, której statystyki cię interesują",
@@ -28,7 +29,8 @@ def loadView():
         return
 
     # Create tabs for different views
-    overview_tab, details_tab = st.tabs(["Przegląd Komisji", "Statystyki Szczegółowe"])
+    overview_tab, details_tab = st.tabs(
+        ["Przegląd Komisji", "Statystyki Szczegółowe"])
 
     if selectedCommittee != "łącznie":
         selectedCommittee = selectedCommittee.split("-")[-1][1:]
@@ -41,7 +43,7 @@ def loadView():
     with overview_tab:
         # Create columns for overview data
         chart_col, data_col = st.columns([2, 1])
-        
+
         with chart_col:
             # Prepare data for plotting
             ClubsCount = clubs.apply(lambda x: x.count(), axis=1)
@@ -56,7 +58,8 @@ def loadView():
                 x='Partie',
                 y='Liczba członków',
                 title='Liczba członków w komisjach',
-                labels={'Partie': 'Partie', 'Liczba członków': 'Liczba członków'}
+                labels={'Partie': 'Partie',
+                        'Liczba członków': 'Liczba członków'}
             )
             fig.update_layout(
                 xaxis_title='Partie',
@@ -68,7 +71,8 @@ def loadView():
 
         with data_col:
             # Clean column names
-            clubs.columns = [str(col).replace('.', '_') for col in clubs.columns]
+            clubs.columns = [str(col).replace('.', '_')
+                             for col in clubs.columns]
             AgGrid(clubs)
 
         # Display MPs data if "łącznie" is selected
@@ -78,10 +82,6 @@ def loadView():
 
     with details_tab:
         # Age and other statistics
-        DataframeAges, AgesButDictionary = get_committee_member_ages(
-            clubsButBetter, term_number)
-        all_ages = DataframeAges.values.flatten()
-        all_ages = pd.Series(all_ages).dropna()
 
         # Statistics selection
         stats = st.selectbox(
@@ -95,7 +95,12 @@ def loadView():
         else:
             match stats:
                 case "wiek":
-                    _sharedViews.ageGraphs(all_ages, AgesButDictionary, term_number)
+                    DataframeAges, AgesButDictionary = get_committee_member_ages(
+                        clubsButBetter, term_number)
+                    all_ages = DataframeAges.values.flatten()
+                    all_ages = pd.Series(all_ages).dropna()
+                    _sharedViews.ageGraphs(
+                        all_ages, AgesButDictionary, term_number)
                 case "edukacja":
                     EducationDictionary = get_committee_member_details(
                         clubsButBetter, term_number, 'edukacja')
