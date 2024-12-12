@@ -16,6 +16,7 @@ def ageGraphs(all_ages, AgesButDictionary, term="", MPsInfoDataFrame=""):
         title=f'Ogólny rozkład wiekowy posłów {term} kadencji sejmu',
         labels={'x': 'Wiek', 'y': 'Liczba członków'},
         color_discrete_sequence=['orange']
+
     )
     fig.update_layout(
         xaxis_title='Wiek',
@@ -80,26 +81,26 @@ def MoreStats(ChosenDictionary):
     st.write("Statystyki dla posłów w poszczególnych klubach:")
     # st.write("Wykresy dla klubów jeśli członkowie mają różne atrybuty")
     for club, data in ChosenDictionary.items():
-        if len(data) > 1:
-            labels = list(data.keys())
-            values = list(data.values())
-            fig = go.Figure(
-                data=[go.Pie(labels=labels, values=values)]
-            )
-            fig.update_layout(
-                title=f'{club}',
-            )
-            st.plotly_chart(fig)
-        else:
-            labels = list(data.keys())
-            values = list(data.values())
-            fig = go.Figure(
-                data=[go.Pie(labels=labels, values=values)]
-            )
-            fig.update_layout(
-                title=f'{club}',
-            )
-            st.plotly_chart(fig)
-            # st.write(f"Klub {club}")
-            # st.write(
-            #    f"{list(data.keys())[0]} - {list(data.values())[0]} czyli 100%")
+
+        labels = list(data.keys())
+        values = list(data.values())
+        fig = go.Figure(
+            data=[go.Pie(labels=labels, values=values)]
+        )
+        fig.update_layout(
+            title=f'{club}',
+        )
+        st.plotly_chart(fig)
+        # else:
+        #     labels = list(data.keys())
+        #     values = list(data.values())
+        #     fig = go.Figure(
+        #         data=[go.Pie(labels=labels, values=values)]
+        #     )
+        #     fig.update_layout(
+        #         title=f'{club}',
+        #     )
+        #     st.plotly_chart(fig)
+        # st.write(f"Klub {club}")
+        # st.write(
+        #    f"{list(data.keys())[0]} - {list(data.values())[0]} czyli 100%")

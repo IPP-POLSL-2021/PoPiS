@@ -62,22 +62,13 @@ def ageStats(term, MpIdByClub, Mplist):
     if term != 10:
         termResponse = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}')
         termInfo = termResponse.json()
-        endOfTerm = termInfo['to']
+        endOfTerm = termInfo['from']
         current_time = datetime.strptime(endOfTerm, "%Y-%m-%d")
-    # print(current_time)
-    MPsAge = {}
-    # print(committee)
-    # print(committee.to_dict)
-    # committee = committee.to_dict(orient="list")
-    # print(committee)
-    # searchedData = f'{searchedInfo}'
-    for patry in MpIdByClub:
-        # print(committee[patry])
-        ages = []
 
-        # print(patry)
+    MPsAge = {}
+    for patry in MpIdByClub:
+        ages = []
         for personId in MpIdByClub[patry]:
-            # print(person)
             dateOfBirth = [
                 mp['birthDate'] for mp in MPs if mp['id'] == personId]
             # dateOfBirth = str(Mplist[])
