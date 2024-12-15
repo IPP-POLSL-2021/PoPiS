@@ -9,7 +9,3 @@ tab2, tab3 = st.tabs(["Obserwuj Interpelacje", "Rozkład Benforda"])
 with tab2:
     st.header("Obserwuj Interpelacje")
     watch_interpelation.loadView()
-
-with tab3:
-    st.header("Rozkład Benforda")
-    benford_view.loadView()

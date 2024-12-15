@@ -31,7 +31,7 @@ def loadView():
     matrix = matrix.fillna(0.0)
 
     datafreame_col, plot_col = st.tabs(
-        ["dataframe", "wykres"])
+        ["macierz korelacji", "wykres"])
 
     with datafreame_col:
         st.dataframe(matrix)
