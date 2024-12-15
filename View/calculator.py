@@ -30,16 +30,7 @@ def loadView():
         diff = 0
 
         frequency = 0
-        if st.session_state.get("last_clicked_city"):
-            st.write(st.session_state["last_clicked_city"])
-            districtcMap = st.session_state["last_clicked_city"]
-        # elif st.session_state["selected_cities"]:
-        #     st.write(", ".join(st.session_state["selected_cities"]))
-        #     districtcMap = st.session_state["last_clicked_city"]
 
-        else:
-            st.write("Nie wybrano żadnych miast.")
-            districtcMap = "Legnica"
         # val = ""
         clublist = []
         votesDict = {'PiS': 0, 'KO': 0, 'Trzecia Droga': 0, 'Lewica': 0,
@@ -76,128 +67,122 @@ def loadView():
         political_parties = ["PiS", "KO",
                              "Trzecia Droga", "Konfederacja", "Lewica"]
 
-        main_col1, main_col2 = st.columns([3, 4])
-        with main_col1:
-            with st.form("kalkulator mandatów do Sejmu"):
-                type = st.selectbox(
-                    "rodzaj głosów", ["ilościowy", "procentowy"])
-                st.write("wybierz okręg który chcesz uzupełnić")
-                method = st.selectbox("metoda liczenia głosów", [
-                    "d'Hondta", "Sainte-Laguë", "Kwota Hare’a (metoda największych reszt)", "Kwota Hare’a (metoda najmniejszych reszt)"])
-                # if resestAll:
-                #     clearJSON(seatsDistricstsDict)
-                district = st.selectbox("wybierz okręg który chcesz uzupełnić",
-                                        districtsDict.keys())
-                selection = st.selectbox(
-                    "Wybrałeś okręg z listy czy z mapy", ["mapy", "listy"])
-                if selection == "mapy":
-                    val = districtsDict[districtcMap]
-                    district = districtcMap
-                else:
-                    val = districtsDict[district]
-                seatsNum = val['Miejsca do zdobycia']
-                st.write(f"w tym okręgu jest do rozdania {seatsNum} mandatów")
-                st.write("Uzupełnij ilość głosów otrzymanych przez partie")
-                pis = st.number_input("głosy parti PiS", 0)
-                ko = st.number_input("głosy parti KO", 0)
-                td = st.number_input("głosy parti Trzecia Droga", 0)
-                lw = st.number_input("głosy  parti Lewica", 0)
-                kf = st.number_input("głosy parti Konfederacja", 0)
+        with st.form("kalkulator mandatów do Sejmu"):
+            type = st.selectbox(
+                "rodzaj głosów", ["ilościowy", "procentowy"])
+            st.write("wybierz okręg który chcesz uzupełnić")
+            method = st.selectbox("metoda liczenia głosów", [
+                "d'Hondta", "Sainte-Laguë", "Kwota Hare’a (metoda największych reszt)", "Kwota Hare’a (metoda najmniejszych reszt)"])
+            # if resestAll:
+            #     clearJSON(seatsDistricstsDict)
+            district = st.selectbox("wybierz okręg który chcesz uzupełnić",
+                                    districtsDict.keys())
+
+            val = districtsDict[district]
+            seatsNum = val['Miejsca do zdobycia']
+            st.write(f"w tym okręgu jest do rozdania {seatsNum} mandatów")
+            st.write("Uzupełnij ilość głosów otrzymanych przez partie")
+            pis = st.number_input("głosy parti PiS", 0)
+            ko = st.number_input("głosy parti KO", 0)
+            td = st.number_input("głosy parti Trzecia Droga", 0)
+            lw = st.number_input("głosy  parti Lewica", 0)
+            kf = st.number_input("głosy parti Konfederacja", 0)
+            if type == "procentowy":
+                frequency = st.number_input("frekwencja", 0)
+            else:
+                frequency = pis+ko+td+lw+kf
+
+            submitted = st.form_submit_button("Licz")
+            if submitted:
+                # val = districtsDict[district]
+                val['PiS'] = pis
+                val['KO'] = ko
+                val['Trzecia Droga'] = td
+                val['Lewica'] = lw
+                val['Konfederacja'] = kf
                 if type == "procentowy":
-                    frequency = st.number_input("frekwencja", 0)
-                else:
-                    frequency = pis+ko+td+lw+kf
-
-                submitted = st.form_submit_button("Licz")
-                if submitted:
-                    # val = districtsDict[district]
-                    val['PiS'] = pis
-                    val['KO'] = ko
-                    val['Trzecia Droga'] = td
-                    val['Lewica'] = lw
-                    val['Konfederacja'] = kf
-                    if type == "procentowy":
-                        val['Frekwencja'] = frequency
-                        if pis+ko+td+lw+kf != 100:
-                            st.warning("Wyniki powinny sumować się do 100%")
-                        else:
-                            procent = frequency/100
-                            newSeats, lastParty, nextParty = seatsCalculator.chooseMethod(
-                                pis*procent, ko*procent, td*procent, lw*procent, kf*procent, val['Frekwencja'], "ilościowy", seatsNum, method)
-                            votesNumber[district]['PiS'] = pis*procent
-                            votesNumber[district]['KO'] = ko*procent
-                            votesNumber[district]['Trzecia Droga'] = td*procent
-                            votesNumber[district]['Lewica'] = lw*procent
-                            votesNumber[district]['Konfederacja'] = kf*procent
-                            with open("data.json", "r", encoding="utf-8") as json_file:
-                                loaded_data = json.load(json_file)
-                                loaded_data[district]['PiS'] = newSeats['PiS']
-                                loaded_data[district]['KO'] = newSeats['KO']
-                                loaded_data[district]['Trzecia Droga'] = newSeats['Trzecia Droga']
-                                loaded_data[district]['Lewica'] = newSeats['Lewica']
-                                loaded_data[district]['Konfederacja'] = newSeats['Konfederacja']
-
-                            with open("votes.json", "r", encoding="utf-8") as json_file:
-                                loaded_votes = json.load(json_file)
-                                loaded_votes[district]['PiS'] = votesNumber[district]['PiS']
-                                loaded_votes[district]['KO'] = votesNumber[district]['KO']
-                                loaded_votes[district]['Trzecia Droga'] = votesNumber[district]['Trzecia Droga']
-                                loaded_votes[district]['Lewica'] = votesNumber[district]['Lewica']
-                                loaded_votes[district]['Konfederacja'] = votesNumber[district]['Konfederacja']
-
-                            with open("data.json", "w", encoding="utf-8") as json_file:
-                                json.dump(loaded_data, json_file,
-                                          ensure_ascii=False, indent=4)
-                            with open("votes.json", "w", encoding="utf-8") as json_file:
-                                json.dump(loaded_votes, json_file,
-                                          ensure_ascii=False, indent=4)
-                            st.write(newSeats)
-
+                    val['Frekwencja'] = frequency
+                    if pis+ko+td+lw+kf != 100:
+                        st.warning("Wyniki powinny sumować się do 100%")
                     else:
-                        val['Frekwencja'] = pis+ko+td+lw+kf
+                        procent = frequency/100
                         newSeats, lastParty, nextParty = seatsCalculator.chooseMethod(
-                            pis, ko, td, lw, kf, val['Frekwencja'], "ilościowy", seatsNum, method)
-
+                            pis*procent, ko*procent, td*procent, lw*procent, kf*procent, val['Frekwencja'], "ilościowy", seatsNum, method)
+                        votesNumber[district]['PiS'] = pis*procent
+                        votesNumber[district]['KO'] = ko*procent
+                        votesNumber[district]['Trzecia Droga'] = td*procent
+                        votesNumber[district]['Lewica'] = lw*procent
+                        votesNumber[district]['Konfederacja'] = kf*procent
                         with open("data.json", "r", encoding="utf-8") as json_file:
                             loaded_data = json.load(json_file)
+                            loaded_data[district]['PiS'] = newSeats['PiS']
+                            loaded_data[district]['KO'] = newSeats['KO']
+                            loaded_data[district]['Trzecia Droga'] = newSeats['Trzecia Droga']
+                            loaded_data[district]['Lewica'] = newSeats['Lewica']
+                            loaded_data[district]['Konfederacja'] = newSeats['Konfederacja']
+
                         with open("votes.json", "r", encoding="utf-8") as json_file:
                             loaded_votes = json.load(json_file)
-                        for element in political_parties:
-                            if element != 'Frekwencja':
-                                loaded_data[district][element] = newSeats[element]
+                            loaded_votes[district]['PiS'] = votesNumber[district]['PiS']
+                            loaded_votes[district]['KO'] = votesNumber[district]['KO']
+                            loaded_votes[district]['Trzecia Droga'] = votesNumber[district]['Trzecia Droga']
+                            loaded_votes[district]['Lewica'] = votesNumber[district]['Lewica']
+                            loaded_votes[district]['Konfederacja'] = votesNumber[district]['Konfederacja']
 
-                                loaded_votes[district][element] = votesNumber[district][element]
-
-                        # loaded_data[district]['PiS'] = newSeats['PiS']
-                        # loaded_data[district]['KO'] = newSeats['KO']
-                        # loaded_data[district]['Trzecia Droga'] = newSeats['Trzecia Droga']
-                        # loaded_data[district]['Lewica'] = newSeats['Lewica']
-                        # loaded_data[district]['Konfederacja'] = newSeats['Konfederacja']
-                        loaded_data[district]['Frekwencja'] = frequency
-                        # loaded_votes[district]['PiS'] = votesNumber[district]['PiS']
-                        # loaded_votes[district]['KO'] = votesNumber[district]['KO']
-                        # loaded_votes[district]['Trzecia Droga'] = votesNumber[district]['Trzecia Droga']
-                        # loaded_votes[district]['Lewica'] = votesNumber[district]['Lewica']
-                        # loaded_votes[district]['Konfederacja'] = votesNumber[district]['Konfederacja']
-
-                        # print(frequency)
-                        loaded_data[district]['Uzupełniono'] = True
                         with open("data.json", "w", encoding="utf-8") as json_file:
                             json.dump(loaded_data, json_file,
                                       ensure_ascii=False, indent=4)
                         with open("votes.json", "w", encoding="utf-8") as json_file:
                             json.dump(loaded_votes, json_file,
                                       ensure_ascii=False, indent=4)
-                        st.dataframe(newSeats)
-                        st.write(
-                            f"Partia która zdobyła ostatni mandat w okręgu to {lastParty} a kolejny zdobyła by partia {nextParty}")
-        with main_col2:
+                        st.write(newSeats)
+
+                else:
+                    val['Frekwencja'] = pis+ko+td+lw+kf
+                    seatsResult = seatsCalculator.chooseMethod(
+                        pis, ko, td, lw, kf, val['Frekwencja'], "ilościowy", seatsNum, method)
+                    newSeats = seatsResult[0]
+                    lastParty = seatsResult[1]
+                    nextParty = seatsResult[2]
+                    with open("data.json", "r", encoding="utf-8") as json_file:
+                        loaded_data = json.load(json_file)
+                    with open("votes.json", "r", encoding="utf-8") as json_file:
+                        loaded_votes = json.load(json_file)
+                    for element in political_parties:
+                        if element != 'Frekwencja':
+                            loaded_data[district][element] = newSeats[element]
+
+                            loaded_votes[district][element] = votesNumber[district][element]
+
+                    # loaded_data[district]['PiS'] = newSeats['PiS']
+                    # loaded_data[district]['KO'] = newSeats['KO']
+                    # loaded_data[district]['Trzecia Droga'] = newSeats['Trzecia Droga']
+                    # loaded_data[district]['Lewica'] = newSeats['Lewica']
+                    # loaded_data[district]['Konfederacja'] = newSeats['Konfederacja']
+                    loaded_data[district]['Frekwencja'] = frequency
+                    # loaded_votes[district]['PiS'] = votesNumber[district]['PiS']
+                    # loaded_votes[district]['KO'] = votesNumber[district]['KO']
+                    # loaded_votes[district]['Trzecia Droga'] = votesNumber[district]['Trzecia Droga']
+                    # loaded_votes[district]['Lewica'] = votesNumber[district]['Lewica']
+                    # loaded_votes[district]['Konfederacja'] = votesNumber[district]['Konfederacja']
+
+                    # print(frequency)
+                    loaded_data[district]['Uzupełniono'] = True
+                    with open("data.json", "w", encoding="utf-8") as json_file:
+                        json.dump(loaded_data, json_file,
+                                  ensure_ascii=False, indent=4)
+                    with open("votes.json", "w", encoding="utf-8") as json_file:
+                        json.dump(loaded_votes, json_file,
+                                  ensure_ascii=False, indent=4)
+                    st.dataframe(newSeats)
+                    st.write(
+                        f"Partia która zdobyła ostatni mandat w okręgu to {lastParty} a kolejny zdobyła by partia {nextParty}")
 
             # if "observables_initialized" not in st.session_state:
             #     setup_observers()
             #     st.session_state["observables_initialized"] = True
 
-            resestAll = st.button("Wyczyść wszystkie dane")
+        resestAll = st.button("Wyczyść wszystkie dane")
         if resestAll:
             with open("data.json", "w", encoding="utf-8") as json_file:
                 json.dump(seatsDistricstsDict, json_file,
