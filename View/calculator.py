@@ -106,7 +106,7 @@ def loadView():
                         st.warning("Wyniki powinny sumować się do 100%")
                     else:
                         procent = frequency/100
-                        newSeats, lastParty, nextParty = seatsCalculator.chooseMethod(
+                        newSeats, lastParty, nextParty = seatsCalculator.chooseMethods(
                             pis*procent, ko*procent, td*procent, lw*procent, kf*procent, val['Frekwencja'], "ilościowy", seatsNum, method)
                         votesNumber[district]['PiS'] = pis*procent
                         votesNumber[district]['KO'] = ko*procent
@@ -139,7 +139,7 @@ def loadView():
 
                 else:
                     val['Frekwencja'] = pis+ko+td+lw+kf
-                    seatsResult = seatsCalculator.chooseMethod(
+                    seatsResult = seatsCalculator.chooseMethods(
                         pis, ko, td, lw, kf, val['Frekwencja'], "ilościowy", seatsNum, method)
                     newSeats = seatsResult[0]
                     lastParty = seatsResult[1]
@@ -176,7 +176,7 @@ def loadView():
                                   ensure_ascii=False, indent=4)
                     st.dataframe(newSeats)
                     st.write(
-                        f"Partia która zdobyła ostatni mandat w okręgu to {lastParty} a kolejny zdobyła by partia {nextParty}")
+                        f"Partia która zdobyła ostatni mandat w okręgu to {str(lastParty).removeprefix('{').removesuffix('}')} a kolejny zdobyła by partia {str(nextParty).removeprefix('{').removesuffix('}')}")
 
             # if "observables_initialized" not in st.session_state:
             #     setup_observers()
@@ -258,55 +258,56 @@ def loadView():
             f"regiony pozostające do uzupełnienia to {keys}")
     with tab1:
         threshold, methodSelect, parties = st.columns(3)
-    with threshold:
-        voteingThreshold = st.number_input("próg wyborczy", 0, 100)
-        voteingThresholdForCoaliton = st.number_input(
-            "próg wyborczy dla koalicji", 0, 100)
-    # st.write(electionCalc.calculateVotes(voteingThreshold))
-    with methodSelect:
-        # method = st.selectbox("metoda liczenia głosów", [
-        #     "d'Hondt", "Sainte-Laguë", "Zmodyfikowany Sainte-Laguë", "Kwota Hare’a (metoda największych reszt)", "Kwota Hare’a (metoda najmniejszych reszt)"])
-        year = st.selectbox("Wybierz rok wyborów", [
-                            "2023", "2019", "2015", "2011", "2007", "2005", "2001"])
+        with threshold:
+            voteingThreshold = st.number_input("próg wyborczy", 0, 100)
+            voteingThresholdForCoaliton = st.number_input(
+                "próg wyborczy dla koalicji", 0, 100)
+        # st.write(electionCalc.calculateVotes(voteingThreshold))
+        with methodSelect:
+            # method = st.selectbox("metoda liczenia głosów", [
+            #     "d'Hondt", "Sainte-Laguë", "Zmodyfikowany Sainte-Laguë", "Kwota Hare’a (metoda największych reszt)", "Kwota Hare’a (metoda najmniejszych reszt)"])
+            year = st.selectbox("Wybierz rok wyborów", [
+                                "2023", "2019", "2015", "2011", "2007", "2005", "2001"])
 
-    qulifiedParties, allParitesDict, voteForDistrict = electionCalc.calculateVotes(
-        voteingThreshold, voteingThresholdForCoaliton, year)
-    allPrtiesDict2 = allParitesDict.copy()
-    with parties:
-        st.write("Wybierz które partie mają być zwolnione z progu wyborczego (wg prawa komitety mniejszości narodowych i etnicznych)")
-        with st.container(height=300):
-            for key in allParitesDict:
-                if key != "Frekwencja":
-                    allParitesDict[key] = st.checkbox(f"{key}", False)
-            # Don't bloat terminal
-            # print(allParitesDict)
-            # w przyszłości jak zrobię lub ktoś zorobi słownik z wszysttkimi nazwami koitetów i ich krótami to się zastąpi
+        qulifiedParties, allParitesDict, voteForDistrict = electionCalc.calculateVotes(
+            voteingThreshold, voteingThresholdForCoaliton, year)
+        allPrtiesDict2 = allParitesDict.copy()
+        with parties:
+            st.write(
+                "Wybierz które partie mają być zwolnione z progu wyborczego (wg prawa komitety mniejszości narodowych i etnicznych)")
+            with st.container(height=300):
+                for key in allParitesDict:
+                    if key != "Frekwencja":
+                        allParitesDict[key] = st.checkbox(f"{key}", False)
+                # Don't bloat terminal
+                # print(allParitesDict)
+                # w przyszłości jak zrobię lub ktoś zorobi słownik z wszysttkimi nazwami koitetów i ich krótami to się zastąpi
 
-    # st.write(electionCalc.calculateVotes(voteingThreshold))
-    for key in allParitesDict:
-        if key != "Frekwencja" and allParitesDict[key] is True and key not in qulifiedParties:
-            qulifiedParties.append(key)
-            # ilość głosów tylko jej narzie nigdzie nie zwracam
-    results = electionCalc.chooseMethod(
-        qulifiedParties, voteForDistrict, year)
+        # st.write(electionCalc.calculateVotes(voteingThreshold))
+        for key in allParitesDict:
+            if key != "Frekwencja" and allParitesDict[key] is True and key not in qulifiedParties:
+                qulifiedParties.append(key)
+                # ilość głosów tylko jej narzie nigdzie nie zwracam
+        results = electionCalc.chooseMethod(
+            qulifiedParties, voteForDistrict, year)
 
-    # for party in results[key]:
-    # if results[key][party] > 0:
-    #     st.write(f" {party}: {results[key][party]}")
+        # for party in results[key]:
+        # if results[key][party] > 0:
+        #     st.write(f" {party}: {results[key][party]}")
 
-    filtered_results = {}
-    for key in results.keys():
-        filtered_results[key] = {party: votes for party,
-                                 votes in results[key].items() if votes != 0}
-        # st.write(f"{key}: ")
+        filtered_results = {}
+        for key in results.keys():
+            filtered_results[key] = {party: votes for party,
+                                     votes in results[key].items() if votes != 0}
+            # st.write(f"{key}: ")
 
-    FiltredResultsDF = pd.DataFrame.from_dict(filtered_results)
-    FiltredResultsDF = FiltredResultsDF.fillna(value=" ")
-    FiltredResultsDF = FiltredResultsDF.astype(str)
-    FiltredResultsDF = FiltredResultsDF.replace(r'\.0$', ' ', regex=True)
+        FiltredResultsDF = pd.DataFrame.from_dict(filtered_results)
+        FiltredResultsDF = FiltredResultsDF.fillna(value=" ")
+        FiltredResultsDF = FiltredResultsDF.astype(str)
+        FiltredResultsDF = FiltredResultsDF.replace(r'\.0$', ' ', regex=True)
 
-    # st.table(FiltredResultsDF)
+        # st.table(FiltredResultsDF)
 
-    FiltredResultsDF = FiltredResultsDF.transpose()
-    FiltredResultsDF = FiltredResultsDF.rename(index={'dhont': "D'hondt"})
-    st.table(FiltredResultsDF)
+        FiltredResultsDF = FiltredResultsDF.transpose()
+        FiltredResultsDF = FiltredResultsDF.rename(index={'dhont': "D'hondt"})
+        st.table(FiltredResultsDF)

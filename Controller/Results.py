@@ -5,7 +5,7 @@ import time
 
 def getResults(Correlation, electionSelections, type):
     str = ""
-    if type == "procentowe":
+    if type == "procentowe" or type == "procętowe":
         str = "_proc"
     match electionSelections:
         case"województwa":

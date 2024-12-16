@@ -1,25 +1,78 @@
-def chooseMethod(PiS, KO, TD, Lewica, Konf, Freq, type, seatsNum, method):
+from Controller import electionCalc
+
+
+def chooseMethods(PiS, KO, TD, Lewica, Konf, Freq, type, seatsNum, method):
+    SeatsDict = {"PiS": 0, "KO": 0, "Trzecia Droga": 0,
+                 "Lewica": 0, "Konfederacja": 0}
+    VoteDict = {"PiS": PiS, "KO": KO, "Trzecia Droga": TD,
+                "Lewica": Lewica, "Konfederacja": Konf}
     match method:
         case "d'Hondta":
-            return dhont(PiS, KO, TD, Lewica, Konf, Freq, type, seatsNum)
-
+            recivedVotes = electionCalc.dhont(
+                SeatsDict, VoteDict, seatsNum)
+            SeatsDict = {"PiS": 0, "KO": 0, "Trzecia Droga": 0,
+                         "Lewica": 0, "Konfederacja": 0}
+            nextSeat = electionCalc.dhont(SeatsDict, VoteDict, seatsNum+1)
+            SeatsDict = {"PiS": 0, "KO": 0, "Trzecia Droga": 0,
+                         "Lewica": 0, "Konfederacja": 0}
+            prevSeat = electionCalc.dhont(SeatsDict, VoteDict, seatsNum-1)
+            # return dhont(PiS, KO, TD, Lewica, Konf, Freq, type, seatsNum)
+            differencesNxt = {key
+                              for key in nextSeat if recivedVotes[key] != nextSeat[key]}
+            differencesPrev = {key
+                               for key in recivedVotes if recivedVotes[key] != prevSeat[key]}
+            return recivedVotes, differencesNxt, differencesPrev
         case "Sainte-Laguë":
-            return SainteLague(PiS, KO, TD, Lewica, Konf, Freq, type, seatsNum)
+            recivedVotes = electionCalc.SainteLaguë(
+                SeatsDict, VoteDict, seatsNum)
+            SeatsDict = {"PiS": 0, "KO": 0, "Trzecia Droga": 0,
+                         "Lewica": 0, "Konfederacja": 0}
+            nextSeat = electionCalc.SainteLaguë(
+                SeatsDict, VoteDict, seatsNum+1)
+            SeatsDict = {"PiS": 0, "KO": 0, "Trzecia Droga": 0,
+                         "Lewica": 0, "Konfederacja": 0}
+            prevSeat = electionCalc.SainteLaguë(
+                SeatsDict, VoteDict, seatsNum-1)
+            # return dhont(PiS, KO, TD, Lewica, Konf, Freq, type, seatsNum)
+            differencesNxt = {key
+                              for key in nextSeat if recivedVotes[key] != nextSeat[key]}
+            differencesPrev = {key
+                               for key in recivedVotes if recivedVotes[key] != prevSeat[key]}
+            return recivedVotes, differencesNxt, differencesPrev
         case "Kwota Hare’a (metoda największych reszt)":
-            # print(HareDrop(PiS, KO, TD, Lewica,
-            #       Konf, Freq, type, seatsNum)[:2])
-            # print(HareDrop(PiS, KO, TD, Lewica,
-            #       Konf, Freq, type, seatsNum+1)[1])
-            return [HareDrop(PiS, KO, TD, Lewica, Konf, Freq, type, seatsNum)[0],
-                    HareDrop(PiS, KO, TD, Lewica, Konf,
-                             Freq, type, seatsNum)[1],
-                    HareDrop(PiS, KO, TD, Lewica, Konf, Freq, type, seatsNum+1)[1]]
+            recivedVotes = electionCalc.HareDrop(
+                SeatsDict, VoteDict, seatsNum, Freq)
+            SeatsDict = {"PiS": 0, "KO": 0, "Trzecia Droga": 0,
+                         "Lewica": 0, "Konfederacja": 0}
+            nextSeat = electionCalc.HareDrop(
+                SeatsDict, VoteDict, seatsNum+1, Freq)
+            SeatsDict = {"PiS": 0, "KO": 0, "Trzecia Droga": 0,
+                         "Lewica": 0, "Konfederacja": 0}
+            prevSeat = electionCalc.HareDrop(
+                SeatsDict, VoteDict, seatsNum-1, Freq)
+            # return dhont(PiS, KO, TD, Lewica, Konf, Freq, type, seatsNum)
+            differencesNxt = {key
+                              for key in nextSeat if recivedVotes[key] != nextSeat[key]}
+            differencesPrev = {key
+                               for key in recivedVotes if recivedVotes[key] != prevSeat[key]}
+            return recivedVotes, differencesNxt, differencesPrev
         case "Kwota Hare’a (metoda najmniejszych reszt)":
-            return [HareDrop(PiS, KO, TD, Lewica, Konf, Freq, type, seatsNum, False)[0],
-                    HareDrop(PiS, KO, TD, Lewica, Konf,
-                             Freq, type, seatsNum, False)[1],
-                    HareDrop(PiS,  KO, TD, Lewica, Konf,
-                             Freq, type, seatsNum+1, False)[1]]
+            recivedVotes = electionCalc.HareDrop(
+                SeatsDict, VoteDict, seatsNum, Freq, False)
+            SeatsDict = {"PiS": 0, "KO": 0, "Trzecia Droga": 0,
+                         "Lewica": 0, "Konfederacja": 0}
+            nextSeat = electionCalc.HareDrop(
+                SeatsDict, VoteDict, seatsNum+1, Freq, False)
+            SeatsDict = {"PiS": 0, "KO": 0, "Trzecia Droga": 0,
+                         "Lewica": 0, "Konfederacja": 0}
+            prevSeat = electionCalc.HareDrop(
+                SeatsDict, VoteDict, seatsNum-1, Freq, False)
+            # return dhont(PiS, KO, TD, Lewica, Konf, Freq, type, seatsNum)
+            differencesNxt = {key
+                              for key in nextSeat if recivedVotes[key] != nextSeat[key]}
+            differencesPrev = {key
+                               for key in recivedVotes if recivedVotes[key] != prevSeat[key]}
+            return recivedVotes, differencesNxt, differencesPrev
 
 
 def HareDrop(PiS, KO, TD, Lewica, Konf, Freq, type, seatsNum, biggest=True):
