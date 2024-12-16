@@ -1,8 +1,8 @@
 import os
 import telebot
-from Controller.discordBotResponses import get_response, create_event, check_24_hours
+from Controller.BotResponses import get_response, create_event, check_24_hours
 from dotenv import load_dotenv
-from Controller import discordBotResponses
+from Controller import BotResponses
 import threading
 import requests
 load_dotenv()
@@ -17,7 +17,7 @@ def delete_reminer(message):
     if len(message.text[5:]) == 0:
         bot.send_message(message.chat.id, "Nie podano komisji")
     else:
-        discordBotResponses.delete(message.text[6:], message.chat.id)
+        BotResponses.delete(message.text[6:], message.chat.id)
 
 
 @bot.message_handler(commands=['komisje', ''])
@@ -33,7 +33,7 @@ def send_welcome(message):
 
 
 @bot.message_handler(commands=['powiadom'])
-def create_reminders(message="", auto=False, id="", Auto_date=""):
+def create_reminders(message=""):
     # message = message.split(" ")[1]
     # if auto == True:
     #     bot.send_message(id, Auto_date)

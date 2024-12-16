@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 from discord import Intents, Client, Message
 import threading
-from Controller.discordBotResponses import get_response, create_event, check_24_hours
+from Controller.BotResponses import get_response, create_event, check_24_hours
 load_dotenv()
 # aby wysłąć przypomnienie w  gdzieś musiałbym przetrzymywać cały obiekt message albo przynajmniej podobiekt author
 TOKEN = os.getenv('TOKEN')

@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine
+
 import requests
 from api_wrappers.committees import get_committees, get_committee_future_sitting
 from datetime import datetime, timedelta
@@ -62,7 +62,8 @@ def get_response(User_Input):
     if lowered == '':
         return ""
     elif lowered == "komisje":
-        committees = get_committees(10)
+        term = 10
+        committees = get_committees(term)
         committeesList = ""
         for committee in committees:
             committeesList += f"{committee['name']} o kodzie: {committee['code']}\n"
@@ -95,17 +96,6 @@ def create_event(id, text, platform, userEvent=True):
                 df.to_csv("./Data/powiadomienia.csv",
                           mode='a', index=False, header=False)
             return "brak nowych posiedzeń"
-
-        elif userEvent is False:
-            Auto_date = f"w ciągu ostatnich trzech dni komisja o kodzie {text} miała ostatnie spotkanie {date}"
-            if platform == "discord":
-                # id.send(
-                #     f"w ciągu ostatnich trzech dni komisja o kodzie {text} miała ostanie spotkanie {date}"
-                # )
-                print("narazie pusto")
-            # else:
-                # create_reminders("", True, id, Auto_date)
-        # print(remindersList['platform'])
         request = requests.get(
             f"https://api.sejm.gov.pl/sejm/term10/committees/{text}")
         response = request.json()
