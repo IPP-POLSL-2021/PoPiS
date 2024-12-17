@@ -74,17 +74,18 @@ def get_response(User_Input):
         return ""
 
 
-def create_event(id, text, platform, userEvent=True):
+def create_event(id, text, platform):
     # print(id)
     remindersList = pd.read_csv("./Data/powiadomienia.csv")
     last = ""
-    committees = get_committees(10)
+    term = 10
+    committees = get_committees(term)
     committeesList = ""
     for committee in committees:
         committeesList += f":{committee['code']} "
 
     if text in committeesList:
-        date = get_committee_future_sitting(10, text, 3)
+        date = get_committee_future_sitting(term, text, 3)
         new_reminder = {
             'channelId': id, 'platform': platform, 'committee': text}
 

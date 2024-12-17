@@ -153,7 +153,7 @@ def get_committee_member_ages(committee: Dict[str, List[str]], term: int = 10, s
     if term != 10:
         termResponse = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}')
         termInfo = termResponse.json()
-        endOfTerm = termInfo['to']
+        endOfTerm = termInfo['from']
         current_time = datetime.strptime(endOfTerm, "%Y-%m-%d")
 
     MPsAge: Dict[str, List[float]] = {}
