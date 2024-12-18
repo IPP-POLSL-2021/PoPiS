@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 from View import _sharedViews
 from st_aggrid import AgGrid
+from Controller import MPsStats
 
 
 def loadView():
@@ -99,8 +100,13 @@ def loadView():
                         clubsButBetter, term_number)
                     all_ages = DataframeAges.values.flatten()
                     all_ages = pd.Series(all_ages).dropna()
+                    MPsInfo, Clubs = MPsStats.MPsData(term_number)
+
+            # st.write(MPsInfo)
+                    MPsInfoDataFrame = pd.DataFrame.from_dict(
+                        MPsInfo)
                     _sharedViews.ageGraphs(
-                        all_ages, AgesButDictionary, term_number)
+                        all_ages, AgesButDictionary, term_number, MPsInfoDataFrame, False)
                 case "edukacja":
                     EducationDictionary = get_committee_member_details(
                         clubsButBetter, term_number, 'edukacja')

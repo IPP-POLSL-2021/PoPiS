@@ -8,7 +8,7 @@ import plotly.graph_objects as go
 from statistics import mean, median, stdev
 
 
-def ageGraphs(all_ages, AgesButDictionary, term="", MPsInfoDataFrame=""):
+def ageGraphs(all_ages, AgesButDictionary, term="", MPsInfoDataFrame="", alldata=True):
     # General age distribution histogram
     fig = px.histogram(
         x=all_ages,
@@ -48,7 +48,7 @@ def ageGraphs(all_ages, AgesButDictionary, term="", MPsInfoDataFrame=""):
     youngest, oldest = st.columns(2)
 
     st.dataframe(df, use_container_width=True)
-    if True:
+    if alldata == True:
         with oldest:
             # MPsInfoDataFrame = MPsInfoDataFrame.astype(int)
 
