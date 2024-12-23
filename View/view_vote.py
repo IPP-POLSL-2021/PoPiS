@@ -1,6 +1,6 @@
 import streamlit as st
 from Controller import MPsStats
-from api_wrappers import votings
+from api_wrappers import votings, MP
 import datetime
 from collections import defaultdict
 import logging
@@ -137,10 +137,15 @@ def loadView():
                                         total_votes = len(voting_details)
                                         if total_votes > 0:
                                             votes_count = defaultdict(int)
+                                            # needed to get current MPs clubs
+                                            mpList = MP.get_MPs(
+                                                term_number).json()
 
                                             # Log raw voting data for debugging
                                             logger.info("Raw voting details:")
-                                            for vote in voting_details:
+                                            for i, vote in enumerate(voting_details):
+                                                votings.clubs_votes(
+                                                    term=term_number, proceedingNum=selected_date, voteNum=i, MPslist=mpList)
                                                 vote_value = vote.get(
                                                     'vote', '')
                                                 logger.info(
