@@ -145,7 +145,7 @@ def loadView():
                                             logger.info("Raw voting details:")
                                             for i, vote in enumerate(voting_details):
                                                 votings.clubs_votes(
-                                                    term=term_number, proceedingNum=selected_date, voteNum=i, MPslist=mpList)
+                                                    term=term_number, proceedingNum=proceeding_number, voteNum=i, MPslist=mpList)
                                                 vote_value = vote.get(
                                                     'vote', '')
                                                 logger.info(

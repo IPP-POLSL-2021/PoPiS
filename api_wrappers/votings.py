@@ -331,12 +331,34 @@ if __name__ == "__main__":
                 print(f"  {vote_type.title()}: {count}")
 
 
-def clubs_votes(term: int, proceedingNum: int, voteNum: int, MPslist: dict):
+def clubs_votes(term: int, proceedingNum: int, voteNum: int, MPslist: list):
     votesLists = requests.get(
-        f"https://api.sejm.gov.pl/sejm/term{term}/votings/{proceedingNum}/{voteNum}").json()
+        f"https://api.sejm.gov.pl/sejm/term{term}/votings/{proceedingNum}/{voteNum+1}")
+    resopnse = votesLists.json()
     clubVoteDict = {}
+    originalClubVoteDict = {}
+    voteTypeDict = {"YES": 0, "NO": 0, "ABSTAIN": 0, "ABSENT": 0}
     for element in MPslist:
         if element["club"] not in clubVoteDict:
-            clubVoteDict["club"] = {}
+            clubVoteDict[element["club"]] = voteTypeDict.copy()
+    for MP in resopnse["votes"]:
+        # clubVoteDict[]
+        MP_id = MP["MP"]
+        club_name = next((mp["club"]
+                         for mp in MPslist if mp["id"] == MP_id), None)
+        if club_name is not None and "votes" not in MP and MP["vote"] != 'VOTE_VALID':
+            clubVoteDict[club_name][MP["vote"]] += 1
+        elif "votes" in MP and MP["vote"] != 'VOTE_VALID':
+            clubVoteDict[club_name][MP["votes"][0]] += 1
+        if MP["club"] in originalClubVoteDict and "vote" in MP and MP["vote"] != 'VOTE_VALID':
+            originalClubVoteDict[MP["club"]][MP["vote"]] += 1
+        elif MP["club"] not in originalClubVoteDict and "vote" in MP and MP["vote"] != 'VOTE_VALID':
 
-    return
+            originalClubVoteDict[MP["club"]] = voteTypeDict.copy()
+            originalClubVoteDict[MP["club"]][MP["vote"]] += 1
+        elif MP["club"] not in originalClubVoteDict and "votes" in MP:
+            originalClubVoteDict[MP["club"]] = voteTypeDict.copy()
+            originalClubVoteDict[MP["club"]][MP["votes"][0]] += 1
+        elif MP["club"] not in originalClubVoteDict and "votes" in MP:
+            originalClubVoteDict[MP["club"]][MP["votes"][0]] += 1
+    return originalClubVoteDict, clubVoteDict
