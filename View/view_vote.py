@@ -144,13 +144,14 @@ def loadView():
                                             # Log raw voting data for debugging
                                             logger.info("Raw voting details:")
                                             for i, vote in enumerate(voting_details):
-                                                votings.clubs_votes(
+                                                originalDict, currDict = votings.clubs_votes(
                                                     term=term_number, proceedingNum=proceeding_number, voteNum=i, MPslist=mpList)
                                                 vote_value = vote.get(
                                                     'vote', '')
                                                 logger.info(
                                                     f"Vote value: {vote_value}")
-
+                                                st.dataframe(originalDict)
+                                                st.dataframe(currDict)
                                                 # Map vote values
                                                 # print(vote_value)
                                                 if vote_value.lower() in ['yes']:
