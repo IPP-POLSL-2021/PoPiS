@@ -2,6 +2,7 @@ import streamlit as st
 from Controller import MPsStats
 from api_wrappers import votings, MP
 import datetime
+import pandas as pd
 from collections import defaultdict
 import logging
 
@@ -150,18 +151,39 @@ def loadView():
                                                     'vote', '')
                                                 logger.info(
                                                     f"Vote value: {vote_value}")
-                                                st.dataframe(originalDict)
-                                                st.dataframe(currDict)
-                                                # Map vote values
-                                                # print(vote_value)
-                                                if vote_value.lower() in ['yes']:
-                                                    votes_count['Za'] += 1
-                                                elif vote_value.lower() in ['no']:
-                                                    votes_count['Przeciw'] += 1
-                                                elif vote_value.lower() in ['abstain']:
-                                                    votes_count['Wstrzymał się'] += 1
-                                                elif vote_value.lower() in ['absent']:
-                                                    votes_count['Nieobecny'] += 1
+                                                if pd.DataFrame.from_dict(originalDict).empty:
+
+                                                    continue
+                                                with st.expander(f"Głosowanie nr {i+1} - {vote.get('topic', 'Brak tematu')}"):
+
+                                                    if pd.DataFrame.from_dict(originalDict).equals(pd.DataFrame.from_dict(currDict)):
+                                                        orgFrame = pd.DataFrame.from_dict(
+                                                            originalDict)
+                                                        orgFrame.index = [
+                                                            "Za", "Przeciw", "Wstrzymało się", "Nieobecni"]
+                                                        st.write(
+                                                            "Głosy oddnae przez kluby przy ich składzie w momencie głosowania")
+                                                        st.dataframe(
+                                                            originalDict)
+                                                    elif not pd.DataFrame.from_dict(originalDict).empty:
+                                                        st.write(
+                                                            "Głosy oddnae przez kluby przy ich składzie w momencie głosowania")
+                                                        st.dataframe(
+                                                            originalDict)
+                                                        st.write(
+                                                            "Głosy oddnae przez kluby przy ich składzie w obecnym momencie lub pod koniec kadencji")
+
+                                                        st.dataframe(currDict)
+                                                    # Map vote values
+                                                    # print(vote_value)
+                                                    if vote_value.lower() in ['yes']:
+                                                        votes_count['Za'] += 1
+                                                    elif vote_value.lower() in ['no']:
+                                                        votes_count['Przeciw'] += 1
+                                                    elif vote_value.lower() in ['abstain']:
+                                                        votes_count['Wstrzymał się'] += 1
+                                                    elif vote_value.lower() in ['absent']:
+                                                        votes_count['Nieobecny'] += 1
 
                                             # Log calculated statistics
                                             logger.info(
