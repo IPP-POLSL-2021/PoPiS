@@ -26,7 +26,6 @@ def MPsData(term):
     response = requests.get(f"https://api.sejm.gov.pl/sejm/term{term}/MP")
     MpsList = response.json()
     MpData = {"Name": [], "Age": [], "Club": []}
-    # current_time = datetime.now().replace(microsecond=0, second=0, minute=0, hour=0)
     termResponse = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}')
     termInfo = termResponse.json()
     endOfTerm = termInfo['from']
@@ -58,8 +57,13 @@ def ageStats(term, MpIdByClub, Mplist):
     # response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/MP')
     searchedData = 'birthDate'
     MPs = Mplist
+    response = requests.get(f"https://api.sejm.gov.pl/sejm/term")
+    termList = response.json()
+    for TERM in termList:
+        if TERM["current"] == True:
+            currterm = TERM["num"]
     current_time = datetime.now().replace(microsecond=0, second=0, minute=0, hour=0)
-    if term != 10:
+    if term != currterm:
         termResponse = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}')
         termInfo = termResponse.json()
         endOfTerm = termInfo['from']
@@ -137,14 +141,14 @@ def MoreMPsStats(MPSimpleList, MPIdlist, term=10, searchedInfo='edukacja'):
 
 
 def HistoryOfMp(lastFirstName, currentMpsList, selectedTem):
-    # print(lastFirstName)
+
     request = requests.get("https://api.sejm.gov.pl/sejm/term")
     response = request.json()
     termNum = 0
     for term in response:
         if term['current']:
             termNum = term['num']
-            # print(term)
+
     curr = termNum
     termNum = selectedTem
     HistList = {}
@@ -152,7 +156,7 @@ def HistoryOfMp(lastFirstName, currentMpsList, selectedTem):
     for termNum in range(termNum, 0, -1):
         if termNum == curr:
             Mp = [Mp for Mp in currentMpsList if Mp['lastFirstName'] == lastFirstName]
-            # list[term] = [currentMpsList['club'], currentMpsList['districtName'],,currentMpsList['educationLevel'],currentMpsList['proffesion']]
+
             Mp = Mp[0]
             Mpstats = MPModel.Mp(Mp.get('club', None), Mp.get('districtName', None), Mp.get('educationLevel', None),
                                  Mp.get('numberOfVotes', None), Mp.get('profession', None), Mp.get('voivodeship', None))
@@ -162,18 +166,12 @@ def HistoryOfMp(lastFirstName, currentMpsList, selectedTem):
                 f"https://api.sejm.gov.pl/sejm/term{termNum}/MP")
             response = request.json()
 
-            # print(response, "ressssponse")
             Mp = [Mp for Mp in response if Mp['lastFirstName'] == lastFirstName]
 
-            # print(f"{Mp} Mp zwykłe")
-            # print(f"{Mp[0]} Mp nie zwykłe czytaj spierdolone")
             if len(Mp) > 0:
                 Mp = Mp[0]
                 Mpstats = MPModel.Mp(Mp.get('club', None), Mp.get('districtName', None), Mp.get('educationLevel', None),
                                      Mp.get('numberOfVotes', None), Mp.get('profession', None), Mp.get('voivodeship', None))
                 HistList[termNum] = Mpstats
-            # else:
-        # print(Mpstats.club)
-        # print(termNum)
-    # print(HistList)
+
     return HistList

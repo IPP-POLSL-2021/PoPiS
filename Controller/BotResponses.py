@@ -4,7 +4,7 @@ from api_wrappers.committees import get_committees, get_committee_future_sitting
 from datetime import datetime, timedelta
 import sys
 # from Controller.telegrambot import create_reminders
-
+import requests
 import pandas as pd
 #####
 
@@ -75,10 +75,14 @@ def get_response(User_Input):
 
 
 def create_event(id, text, platform):
-    # print(id)
+
     remindersList = pd.read_csv("./Data/powiadomienia.csv")
     last = ""
-    term = 10
+    response = requests.get(f"https://api.sejm.gov.pl/sejm/term")
+    termList = response.json()
+    for TERM in termList:
+        if TERM["current"] == True:
+            term = TERM["num"]
     committees = get_committees(term)
     committeesList = ""
     for committee in committees:
