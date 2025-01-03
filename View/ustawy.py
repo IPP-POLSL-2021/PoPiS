@@ -1,6 +1,4 @@
 import requests
-# from streamlit_notifications import send_push
-from datetime import datetime, date
 import streamlit as st
 # from sentimentpl.models import SentimentPLModel
 from Controller.acts import get_all_acts_this_year, get_titles_of_record, is_the_new_act_in_effect_today,  get_process_details, get_legislative_processes

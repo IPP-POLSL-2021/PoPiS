@@ -2,12 +2,6 @@ import streamlit as st
 from Controller import seatsCalculator
 import json
 import pandas as pd
-import folium
-from streamlit_folium import st_folium
-import geopandas as gpd
-import os
-from shapely.geometry import Point
-from math import radians, cos, sin, asin, sqrt
 from Controller import electionCalc
 # import numpy as np
 

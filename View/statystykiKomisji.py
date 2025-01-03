@@ -2,9 +2,7 @@ from api_wrappers.committees import get_committee_stats, get_committees, get_com
 import streamlit as st
 import plotly.express as px
 import pandas as pd
-import numpy as np
 from View import _sharedViews
-from st_aggrid import AgGrid
 from Controller import MPsStats
 
 
@@ -74,7 +72,7 @@ def loadView():
             # Clean column names
             clubs.columns = [str(col).replace('.', '_')
                              for col in clubs.columns]
-            AgGrid(clubs)
+            st.dataframe(clubs, use_container_width=True)
 
         # Display MPs data if "łącznie" is selected
         if selectedCommittee == "łącznie":

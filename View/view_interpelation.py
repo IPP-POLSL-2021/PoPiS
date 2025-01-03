@@ -1,6 +1,5 @@
 import streamlit as st
 from api_wrappers.interpelation import get_interpelation, get_title, get_replies, get_authors, get_date, get_receipent
-import time
 import requests
 
 

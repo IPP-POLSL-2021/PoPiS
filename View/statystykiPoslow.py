@@ -2,7 +2,6 @@ import streamlit as st
 from Controller import MPsStats
 import pandas as pd
 from View import _sharedViews
-import numpy as np
 
 
 def loadView():

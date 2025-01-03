@@ -2,7 +2,6 @@ import streamlit as st
 from api_wrappers.committees import get_committees, get_committee_future_sitting, get_last_n_committee_sitting_dates
 import requests
 # from View import committeeTranscript
-import pandas as pd
 
 
 def loadView():
