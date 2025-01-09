@@ -58,7 +58,6 @@ def find_minimal_coalitions(
     """
     # Retrieve clubs data
     clubs = get_clubs(term).json()
-    
     # Sort clubs by member count in descending order
     clubs.sort(key=lambda x: x['membersCount'], reverse=True)
     
@@ -74,21 +73,24 @@ def find_minimal_coalitions(
         for coalition in combinations(clubs, coalition_size):
             # Calculate total MPs in this coalition
             total_mps = sum(club['membersCount'] for club in coalition)
-            
+
             # Create a hashable representation of club names
             coalition_names = frozenset(club['name'] for club in coalition)
-            
+            print(coalition_names)
             # Check if coalition meets the threshold
             if total_mps >= threshold:
                 # Check if this is a minimal coalition
                 is_minimal = True
                 for existing_names in minimal_coalition_names:
+                    #print(existing_names)
                     if existing_names.issubset(coalition_names):
                         is_minimal = False
+                        print("not minimal")
                         break
-                
+                print(len(minimal_coalition_names))
                 # Verify minimal nature by checking subset removals
                 if is_minimal:
+                    #print("is minimal YAY")
                     for club in coalition:
                         subset_coalition = [c for c in coalition if c != club]
                         subset_mps = sum(c['membersCount'] for c in subset_coalition)
