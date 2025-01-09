@@ -23,21 +23,13 @@ def delete_reminer(message):
 @bot.message_handler(commands=['komisje', ''])
 def send_welcome(message):
     print(message.text)
-    # w przypadku telegramu wystarczy w bazie przechować id czatu i date
     response = get_response(message.text[1:])
-    # for response in responseArray:
-
-    # print(response)
     bot.reply_to(message, f"oto lista komisji{response}")
     bot.send_message(message.chat.id, message.text)
 
 
 @bot.message_handler(commands=['powiadom'])
 def create_reminders(message=""):
-    # message = message.split(" ")[1]
-    # if auto == True:
-    #     bot.send_message(id, Auto_date)
-    # else:
     response = message.text.split(" ")[1]
     date = create_event(message.chat.id, response, "telegram")
     if date == "brak":
