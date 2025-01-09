@@ -162,12 +162,12 @@ def loadView():
                                                         orgFrame.index = [
                                                             "Za", "Przeciw", "Wstrzymało się", "Nieobecni"]
                                                         st.write(
-                                                            "Głosy oddnae przez kluby przy ich składzie w momencie głosowania")
+                                                            "Głosy oddane przez kluby przy ich składzie w momencie głosowania")
                                                         st.dataframe(
                                                             originalDict)
                                                     elif not pd.DataFrame.from_dict(originalDict).empty:
                                                         st.write(
-                                                            "Głosy oddnae przez kluby przy ich składzie w momencie głosowania")
+                                                            "Głosy oddane przez kluby przy ich składzie w momencie głosowania")
                                                         orgFrame = pd.DataFrame.from_dict(
                                                             originalDict)
                                                         orgFrame.index = [
@@ -179,7 +179,7 @@ def loadView():
                                                         currFrame.index = [
                                                             "Za", "Przeciw", "Wstrzymało się", "Nieobecni"]
                                                         st.write(
-                                                            "Głosy oddnae przez kluby przy ich składzie w obecnym momencie lub pod koniec kadencji")
+                                                            "Głosy oddane przez kluby przy ich składzie w obecnym momencie lub pod koniec kadencji")
 
                                                         st.dataframe(currFrame)
                                                     # Map vote values
