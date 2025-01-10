@@ -72,7 +72,8 @@ def loadView():
             # Clean column names
             clubs.columns = [str(col).replace('.', '_')
                              for col in clubs.columns]
-            st.dataframe(clubs, use_container_width=True)
+            st.subheader("Lista Członków w komisjach")
+            st.dataframe(clubs.T, use_container_width=True)
 
         # Display MPs data if "łącznie" is selected
         if selectedCommittee == "łącznie":
