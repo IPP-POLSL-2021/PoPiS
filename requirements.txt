@@ -3,5 +3,4 @@ pandas
 statistics
 numpy
 plotly
-streamlit-aggrid
 scipy
