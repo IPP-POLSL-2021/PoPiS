@@ -129,7 +129,7 @@ def loadView():
                         with open("votes.json", "w", encoding="utf-8") as json_file:
                             json.dump(loaded_votes, json_file,
                                       ensure_ascii=False, indent=4)
-                        st.dataframe(newSeats)
+                        st.write(newSeats)
 
                 else:
                     val['Frekwencja'] = pis+ko+td+lw+kf

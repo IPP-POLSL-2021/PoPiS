@@ -1,6 +1,8 @@
 import streamlit as st
-import plotly.express as px
+import matplotlib.pyplot as plt
 from Controller.Results import getResults
+import plotly.express as px
+
 
 def loadView():
     # Add default options and info messages for each selectbox
@@ -14,7 +16,7 @@ def loadView():
     correlationValue = -1
 
     electionSelections = st.selectbox(
-        "Wybierz poziom administracyjny do analizy",
+        "wybierz poziom administracyjny do analizy",
         ["Wybierz poziom"] + ["województwa", "okręgi", "powiaty", "gminy", "obwody"]
     )
 
@@ -25,8 +27,8 @@ def loadView():
     matrix, Results = getResults(correlationValue, electionSelections, type)
     matrix = matrix.fillna(0.0)
 
-    datafreame_col, plot_col = st.tabs([
-        "Macierz korelacji", "Wykres"])
+    datafreame_col, plot_col = st.tabs(
+        ["macierz korelacji", "wykres"])
 
     with datafreame_col:
         st.dataframe(matrix)
@@ -34,7 +36,8 @@ def loadView():
     with plot_col:
         # Add default option for first correlation element
         axisX_options = ["Wybierz pierwszy element"] + list(Results.columns)
-        axisX = st.selectbox("Wybierz pierwszy element korelacji", axisX_options)
+        axisX = st.selectbox(
+            "wybierz pierwszy element korelacji", axisX_options)
 
         if axisX == "Wybierz pierwszy element":
             st.info("Wybierz pierwszy element korelacji")
@@ -46,18 +49,24 @@ def loadView():
 
         # Add default option for second correlation element
         axisY_options = ["Wybierz drugi element"] + list(columns_2)
-        axisY = st.selectbox("Wybierz drugi element korelacji", axisY_options)
+        axisY = st.selectbox("wybierz drugi element korelacji", axisY_options)
 
         if axisY == "Wybierz drugi element":
             st.info("Wybierz drugi element korelacji")
             return
 
-        reggresionLine = st.checkbox("Czy pokazać linię regresji")
+        fig, ax = plt.subplots()
+        ax.set_xlabel(axisX)
+        ax.set_ylabel(axisY)
+        ax.legend()
+
+        values = Results[axisX]
+        reggresionLine = st.checkbox("Czy pokzać linie regresji")
         Results = Results[Results[axisX] > 0]
 
-        if not reggresionLine:
+        if reggresionLine is False:
             fig = px.scatter(Results, x=axisX, y=axisY)
-        elif reggresionLine and electionSelections == "obwody":
+        elif reggresionLine is True and electionSelections == "obwody":
             fig = px.scatter(Results, x=axisX, y=axisY,
                              trendline="ols", trendline_color_override="green")
         else:

@@ -1,8 +1,9 @@
 import pandas as pd
 import numpy as np
-import plotly.graph_objects as go
+import matplotlib.pyplot as plt
 from .Results import getResults
 from scipy import stats
+
 
 def perform_ks_test(actual_dist, benford_dist):
     """
@@ -22,7 +23,9 @@ def perform_ks_test(actual_dist, benford_dist):
     # Perform Kolmogorov-Smirnov test
     ks_statistic, p_value = stats.ks_2samp(actual_cdf, benford_cdf)
 
+    # In the analyze_benford_law function, after calculating chi_square:
     return ks_statistic, p_value
+
 
 def get_first_digit(number):
     """Extract the first digit of a number."""
@@ -30,6 +33,7 @@ def get_first_digit(number):
         return int(str(abs(float(number))).strip('0.')[0])
     except (ValueError, IndexError):
         return None
+
 
 def calculate_benford_distribution(data):
     """Calculate the actual distribution of first digits and compare with Benford's Law."""
@@ -46,6 +50,7 @@ def calculate_benford_distribution(data):
     actual_distribution = (digit_counts / len(first_digits) * 100)
 
     return benford, actual_distribution.values
+
 
 def analyze_benford_law(election_level="województwa", type="procentowe"):
     """Analyze election results using Benford's Law."""
@@ -66,28 +71,21 @@ def analyze_benford_law(election_level="województwa", type="procentowe"):
         # Calculate distributions
         benford_dist, actual_dist = calculate_benford_distribution(all_values)
 
-        # Create visualization using Plotly
+        # Create visualization
+        plt.figure(figsize=(10, 6))
         digits = range(1, 10)
 
-        fig = go.Figure()
-        fig.add_trace(go.Bar(
-            x=digits, y=benford_dist,
-            name="Rozkład Benforda",
-            marker_color='blue', opacity=0.5
-        ))
-        fig.add_trace(go.Bar(
-            x=digits, y=actual_dist,
-            name="Rozkład rzeczywisty",
-            marker_color='red', opacity=0.5
-        ))
+        plt.bar([x - 0.2 for x in digits], benford_dist, width=0.4,
+                label="Rozkład Benforda", color='blue', alpha=0.5)
+        plt.bar([x + 0.2 for x in digits], actual_dist, width=0.4,
+                label="Rozkład rzeczywisty", color='red', alpha=0.5)
 
-        fig.update_layout(
-            title=f'Analiza rozkładu Benforda - {election_level}',
-            xaxis_title='Pierwsza cyfra',
-            yaxis_title='Częstość (%)',
-            barmode='group',
-            template='plotly_white'
-        )
+        plt.xlabel('Pierwsza cyfra')
+        plt.ylabel('Częstość (%)')
+        plt.title(f'Analiza rozkładu Benforda - {election_level}')
+        plt.legend()
+        plt.grid(True, alpha=0.3)
+        plt.xticks(digits)
 
         # Calculate chi-square test statistic
         expected = np.array(benford_dist) * len(all_values) / 100
@@ -97,7 +95,8 @@ def analyze_benford_law(election_level="województwa", type="procentowe"):
         # Calculate KS statistic and p-value
         ks_statistic, p_value = perform_ks_test(actual_dist, benford_dist)
 
-        return fig, chi_square, ks_statistic, p_value
+        return plt, chi_square, ks_statistic, p_value
 
     except Exception as e:
+        plt.close()  # Clean up any open figures
         raise ValueError(f"Błąd podczas analizy: {str(e)}")
