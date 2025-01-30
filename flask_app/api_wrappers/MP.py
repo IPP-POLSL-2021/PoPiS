@@ -99,28 +99,8 @@ def get_district(term=None, id=None, mode=None, response=False):
 
 @handle_response
 def get_photo(term, id, response=False):
-    """
-    Retrieve a photo of an MP.
-    
-    Args:
-        term (int): The parliamentary term
-        id (str): The MP's ID
-        response (requests.Response, optional): Pre-fetched response. Defaults to False.
-    
-    Returns:
-        bytes: The photo content
-    
-    Raises:
-        requests.exceptions.RequestException: If the request fails
-    """
-    try:
-        if not response:
-            response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/MP/{id}/photo')
-            response.raise_for_status()
-        return response.content
-    except requests.exceptions.RequestException as e:
-        print(f"Error fetching MP photo: {e}")
-        raise
+    response = requests.get(f'https://api.sejm.gov.pl/sejm/term{term}/MP/{id}/photo')
+    return response.content
 
 
 #birth_date (str --> datetime.date): a date of birth Example: 1985-04-14.

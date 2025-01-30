@@ -2,8 +2,28 @@ import requests
 from datetime import datetime, timedelta
 import pandas as pd
 import numpy as np
-from Model import MPModel
+#from Model import MPModel
 
+class Mp:
+    def __init__(self, club, districtName, educationLevel, numberOfVotes, profession, voivodeship) -> None:
+        self.club = club
+        self.districtName = districtName
+        self.educationLevel = educationLevel
+        self.numberOfVotes = numberOfVotes
+        self.profession = profession
+        self.voivodeship = voivodeship
+
+        pass
+
+    def __str__(self) -> str:
+        base = f"Był w klubie {self.club}, został wybrany z okręgu {self.districtName} znajdującym się w woj. {self.voivodeship}, miał wykształcenie {self.educationLevel} "
+        if self.numberOfVotes != 0:
+            base += f" , otrzymał {self.numberOfVotes} głosów "
+        if self.profession is None:
+            base += " Podczas tej kadencji poseł nie pełnił żadnej profesji "
+        else:
+            base += f" podczas tej kadencji poseł miał profesję {self.profession}"
+        return base
 
 def groupMpsByClub(term):
     response = requests.get(f"https://api.sejm.gov.pl/sejm/term{term}/MP")
@@ -158,7 +178,7 @@ def HistoryOfMp(lastFirstName, currentMpsList, selectedTem):
             Mp = [Mp for Mp in currentMpsList if Mp['lastFirstName'] == lastFirstName]
 
             Mp = Mp[0]
-            Mpstats = MPModel.Mp(Mp.get('club', None), Mp.get('districtName', None), Mp.get('educationLevel', None),
+            Mpstats = Mp(Mp.get('club', None), Mp.get('districtName', None), Mp.get('educationLevel', None),
                                  Mp.get('numberOfVotes', None), Mp.get('profession', None), Mp.get('voivodeship', None))
             HistList[termNum] = Mpstats
         else:
@@ -170,7 +190,7 @@ def HistoryOfMp(lastFirstName, currentMpsList, selectedTem):
 
             if len(Mp) > 0:
                 Mp = Mp[0]
-                Mpstats = MPModel.Mp(Mp.get('club', None), Mp.get('districtName', None), Mp.get('educationLevel', None),
+                Mpstats = Mp(Mp.get('club', None), Mp.get('districtName', None), Mp.get('educationLevel', None),
                                      Mp.get('numberOfVotes', None), Mp.get('profession', None), Mp.get('voivodeship', None))
                 HistList[termNum] = Mpstats
 
