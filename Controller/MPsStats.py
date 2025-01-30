@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 #from Model import MPModel
 
-class Mp:
+class MpClass:
     def __init__(self, club, districtName, educationLevel, numberOfVotes, profession, voivodeship) -> None:
         self.club = club
         self.districtName = districtName
@@ -178,7 +178,7 @@ def HistoryOfMp(lastFirstName, currentMpsList, selectedTem):
             Mp = [Mp for Mp in currentMpsList if Mp['lastFirstName'] == lastFirstName]
 
             Mp = Mp[0]
-            Mpstats = Mp(Mp.get('club', None), Mp.get('districtName', None), Mp.get('educationLevel', None),
+            Mpstats = MpClass(Mp.get('club', None), Mp.get('districtName', None), Mp.get('educationLevel', None),
                                  Mp.get('numberOfVotes', None), Mp.get('profession', None), Mp.get('voivodeship', None))
             HistList[termNum] = Mpstats
         else:
@@ -190,7 +190,7 @@ def HistoryOfMp(lastFirstName, currentMpsList, selectedTem):
 
             if len(Mp) > 0:
                 Mp = Mp[0]
-                Mpstats = Mp(Mp.get('club', None), Mp.get('districtName', None), Mp.get('educationLevel', None),
+                Mpstats = MpClass(Mp.get('club', None), Mp.get('districtName', None), Mp.get('educationLevel', None),
                                      Mp.get('numberOfVotes', None), Mp.get('profession', None), Mp.get('voivodeship', None))
                 HistList[termNum] = Mpstats
 
